@@ -1,7 +1,13 @@
 <script setup lang="ts">
+import RegisterWrap from '~/components/core/register/RegisterContainer.vue';
+
+
+
+
 </script>
 
-
 <template>
-    <h1>this is register page</h1>
+    <NuxtLayout name="auth-layout">
+        <RegisterWrap />
+    </NuxtLayout>
 </template>
