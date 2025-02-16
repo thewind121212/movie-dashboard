@@ -1,7 +1,14 @@
 <script setup lang="ts">
+import LoginWrap from '~/components/core/login/loginWrap.vue';
+
+const message = 'Hello, World!'
+
+
+
 </script>
 
-
 <template>
-    <h1>this is register page</h1>
+    <NuxtLayout name="auth">
+
+    </NuxtLayout>
 </template>

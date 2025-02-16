@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import LoginWrap from '~/components/core/login/loginWrap.vue';
+
 const message = 'Hello, World!'
+
+
+
 </script>
 
 <template>
