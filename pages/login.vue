@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import LoginWrap from '~/components/core/login/loginWrap.vue';
+import LoginWrap from '~/components/core/login/LoginContainer.vue';
 
 const message = 'Hello, World!'
 
@@ -8,7 +8,7 @@ const message = 'Hello, World!'
 </script>
 
 <template>
-    <NuxtLayout name="auth">
+    <NuxtLayout name="auth-layout">
         <LoginWrap />
     </NuxtLayout>
 </template>

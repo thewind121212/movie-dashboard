@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import RegisterWrap from '~/components/core/register/registerWrap.vue';
+import RegisterWrap from '~/components/core/register/RegisterContainer.vue';
 
 
 
@@ -7,7 +7,7 @@ import RegisterWrap from '~/components/core/register/registerWrap.vue';
 </script>
 
 <template>
-    <NuxtLayout name="auth">
+    <NuxtLayout name="auth-layout">
         <RegisterWrap />
     </NuxtLayout>
 </template>
