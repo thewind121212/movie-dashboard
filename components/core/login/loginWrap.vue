@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import LoginForm from './loginForm.vue';
+const router = useRouter()
 
 </script>
 
@@ -22,7 +23,9 @@ import LoginForm from './loginForm.vue';
         </div>
         <div class="footer-auth">
             <p class="text-[#3D3D3D] text-[1rem] leading-[1.5rem] font-shatoshi cursor-default">Don’t have an account?
-                <span class="font-medium cursor-pointer">Sign Up</span> </p>
+                <span class="font-medium cursor-pointer"
+                v-on:click="() => router.push('/register')"
+                >Sign Up</span> </p>
         </div>
     </div>
 

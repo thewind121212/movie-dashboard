@@ -1,0 +1,54 @@
+<script setup>
+import { Form, Field, ErrorMessage } from 'vee-validate';
+import { toTypedSchema } from '@vee-validate/zod';
+import * as zod from 'zod';
+
+
+const validationSchema = toTypedSchema(
+    zod.object({
+        email: zod.string({ message: '*Email is required' }).min(1, { message: 'This is required' }).email({ message: 'Must be a valid email' }),
+    })
+);
+function onSubmit(values) {
+    console.log(JSON.stringify(values));
+}
+</script>
+
+
+
+<template>
+    <div class="w-full h-auto flex flex-col gap-[2rem] items-center">
+        <div class="login-header text-center flex flex-col gap-[0.75rem] items-center">
+            <h1 class="text-[#121212] text-[3rem] leading-[3rem] font-noto">Get started</h1>
+            <p class="text-[#3D3D3D] text-[1rem] leading-[1.5rem] font-shatoshi w-[70%] text-center">To begin, please
+                enter your email
+                address. We will then send a verification email to ensure its accuracy.</p>
+        </div>
+        <Form :validation-schema="validationSchema" @submit="onSubmit"
+            class="w-[60%] h-auto flex flex-col gap-[2.5rem] font-shatoshi">
+            <div class="w-full h-auto flex flex-col gap-[1rem]">
+                <div class="w-full h-auto flex flex-col gap-2">
+                    <label for="email" class="text-[#121212] text-[1rem] leading-[1.5rem]">Email</label>
+                    <Field name="email" type="email" v-slot="{ field }">
+                        <input type="email" v-bind="field"
+                            class="bg-[#F5F7FA] aspect-[430/48] rounded-[0.75rem] px-[1rem] py-[0.875rem] text-[#6B6B6B] text-[0.875rem] leading-[1.25rem]"
+                            placeholder="Enter Your Email" />
+                    </Field>
+                    <ErrorMessage name="email" class="text-red-400 text-[0.75rem] leading-[0.75rem]" />
+                </div>
+            </div>
+            <div class="submit-action w-full flex flex-col gap-[0.75rem]">
+                <button
+                    class="bg-[#121212] aspect-[430/48] rounded-[0.75rem] px-[1rem] py-[0.875rem] text-[#fff] text-[0.875rem] leading-[1.25rem]">Sign
+                    Up</button>
+                <button
+                    class="bg-[#fffff] rounded-[0.75rem] px-[1rem] py-[0.875rem] text-[#121212] text-[0.875rem] border leading-[1.25rem] border-[#EDEDED]  flex justify-center items-center gap-[0.625rem]">
+                    <span class="w-auto h-auto">
+                        <NuxtImg src="/icons/google.svg" width="24" height="24" alt="google-icon" class="!w-6 !h-6" />
+                    </span>
+                    Sign Up With Google
+                </button>
+            </div>
+        </Form>
+    </div>
+</template>

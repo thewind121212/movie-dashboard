@@ -8,9 +8,10 @@ const currentAuthPath = route.path.replace('/', '') as 'login' | 'register'
 
 
 <template>
-    <section class="w-screen h-screen flex justify-start items-start p-[12px]">
-        <div class="rounded-[20px] overflow-hidden h-full min-w-[550px] w-1/2 relative">
-            <NuxtImg :src="currentAuthPath === 'login' ? '/images/login-image.jpg' : '/images/register-image.png'" alt="login" class="w-full h-full object-cover" />
+    <section class="w-screen h-screen flex justify-start items-start p-[0.75rem] select-none gap-[0.75rem]">
+        <div class="rounded-[1.25rem] overflow-hidden h-full min-w-[550px] w-1/2 relative">
+            <NuxtImg :src="currentAuthPath === 'login' ? '/images/login-image.jpg' : '/images/register-image.png'"
+                alt="login" class="w-full h-full object-cover" />
             <div class="absolute w-full h-full bg-[#000] left-0 top-0 opacity-[0.35] z-10"></div>
             <div class="w-full h-full z-20 absolute top-0 left-0 flex flex-col">
                 <div

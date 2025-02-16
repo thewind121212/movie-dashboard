@@ -1,6 +1,29 @@
+<script setup>
+import { Form, Field, ErrorMessage } from 'vee-validate';
+import { toTypedSchema } from '@vee-validate/zod';
+import * as zod from 'zod';
+
+
+const showPassword = ref(false);
+
+
+const validationSchema = toTypedSchema(
+    zod.object({
+        email: zod.string({ message: '*Email is required' }).email({ message: '*Must be a valid email' }),
+        password: zod.string().min(1, { message: '*Password is required' }).min(8, { message: '*Password is too short' }),
+        remember: zod.boolean().default(false),
+    })
+);
+function onSubmit(values) {
+    console.log(JSON.stringify(values));
+}
+</script>
+
+
+
 <template>
     <Form :validation-schema="validationSchema" @submit="onSubmit"
-        class="w-[60%] h-auto flex flex-col gap-[2.5rem] font-shatoshi">
+        class="w-[60%] h-auto flex flex-col gap-[2rem] font-shatoshi">
         <div class="w-full h-auto flex flex-col gap-[1rem]">
             <div class="w-full h-auto flex flex-col gap-2">
                 <label for="email" class="text-[#121212] text-[1rem] leading-[1.5rem]">Email</label>
@@ -15,7 +38,8 @@
                 <label for="password" class="text-[#121212] text-[1rem] leading-[1.5rem]">Password</label>
                 <Field name="password" v-slot="{ field }">
                     <div class="w-full h-auto relative">
-                        <input :type="showPassword ? 'text' : 'password'" v-model="password" v-bind="field"
+                        <input name="password" :type="showPassword ? 'text' : 'password'" v-bind="field"
+                            autocomplete="on"
                             class="bg-[#F5F7FA] w-full aspect-[430/48] rounded-[0.75rem] px-[1rem] py-[0.875rem] text-[#6B6B6B] text-[0.875rem] leading-[1.25rem]"
                             placeholder="Enter Your Password" />
                         <button @click="showPassword = !showPassword" type="button"
@@ -29,8 +53,8 @@
             </div>
             <div class="h-auto w-full flex justify-between items-center">
                 <div class="w-full h-auto flex justify-start items-center gap-[0.625rem]">
-                    <Field name="remember" type="checkbox">
-                        <input type="checkbox" />
+                    <Field name="remember" type="checkbox" v-slot="{ field }" :value="true" :unchecked-value="false">
+                        <input type="checkbox" name="remember" v-bind="field" :value="true" ref="" />
                         <label for="remember"
                             class="text-[#3D3D3D] text-[0.875rem] leading-[1.25rem] cursor-pointer">Remember
                             Me</label>
@@ -44,48 +68,13 @@
             <button
                 class="bg-[#121212] aspect-[430/48] rounded-[0.75rem] px-[1rem] py-[0.875rem] text-[#fff] text-[0.875rem] leading-[1.25rem]">Sign
                 In</button>
-            <div class="login-with-provider grid grid-cols-2 gap-2 w-full">
-                <button
-                    class="bg-[#fffff] rounded-[0.75rem] px-[1rem] py-[0.875rem] text-[#121212] text-[0.875rem] border leading-[1.25rem] border-[#EDEDED]  flex justify-center items-center gap-[0.625rem]">
-                    <span class="w-auto h-auto">
-                        <NuxtImg src="/icons/google.svg" width="24" height="24" alt="google-icon" class="!w-6 !h-6" />
-                    </span>
-                    Google
-                </button>
-                <button
-                    class="bg-[#fffff] rounded-[0.75rem] px-[1rem] py-[0.875rem] text-[#121212] text-[0.875rem] border leading-[1.25rem] border-[#EDEDED]  flex justify-center items-center gap-[0.625rem]">
-                    <span class="w-auto h-auto">
-                        <NuxtImg src="/icons/facebook.svg" width="24" height="24" alt="google-icon" class="!w-6 !h-6" />
-                    </span>
-                    Facebook
-                </button>
-            </div>
+            <button
+                class="bg-[#fffff] rounded-[0.75rem] px-[1rem] py-[0.875rem] text-[#121212] text-[0.875rem] border leading-[1.25rem] border-[#EDEDED]  flex justify-center items-center gap-[0.625rem]">
+                <span class="w-auto h-auto">
+                    <NuxtImg src="/icons/google.svg" width="24" height="24" alt="google-icon" class="!w-6 !h-6" />
+                </span>
+                Sign In Google
+            </button>
         </div>
-        <button type="submit" class="">Submit</button>
     </Form>
 </template>
-
-
-<script setup>
-import { Form, Field, ErrorMessage } from 'vee-validate';
-import { toTypedSchema } from '@vee-validate/zod';
-import * as zod from 'zod';
-
-
-const showPassword = ref(false);
-
-
-const validationSchema = toTypedSchema(
-    zod.object({
-        email: zod.string({ message: '*Email is required' }).min(1, { message: 'This is required' }).email({ message: 'Must be a valid email' }),
-        password: zod.string().min(1, { message: 'This is required' }).min(8, { message: 'Too short' }),
-    })
-);
-function onSubmit(values) {
-    console.log(JSON.stringify(values));
-}
-
-
-
-
-</script>
