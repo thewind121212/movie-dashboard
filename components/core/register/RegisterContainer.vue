@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import RegisterForm from './RegisterInitForm.vue';
+import RegisterForm from './RegisterRequestForm.vue';
 import RegisterFillForm from './RegisterFillForm.vue';
 import RegisterResponse from './RegisterResponse.vue';
 
 const RegisterReview = defineAsyncComponent(() => import('./RegisterReview.vue'))
+type RegisterPhase = 'REGISTER' | 'EMAIL_REVIEW' | 'SIGN_UP_PROCESSING' | 'SIGN_UP_RESPONSE'
 
 const router = useRouter()
 
-type RegisterPhase = 'REGISTER' | 'EMAIL_REVIEW' | 'SIGN_UP_PROCESSING' | 'SIGN_UP_RESPONSE'
 
 const registerPhase = ref<RegisterPhase>('REGISTER')
 
@@ -23,6 +23,7 @@ const toggleRegisterPhase = (phase: RegisterPhase) => {
         registerPhase.value = 'REGISTER'
     }
 }
+
 
 </script>
 

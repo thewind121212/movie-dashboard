@@ -141,3 +141,423 @@ movie-dashboard
 └─ tsconfig.json
 
 ```
+```
+movie-dashboard
+├─ README.md
+├─ app.vue
+├─ assets
+│  └─ css
+│     ├─ app.css
+│     └─ fonts.css
+├─ components
+│  ├─ core
+│  │  ├─ login
+│  │  │  ├─ LoginContainer.vue
+│  │  │  └─ LoginForm.vue
+│  │  └─ register
+│  │     ├─ RegisterContainer.vue
+│  │     ├─ RegisterFillForm.vue
+│  │     ├─ RegisterFn.ts
+│  │     ├─ RegisterInitForm.vue
+│  │     ├─ RegisterResponse.vue
+│  │     └─ RegisterReview.vue
+│  └─ shared
+│     └─ input
+│        ├─ PasswordInput.vue
+│        └─ TextInput.vue
+├─ layouts
+│  └─ Auth.layout.vue
+├─ nuxt.config.ts
+├─ package-lock.json
+├─ package.json
+├─ pages
+│  ├─ Index.vue
+│  ├─ Login.vue
+│  └─ Register.vue
+├─ plugins
+│  └─ Vue3Lottie.client.ts
+├─ public
+│  ├─ animations
+│  │  ├─ InternalError.json
+│  │  ├─ fail.json
+│  │  ├─ successed.json
+│  │  └─ waiting.json
+│  ├─ favicon.ico
+│  ├─ icons
+│  │  ├─ eye-slash.svg
+│  │  ├─ eye.svg
+│  │  ├─ facebook.svg
+│  │  ├─ google.svg
+│  │  ├─ loading.svg
+│  │  └─ logo-dark.webp
+│  ├─ images
+│  │  ├─ image.png
+│  │  ├─ login-image.jpg
+│  │  └─ register-image.png
+│  ├─ robots.txt
+│  └─ static
+│     └─ fonts
+│        ├─ Satoshi-Black.woff2
+│        ├─ Satoshi-Bold.woff2
+│        ├─ Satoshi-Light.woff2
+│        ├─ Satoshi-Medium.woff2
+│        ├─ Satoshi-Regular.woff2
+│        └─ Satoshi-Variable.woff2
+├─ server
+│  └─ tsconfig.json
+├─ tailwind.config.js
+└─ tsconfig.json
+
+```
+```
+movie-dashboard
+├─ --dotenv
+│  └─ nuxt.config.ts
+├─ README.md
+├─ app.vue
+├─ assets
+│  └─ css
+│     ├─ app.css
+│     └─ fonts.css
+├─ components
+│  ├─ core
+│  │  ├─ login
+│  │  │  ├─ LoginContainer.vue
+│  │  │  └─ LoginForm.vue
+│  │  └─ register
+│  │     ├─ RegisterContainer.vue
+│  │     ├─ RegisterFillForm.vue
+│  │     ├─ RegisterFn.ts
+│  │     ├─ RegisterInitForm.vue
+│  │     ├─ RegisterResponse.vue
+│  │     └─ RegisterReview.vue
+│  └─ shared
+│     └─ input
+│        ├─ PasswordInput.vue
+│        └─ TextInput.vue
+├─ layouts
+│  └─ Auth.layout.vue
+├─ nuxt.config.ts
+├─ package-lock.json
+├─ package.json
+├─ pages
+│  ├─ Index.vue
+│  ├─ Login.vue
+│  └─ Register.vue
+├─ plugins
+│  └─ Vue3Lottie.client.ts
+├─ public
+│  ├─ animations
+│  │  ├─ InternalError.json
+│  │  ├─ fail.json
+│  │  ├─ successed.json
+│  │  └─ waiting.json
+│  ├─ favicon.ico
+│  ├─ icons
+│  │  ├─ eye-slash.svg
+│  │  ├─ eye.svg
+│  │  ├─ facebook.svg
+│  │  ├─ google.svg
+│  │  ├─ loading.svg
+│  │  └─ logo-dark.webp
+│  ├─ images
+│  │  ├─ image.png
+│  │  ├─ login-image.jpg
+│  │  └─ register-image.png
+│  ├─ robots.txt
+│  └─ static
+│     └─ fonts
+│        ├─ Satoshi-Black.woff2
+│        ├─ Satoshi-Bold.woff2
+│        ├─ Satoshi-Light.woff2
+│        ├─ Satoshi-Medium.woff2
+│        ├─ Satoshi-Regular.woff2
+│        └─ Satoshi-Variable.woff2
+├─ server
+│  └─ tsconfig.json
+├─ tailwind.config.js
+└─ tsconfig.json
+
+```
+```
+movie-dashboard
+├─ README.md
+├─ app.vue
+├─ assets
+│  └─ css
+│     ├─ app.css
+│     └─ fonts.css
+├─ components
+│  ├─ core
+│  │  ├─ login
+│  │  │  ├─ LoginContainer.vue
+│  │  │  └─ LoginForm.vue
+│  │  └─ register
+│  │     ├─ RegisterContainer.vue
+│  │     ├─ RegisterFillForm.vue
+│  │     ├─ RegisterFn.ts
+│  │     ├─ RegisterInitForm.vue
+│  │     ├─ RegisterResponse.vue
+│  │     └─ RegisterReview.vue
+│  └─ shared
+│     └─ input
+│        ├─ PasswordInput.vue
+│        └─ TextInput.vue
+├─ layouts
+│  └─ Auth.layout.vue
+├─ nuxt.config.ts
+├─ package-lock.json
+├─ package.json
+├─ pages
+│  ├─ Index.vue
+│  ├─ Login.vue
+│  └─ Register.vue
+├─ plugins
+│  └─ Vue3Lottie.client.ts
+├─ public
+│  ├─ animations
+│  │  ├─ InternalError.json
+│  │  ├─ fail.json
+│  │  ├─ successed.json
+│  │  └─ waiting.json
+│  ├─ favicon.ico
+│  ├─ icons
+│  │  ├─ eye-slash.svg
+│  │  ├─ eye.svg
+│  │  ├─ facebook.svg
+│  │  ├─ google.svg
+│  │  ├─ loading.svg
+│  │  └─ logo-dark.webp
+│  ├─ images
+│  │  ├─ image.png
+│  │  ├─ login-image.jpg
+│  │  └─ register-image.png
+│  ├─ robots.txt
+│  └─ static
+│     └─ fonts
+│        ├─ Satoshi-Black.woff2
+│        ├─ Satoshi-Bold.woff2
+│        ├─ Satoshi-Light.woff2
+│        ├─ Satoshi-Medium.woff2
+│        ├─ Satoshi-Regular.woff2
+│        └─ Satoshi-Variable.woff2
+├─ server
+│  ├─ routes
+│  │  └─ ping.ts
+│  └─ tsconfig.json
+├─ tailwind.config.js
+└─ tsconfig.json
+
+```
+```
+movie-dashboard
+├─ README.md
+├─ app.vue
+├─ assets
+│  └─ css
+│     ├─ app.css
+│     └─ fonts.css
+├─ components
+│  ├─ core
+│  │  ├─ login
+│  │  │  ├─ LoginContainer.vue
+│  │  │  └─ LoginForm.vue
+│  │  └─ register
+│  │     ├─ RegisterContainer.vue
+│  │     ├─ RegisterFillForm.vue
+│  │     ├─ RegisterFn.ts
+│  │     ├─ RegisterInitForm.vue
+│  │     ├─ RegisterResponse.vue
+│  │     └─ RegisterReview.vue
+│  └─ shared
+│     └─ input
+│        ├─ PasswordInput.vue
+│        └─ TextInput.vue
+├─ layouts
+│  └─ Auth.layout.vue
+├─ nuxt.config.ts
+├─ package-lock.json
+├─ package.json
+├─ pages
+│  ├─ Index.vue
+│  ├─ Login.vue
+│  └─ Register.vue
+├─ plugins
+│  └─ Vue3Lottie.client.ts
+├─ public
+│  ├─ animations
+│  │  ├─ InternalError.json
+│  │  ├─ fail.json
+│  │  ├─ successed.json
+│  │  └─ waiting.json
+│  ├─ favicon.ico
+│  ├─ icons
+│  │  ├─ eye-slash.svg
+│  │  ├─ eye.svg
+│  │  ├─ facebook.svg
+│  │  ├─ google.svg
+│  │  ├─ loading.svg
+│  │  └─ logo-dark.webp
+│  ├─ images
+│  │  ├─ image.png
+│  │  ├─ login-image.jpg
+│  │  └─ register-image.png
+│  ├─ robots.txt
+│  └─ static
+│     └─ fonts
+│        ├─ Satoshi-Black.woff2
+│        ├─ Satoshi-Bold.woff2
+│        ├─ Satoshi-Light.woff2
+│        ├─ Satoshi-Medium.woff2
+│        ├─ Satoshi-Regular.woff2
+│        └─ Satoshi-Variable.woff2
+├─ server
+│  ├─ api
+│  │  └─ ping.ts
+│  └─ tsconfig.json
+├─ tailwind.config.js
+└─ tsconfig.json
+
+```
+```
+movie-dashboard
+├─ README.md
+├─ app.vue
+├─ assets
+│  └─ css
+│     ├─ app.css
+│     └─ fonts.css
+├─ components
+│  ├─ core
+│  │  ├─ login
+│  │  │  ├─ LoginContainer.vue
+│  │  │  └─ LoginForm.vue
+│  │  └─ register
+│  │     ├─ RegisterContainer.vue
+│  │     ├─ RegisterFillForm.vue
+│  │     ├─ RegisterFn.ts
+│  │     ├─ RegisterInitForm.vue
+│  │     ├─ RegisterResponse.vue
+│  │     └─ RegisterReview.vue
+│  └─ shared
+│     └─ input
+│        ├─ PasswordInput.vue
+│        └─ TextInput.vue
+├─ layouts
+│  └─ Auth.layout.vue
+├─ nuxt.config.ts
+├─ package-lock.json
+├─ package.json
+├─ pages
+│  ├─ Index.vue
+│  ├─ Login.vue
+│  └─ Register.vue
+├─ plugins
+│  └─ Vue3Lottie.client.ts
+├─ public
+│  ├─ animations
+│  │  ├─ InternalError.json
+│  │  ├─ fail.json
+│  │  ├─ successed.json
+│  │  └─ waiting.json
+│  ├─ favicon.ico
+│  ├─ icons
+│  │  ├─ eye-slash.svg
+│  │  ├─ eye.svg
+│  │  ├─ facebook.svg
+│  │  ├─ google.svg
+│  │  ├─ loading.svg
+│  │  └─ logo-dark.webp
+│  ├─ images
+│  │  ├─ image.png
+│  │  ├─ login-image.jpg
+│  │  └─ register-image.png
+│  ├─ robots.txt
+│  └─ static
+│     └─ fonts
+│        ├─ Satoshi-Black.woff2
+│        ├─ Satoshi-Bold.woff2
+│        ├─ Satoshi-Light.woff2
+│        ├─ Satoshi-Medium.woff2
+│        ├─ Satoshi-Regular.woff2
+│        └─ Satoshi-Variable.woff2
+├─ server
+│  ├─ api
+│  │  └─ auth
+│  │     └─ registerRequest.ts
+│  └─ tsconfig.json
+├─ tailwind.config.js
+└─ tsconfig.json
+
+```
+```
+movie-dashboard
+├─ README.md
+├─ app.vue
+├─ assets
+│  └─ css
+│     ├─ app.css
+│     └─ fonts.css
+├─ components
+│  ├─ core
+│  │  ├─ login
+│  │  │  ├─ LoginContainer.vue
+│  │  │  └─ LoginForm.vue
+│  │  └─ register
+│  │     ├─ RegisterContainer.vue
+│  │     ├─ RegisterFillForm.vue
+│  │     ├─ RegisterFn.ts
+│  │     ├─ RegisterInitForm.vue
+│  │     ├─ RegisterResponse.vue
+│  │     └─ RegisterReview.vue
+│  └─ shared
+│     └─ input
+│        ├─ PasswordInput.vue
+│        └─ TextInput.vue
+├─ layouts
+│  └─ Auth.layout.vue
+├─ nuxt.config.ts
+├─ package-lock.json
+├─ package.json
+├─ pages
+│  ├─ Index.vue
+│  ├─ Login.vue
+│  └─ Register.vue
+├─ plugins
+│  └─ Vue3Lottie.client.ts
+├─ public
+│  ├─ animations
+│  │  ├─ InternalError.json
+│  │  ├─ fail.json
+│  │  ├─ successed.json
+│  │  └─ waiting.json
+│  ├─ favicon.ico
+│  ├─ icons
+│  │  ├─ eye-slash.svg
+│  │  ├─ eye.svg
+│  │  ├─ facebook.svg
+│  │  ├─ google.svg
+│  │  ├─ loading.svg
+│  │  └─ logo-dark.webp
+│  ├─ images
+│  │  ├─ image.png
+│  │  ├─ login-image.jpg
+│  │  └─ register-image.png
+│  ├─ robots.txt
+│  └─ static
+│     └─ fonts
+│        ├─ Satoshi-Black.woff2
+│        ├─ Satoshi-Bold.woff2
+│        ├─ Satoshi-Light.woff2
+│        ├─ Satoshi-Medium.woff2
+│        ├─ Satoshi-Regular.woff2
+│        └─ Satoshi-Variable.woff2
+├─ server
+│  ├─ api
+│  │  └─ auth
+│  │     └─ registerRequest.ts
+│  └─ tsconfig.json
+├─ tailwind.config.js
+└─ tsconfig.json
+
+```
