@@ -1,28 +1,20 @@
 <script setup lang="ts">
-import RegisterForm from './RegisterInitForm.vue';
+import RegisterRequest from './RegisterRequestForm.vue';
 import RegisterFillForm from './RegisterFillForm.vue';
 import RegisterResponse from './RegisterResponse.vue';
 
 const RegisterReview = defineAsyncComponent(() => import('./RegisterReview.vue'))
+type RegisterPhase = 'REGISTER' | 'EMAIL_REVIEW' | 'SIGN_UP_PROCESSING' | 'SIGN_UP_RESPONSE'
 
 const router = useRouter()
 
-type RegisterPhase = 'REGISTER' | 'EMAIL_REVIEW' | 'SIGN_UP_PROCESSING' | 'SIGN_UP_RESPONSE'
 
 const registerPhase = ref<RegisterPhase>('REGISTER')
 
-const toggleRegisterPhase = (phase: RegisterPhase) => {
-
-    if (registerPhase.value === 'REGISTER') {
-        registerPhase.value = 'EMAIL_REVIEW'
-    } else if (registerPhase.value === 'EMAIL_REVIEW') {
-        registerPhase.value = 'SIGN_UP_PROCESSING'
-    } else if (registerPhase.value === 'SIGN_UP_PROCESSING') {
-        registerPhase.value = 'SIGN_UP_RESPONSE'
-    } else if (registerPhase.value === 'SIGN_UP_RESPONSE') {
-        registerPhase.value = 'REGISTER'
-    }
+const changeRegisterPhase = (phase: RegisterPhase) => {
+    registerPhase.value = phase
 }
+
 
 </script>
 
@@ -43,15 +35,14 @@ const toggleRegisterPhase = (phase: RegisterPhase) => {
                 'transform -translate-x-[50%]': registerPhase === 'SIGN_UP_PROCESSING',
                 'transform -translate-x-[75%]': registerPhase === 'SIGN_UP_RESPONSE',
             }">
-                <RegisterForm />
-                <RegisterReview />
-                <RegisterFillForm />
-                <RegisterResponse status="INTERNAL_ERROR" />
+                <RegisterRequest @setPhase="changeRegisterPhase" />
+                <RegisterReview @setPhase="changeRegisterPhase" />
+                <RegisterFillForm @setPhase="changeRegisterPhase" />
+                <RegisterResponse @setPhase="changeRegisterPhase" status="INTERNAL_ERROR" />
             </div>
         </div>
         <div class="footer-auth">
-            <p class="text-[#3D3D3D] text-[1rem] leading-[1.5rem] font-shatoshi cursor-default"
-                v-on:click="toggleRegisterPhase('EMAIL_REVIEW')">Already have an account?
+            <p class="text-[#3D3D3D] text-[1rem] leading-[1.5rem] font-shatoshi cursor-default">Already have an account?
                 <span class="font-medium cursor-pointer" v-on:click="() => router.push('/login')">Sign In</span>
             </p>
         </div>

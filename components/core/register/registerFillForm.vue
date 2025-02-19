@@ -17,9 +17,6 @@ const validationSchema = toTypedSchema(
         path: ['repeatPassword'],
     })
 );
-function onSubmit(values) {
-    console.log(JSON.stringify(values));
-}
 </script>
 
 

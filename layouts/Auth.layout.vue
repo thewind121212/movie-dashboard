@@ -1,5 +1,11 @@
 <script setup lang="ts">
 const route = useRoute()
+import { useAuthLoading } from '~/store/authLoading';
+import { computed } from 'vue';
+
+const authLoadingStore = useAuthLoading()
+
+const isLoading = computed(() => authLoadingStore.isLoading)
 
 const currentAuthPath = route.path.replace('/', '') as 'login' | 'register'
 
@@ -11,7 +17,7 @@ const currentAuthPath = route.path.replace('/', '') as 'login' | 'register'
     <section class="w-screen h-screen flex justify-start items-start p-[0.75rem] select-none gap-[0.75rem]">
         <div class="rounded-[1.25rem] overflow-hidden h-full min-w-[550px] w-1/2 relative">
             <NuxtImg :src="currentAuthPath === 'login' ? '/images/login-image.jpg' : '/images/register-image.png'"
-                alt="login" class="w-full h-full object-cover"/>
+                alt="login" class="w-full h-full object-cover" />
             <div class="absolute w-full h-full bg-[#000] left-0 top-0 opacity-[0.35] z-10"></div>
             <div class="w-full h-full z-20 absolute top-0 left-0 flex flex-col">
                 <div
@@ -34,7 +40,13 @@ const currentAuthPath = route.path.replace('/', '') as 'login' | 'register'
                 </div>
             </div>
         </div>
-        <div class="h-full w-1/2">
+        <div class="h-full w-1/2 relative">
+            <client-only>
+                <div v-if="isLoading"
+                    class="w-full h-full bg-[#121212] opacity-60 rounded-[1.25rem] absolute top-0 left-0 z-20 flex justify-center items-center">
+                    <NuxtImg src="/icons/loading.svg" alt="logo" class="w-[3rem] h-auto" />
+                </div>
+            </client-only>
             <slot />
         </div>
     </section>

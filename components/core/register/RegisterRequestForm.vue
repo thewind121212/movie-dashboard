@@ -2,6 +2,10 @@
 import { Form, Field, ErrorMessage } from 'vee-validate';
 import { toTypedSchema } from '@vee-validate/zod';
 import * as zod from 'zod';
+import { useAuthLoading } from '~/store/authLoading';
+import { sendRegisterRequest } from '~/actions/register.action'
+
+const authLoading = useAuthLoading()
 
 
 const validationSchema = toTypedSchema(
@@ -9,8 +13,18 @@ const validationSchema = toTypedSchema(
         email: zod.string({ message: '*Email is required' }).min(1, { message: 'This is required' }).email({ message: 'Must be a valid email' }),
     })
 );
-function onSubmit(values) {
-    console.log(JSON.stringify(values));
+const emit = defineEmits(['setPhase'])
+
+
+async function onSubmit(values) {
+    const {email} = values
+
+    authLoading.setLoading(true)
+    const result = await sendRegisterRequest(email)
+    if (result) {
+        emit('setPhase', 'EMAIL_REVIEW')
+    }
+    authLoading.setLoading(false)
 }
 </script>
 
