@@ -21,6 +21,7 @@
     "vue": "latest",
     "vue-router": "latest",
     "vue3-lottie": "^3.3.1",
+    "vue3-toastify": "^0.2.8",
     "zod": "^3.24.2"
   }
 }

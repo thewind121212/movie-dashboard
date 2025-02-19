@@ -3,6 +3,7 @@ import { Form, Field, ErrorMessage } from 'vee-validate';
 import { toTypedSchema } from '@vee-validate/zod';
 import * as zod from 'zod';
 import { useAuthLoading } from '~/store/authLoading';
+import { sendRegisterRequest } from '~/actions/register.action'
 
 const authLoading = useAuthLoading()
 
@@ -12,22 +13,17 @@ const validationSchema = toTypedSchema(
         email: zod.string({ message: '*Email is required' }).min(1, { message: 'This is required' }).email({ message: 'Must be a valid email' }),
     })
 );
+const emit = defineEmits(['setPhase'])
+
 
 async function onSubmit(values) {
-    authLoading.setLoading(true)
-    await new Promise((resolve) => setTimeout(resolve, 2000))
-    const res = await $fetch('/api/auth/registerRequest',
-        {
-            method: 'POST',
-            headers: {
-                'x-api-token': '123456'
-            },
-            body: {
-                email: values.email,
-            }
+    const {email} = values
 
-        }
-    )
+    authLoading.setLoading(true)
+    const result = await sendRegisterRequest(email)
+    if (result) {
+        emit('setPhase', 'EMAIL_REVIEW')
+    }
     authLoading.setLoading(false)
 }
 </script>
