@@ -1,5 +1,6 @@
 
 import { getErrorMessage } from "#imports"
+import { pushSuccessToast } from "../utils/toastNotification"
 
 export const sendRegisterRequest = async (email: string): Promise<boolean> => {
     try {
@@ -12,32 +13,34 @@ export const sendRegisterRequest = async (email: string): Promise<boolean> => {
             }
         )
 
-        useNuxtApp().$toast.success('Register request created successfully!', {
-            dangerouslyHTMLString: true,
-            autoClose: 2000,
-            progressStyle: {
-                background: '#3AAA78',
-            },
-            toastStyle: {
-                background: 'linear-gradient(90deg, hsla(150, 55%, 96%, 1) 0%, hsla(0, 0%, 100%, 1) 100%, hsla(0, 0%, 100%, 1) 100%)',
-                FontFace: 'Shatoshi',
-            },
-        })
-
+        pushSuccessToast('Register request created successfully!')
         return true
-
     } catch (error: any) {
-        useNuxtApp().$toast.error(getErrorMessage(error), {
-            dangerouslyHTMLString: true,
-            autoClose: 2000,
-            progressStyle: {
-                background: '#F67280',
-            },
-            toastStyle: {
-                background: 'linear-gradient(90deg, hsla(356, 100%, 97%, 1) 0%, hsla(0, 0%, 100%, 1) 100%, hsla(0, 0%, 100%, 1) 100%)',
-                FontFace: 'Shatoshi',
-            },
-        })
+        pushErrorToast(getErrorMessage(error))
+        return false
+    }
+
+}
+
+
+export const register = async (email: string, token: string, name: string, password: string): Promise<boolean> => {
+    try {
+        await $fetch('/api/auth/register',
+            {
+                method: 'POST',
+                body: {
+                    email,
+                    token,
+                    name,
+                    password
+                }
+            }
+        )
+
+        pushSuccessToast('Register request created successfully!')
+        return true
+    } catch (error: any) {
+        pushErrorToast(getErrorMessage(error))
         return false
     }
 

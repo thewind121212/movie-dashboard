@@ -18,7 +18,6 @@ const changeRegisterPhase = (phase: RegisterPhase) => {
     registerPhase.value = phase
 }
 
-console.log(validState.value.email)
 
 onMounted(() => {
     if (validState.value.error && route.query.p && !validState.value.email) {

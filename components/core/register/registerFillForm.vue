@@ -2,6 +2,8 @@
 import { Form, Field, ErrorMessage } from 'vee-validate';
 import { toTypedSchema } from '@vee-validate/zod';
 import * as zod from 'zod';
+import { register } from '~/actions/register.action'
+import { useAuthLoading } from '~/store/authLoading';
 
 
 defineProps({
@@ -10,6 +12,9 @@ defineProps({
 
 
 const showPassword = ref(false);
+const authLoading = useAuthLoading()
+const  route = useRoute()
+
 
 const validationSchema = toTypedSchema(
     zod.object({
@@ -24,14 +29,15 @@ const validationSchema = toTypedSchema(
 );
 
 
-onMounted(() => {
-
-})
 
 
+const onSubmitFillRegister = async (values) => {
+    const { email, fullname, password } = values
+    const token = route.query.p
 
-const onSubmitFillRegister = (values) => {
-    console.log(values)
+    authLoading.setLoading(true)
+    const result = await register(email, token, fullname, password)
+    authLoading.setLoading(false)
 }
 
 </script>
