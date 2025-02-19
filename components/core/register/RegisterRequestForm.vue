@@ -1,5 +1,5 @@
 <script setup>
-import { Form, Field, ErrorMessage } from 'vee-validate';
+import { Form as VeeForm, Field, ErrorMessage } from 'vee-validate';
 import { toTypedSchema } from '@vee-validate/zod';
 import * as zod from 'zod';
 import { useAuthLoading } from '~/store/authLoading';
@@ -17,7 +17,7 @@ const emit = defineEmits(['setPhase'])
 
 
 async function onSubmit(values) {
-    const {email} = values
+    const { email } = values
 
     authLoading.setLoading(true)
     const result = await sendRegisterRequest(email)
@@ -31,14 +31,14 @@ async function onSubmit(values) {
 
 
 <template>
-    <div class="w-full h-auto flex flex-col gap-[2rem] items-center">
+    <div class="w-full h-auto flex flex-col gap-[2rem] items-center bg-white relative z-20">
         <div class="login-header text-center flex flex-col gap-[0.75rem] items-center">
             <h1 class="text-[#121212] text-[3rem] leading-[3rem] font-noto">Get started</h1>
             <p class="text-[#3D3D3D] text-[1rem] leading-[1.5rem] font-shatoshi w-[70%] text-center">To begin, please
                 enter your email
                 address. We will then send a verification email to ensure its accuracy.</p>
         </div>
-        <Form :validation-schema="validationSchema" @submit="onSubmit"
+        <VeeForm :validation-schema="validationSchema" @submit="onSubmit" 
             class="w-[60%] h-auto flex flex-col gap-[2.5rem] font-shatoshi">
             <div class="w-full h-auto flex flex-col gap-[1rem]">
                 <div class="w-full h-auto flex flex-col gap-2">
@@ -63,6 +63,6 @@ async function onSubmit(values) {
                     Sign Up With Google
                 </button>
             </div>
-        </Form>
+        </VeeForm>
     </div>
 </template>
