@@ -27,7 +27,7 @@ export const sendRegisterRequest = async (email: string): Promise<boolean> => {
         return true
 
     } catch (error: any) {
-        useNuxtApp().$toast.info(getErrorMessage(error), {
+        useNuxtApp().$toast.error(getErrorMessage(error), {
             dangerouslyHTMLString: true,
             autoClose: 2000,
             progressStyle: {

@@ -2,18 +2,35 @@
 import RegisterRequest from './RegisterRequestForm.vue';
 import RegisterFillForm from './RegisterFillForm.vue';
 import RegisterResponse from './RegisterResponse.vue';
+import { userRegisterTokenError } from '~/composables/useRegisterTokenError';
 
 const RegisterReview = defineAsyncComponent(() => import('./RegisterReview.vue'))
-type RegisterPhase = 'REGISTER' | 'EMAIL_REVIEW' | 'SIGN_UP_PROCESSING' | 'SIGN_UP_RESPONSE'
+type RegisterPhase = 'INIT' | 'REGISTER' | 'EMAIL_REVIEW' | 'SIGN_UP_PROCESSING' | 'SIGN_UP_RESPONSE'
+
+const { validState } = userRegisterTokenError()
+
 
 const router = useRouter()
-
-
-const registerPhase = ref<RegisterPhase>('REGISTER')
+const route = useRoute()
+const registerPhase = ref<RegisterPhase>('INIT')
 
 const changeRegisterPhase = (phase: RegisterPhase) => {
     registerPhase.value = phase
 }
+
+console.log(validState.value.email)
+
+onMounted(() => {
+    if (validState.value.error && route.query.p && !validState.value.email) {
+        registerPhase.value = 'SIGN_UP_RESPONSE'
+        return
+    }
+    if (!validState.value.error && route.query.p && validState.value.email) {
+        registerPhase.value = 'SIGN_UP_PROCESSING'
+        return
+    }
+    registerPhase.value = 'REGISTER'
+})
 
 
 </script>
@@ -29,16 +46,23 @@ const changeRegisterPhase = (phase: RegisterPhase) => {
             <h2 class="font-[400] font-shatoshi text-[1.375rem] leading-[1.5rem] text-[#121212]">Wliafdew</h2>
         </div>
         <div class="relative w-full h-auto overflow-hidden">
-            <div class="w-[400%] flex justify-center items-center duration-300" :class="{
+            <div class="w-[400%] flex justify-center items-center duration-300 relative" :class="{
                 'translate-x-0': registerPhase === 'REGISTER',
                 '-translate-x-[25%]': registerPhase === 'EMAIL_REVIEW',
                 'transform -translate-x-[50%]': registerPhase === 'SIGN_UP_PROCESSING',
                 'transform -translate-x-[75%]': registerPhase === 'SIGN_UP_RESPONSE',
             }">
-                <RegisterRequest @setPhase="changeRegisterPhase" />
-                <RegisterReview @setPhase="changeRegisterPhase" />
-                <RegisterFillForm @setPhase="changeRegisterPhase" />
-                <RegisterResponse @setPhase="changeRegisterPhase" status="INTERNAL_ERROR" />
+                <div class="w-[25%] h-full absolute left-0 flex justify-center items-center z-10">
+                    <NuxtImg src="/icons/loading.svg" alt="logo" class="w-[3rem] h-auto" />
+                </div>
+                <RegisterRequest @setPhase="changeRegisterPhase"
+                    v-bind:class="registerPhase !== 'REGISTER' && 'opacity-0'" />
+                <RegisterReview @setPhase="changeRegisterPhase"
+                    v-bind:class="registerPhase !== 'EMAIL_REVIEW' && 'opacity-0'" />
+                <RegisterFillForm @setPhase="changeRegisterPhase"
+                    v-bind:class="registerPhase !== 'SIGN_UP_PROCESSING' && 'opacity-0'" :email="validState.email" />
+                <RegisterResponse @setPhase="changeRegisterPhase" status="FAILED" :message="validState.message"
+                    v-bind:class="registerPhase !== 'SIGN_UP_RESPONSE' && 'opacity-0'" />
             </div>
         </div>
         <div class="footer-auth">

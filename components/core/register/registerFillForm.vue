@@ -4,6 +4,11 @@ import { toTypedSchema } from '@vee-validate/zod';
 import * as zod from 'zod';
 
 
+defineProps({
+    email: String
+})
+
+
 const showPassword = ref(false);
 
 const validationSchema = toTypedSchema(
@@ -17,6 +22,18 @@ const validationSchema = toTypedSchema(
         path: ['repeatPassword'],
     })
 );
+
+
+onMounted(() => {
+
+})
+
+
+
+const onSubmitFillRegister = (values) => {
+    console.log(values)
+}
+
 </script>
 
 
@@ -29,15 +46,17 @@ const validationSchema = toTypedSchema(
                 your registration, please provide the information requested below.
             </p>
         </div>
-        <Form :validation-schema="validationSchema" @submit="onSubmit"
+        <Form :validation-schema="validationSchema" @submit="onSubmitFillRegister"
             class="w-[60%] h-auto flex flex-col gap-[2.5rem] font-shatoshi">
             <div class="w-full h-auto flex flex-col gap-[1rem]">
                 <!-- email field -->
                 <div class="w-full h-auto flex flex-col gap-2">
                     <label for="email" class="text-[#121212] text-[1rem] leading-[1.5rem]">Email</label>
-                    <Field name="email" type="email" v-slot="{ field }">
-                        <input type="email" v-bind="field"
-                            class="bg-[#F5F7FA] aspect-[430/48] rounded-[0.75rem] px-[1rem] py-[0.875rem] text-[#6B6B6B] text-[0.875rem] leading-[1.25rem]"
+                    <Field name="email" type="email" v-slot="{ field }" 
+                    :value="email">
+                        <input type="email" v-bind="field" readonly
+                            disabled
+                            class="bg-[#d1d1d1] aspect-[430/48] rounded-[0.75rem] px-[1rem] py-[0.875rem] text-[#6B6B6B] text-[0.875rem] leading-[1.25rem]"
                             placeholder="Enter Your Email" />
                     </Field>
                     <ErrorMessage name="email" class="text-red-400 text-[0.75rem] leading-[0.75rem]" />
