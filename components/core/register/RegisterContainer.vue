@@ -18,7 +18,6 @@ const changeRegisterPhase = (phase: RegisterPhase) => {
     registerPhase.value = phase
 }
 
-console.log(validState.value.email)
 
 onMounted(() => {
     if (validState.value.error && route.query.p && !validState.value.email) {
@@ -29,6 +28,7 @@ onMounted(() => {
         registerPhase.value = 'SIGN_UP_PROCESSING'
         return
     }
+    
     registerPhase.value = 'REGISTER'
 })
 
