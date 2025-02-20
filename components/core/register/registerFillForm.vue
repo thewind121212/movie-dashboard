@@ -29,6 +29,8 @@ const validationSchema = toTypedSchema(
 );
 
 
+const emit = defineEmits(['setPhase'])
+
 
 
 const onSubmitFillRegister = async (values) => {
@@ -37,6 +39,8 @@ const onSubmitFillRegister = async (values) => {
 
     authLoading.setLoading(true)
     const result = await register(email, token, fullname, password)
+        emit('setPhase', 'SIGN_UP_RESPONSE')
+    
     authLoading.setLoading(false)
 }
 

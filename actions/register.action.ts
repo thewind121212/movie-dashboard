@@ -37,7 +37,6 @@ export const register = async (email: string, token: string, name: string, passw
             }
         )
 
-        pushSuccessToast('Register request created successfully!')
         return true
     } catch (error: any) {
         pushErrorToast(getErrorMessage(error))

@@ -28,6 +28,7 @@ onMounted(() => {
         registerPhase.value = 'SIGN_UP_PROCESSING'
         return
     }
+    
     registerPhase.value = 'REGISTER'
 })
 
