@@ -2,17 +2,15 @@
 import { Form, Field, ErrorMessage } from 'vee-validate';
 import { toTypedSchema } from '@vee-validate/zod';
 import { useAuthLoading } from '~/store/authLoading';
-import { login } from '~/actions/auth.action';
+import { forgotPassword } from '~/actions/auth.action';
 import * as zod from 'zod';
 
 
 const authLoading = useAuthLoading()
-const rememberMe = ref(false);
 
 
-const toogleRememberMe = () => {
-    rememberMe.value = !rememberMe.value
-}
+const emits = defineEmits(['setPhase'])
+
 
 
 const validationSchema = toTypedSchema(
@@ -22,12 +20,11 @@ const validationSchema = toTypedSchema(
 );
 async function onSubmit(values) {
     authLoading.setLoading(true);
-    const isLoginSuccess = await login(values.email, values.password, rememberMe.value);
-    authLoading.setLoading(false);
-    if (isLoginSuccess) {
-        //redirect to dashboard
-        await navigateTo('/')
+    const isValid = await forgotPassword(values.email);
+    if (isValid) {
+        emits('setPhase')
     }
+    authLoading.setLoading(false);
 }
 </script>
 

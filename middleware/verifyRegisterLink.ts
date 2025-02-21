@@ -1,8 +1,8 @@
-import { userRegisterTokenError } from '~/composables/useRegisterTokenError'
+import { useVerifyLinkState } from '~/composables/useVerifyLink'
 
 export default defineNuxtRouteMiddleware(async (to) => {
     if (import.meta.server) {
-        const { setValid } = userRegisterTokenError()
+        const { setValid } = useVerifyLinkState()
         const runtimeConfig = useRuntimeConfig()
         //this is a server side middleware for valide register token 
         if (!to.query.p) {

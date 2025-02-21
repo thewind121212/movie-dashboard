@@ -2,19 +2,16 @@
 import { Form, Field, ErrorMessage } from 'vee-validate';
 import { toTypedSchema } from '@vee-validate/zod';
 import { useAuthLoading } from '~/store/authLoading';
-import { login } from '~/actions/auth.action';
+import { forgotSubmit } from '~/actions/auth.action';
 import * as zod from 'zod';
 
 
 const showPassword = ref(false);
 const authLoading = useAuthLoading()
-const rememberMe = ref(false);
+const route = useRoute()
+const { validState } = useVerifyLinkState()
 
-
-const toogleRememberMe = () => {
-    rememberMe.value = !rememberMe.value
-}
-
+const emits = defineEmits(['setPhase'])
 
 const validationSchema = toTypedSchema(
     zod.object({
@@ -27,19 +24,20 @@ const validationSchema = toTypedSchema(
 );
 async function onSubmit(values) {
     authLoading.setLoading(true);
-    const isLoginSuccess = await login(values.email, values.password, rememberMe.value);
-    authLoading.setLoading(false);
-    if (isLoginSuccess) {
-        //redirect to dashboard
-        await navigateTo('/')
+    const isChangePassSuccess = await forgotSubmit(route.query.p, values.password);
+    if (isChangePassSuccess) {
+        validState.value = true
+        emits('setPhase', 'RESET_RESULT')
     }
+
+    authLoading.setLoading(false);
 }
 </script>
 
 
 
 <template>
-    <div class="w-full h-auto flex flex-col gap-[2rem] items-center">
+    <div class="w-full h-auto flex flex-col gap-[2rem] items-center relative bg-white z-20">
         <div class="login-header text-center flex flex-col gap-[0.75rem]">
             <h1 class="text-[#121212] text-[3rem] leading-[3rem] font-noto">Reset Password</h1>
             <p class="text-[#3D3D3D] text-[1rem] leading-[1.5rem] font-shatoshi w-[70%] text-center m-auto">

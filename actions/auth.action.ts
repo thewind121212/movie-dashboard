@@ -67,3 +67,41 @@ export const login = async (email: string, password: string, remember: Boolean):
     }
 
 }
+
+
+
+export const forgotPassword = async (email: string): Promise<boolean> => {
+    try {
+        await $fetch('/api/auth/forgotPassword',
+            {
+                method: 'POST',
+                body: {
+                    email,
+                }
+            }
+        )
+        return true
+    } catch (error: any) {
+        pushErrorToast(getErrorMessage(error))
+        return false
+    }
+
+}
+
+export const forgotSubmit = async (token: string, password: string): Promise<boolean> => {
+    try {
+        await $fetch('/api/auth/forgotSubmit',
+            {
+                method: 'POST',
+                body: {
+                    token,
+                    password
+                }
+            }
+        )
+        return true
+    } catch (error: any) {
+        pushErrorToast(getErrorMessage(error))
+        return false
+    }
+}

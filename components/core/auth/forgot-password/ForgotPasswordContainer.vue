@@ -6,6 +6,9 @@ import AuthResponse from '~/components/shared/utils/authResponse.utils.vue';
 const router = useRouter()
 const forgotPasswordPhase = ref<'FORGOT_FORM' | 'EMAIL_SENT'>('FORGOT_FORM')
 
+onUnmounted(() => {
+    forgotPasswordPhase.value = 'FORGOT_FORM'
+})
 
 </script>
 
@@ -24,7 +27,7 @@ const forgotPasswordPhase = ref<'FORGOT_FORM' | 'EMAIL_SENT'>('FORGOT_FORM')
                     'translate-x-0': forgotPasswordPhase === 'FORGOT_FORM',
                     '-translate-x-1/2': forgotPasswordPhase === 'EMAIL_SENT',
                 }">
-                    <ForgotPasswordForm />
+                    <ForgotPasswordForm @set-phase="forgotPasswordPhase = 'EMAIL_SENT'" />
                     <AuthResponse :heading="'Email Submitted'"
                         :content="'An email containing instructions to reset your password has been sent. Please check your inbox and follow the link'"
                         :animationConfig="{ url: '/animations/successed.json', heigh: 90, width: 90 }" />
