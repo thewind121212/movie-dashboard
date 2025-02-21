@@ -1,5 +1,5 @@
-export const userRegisterTokenError = () => {
-    const validState = useState('registerTokenError', () => ({
+export const useVerifyLinkState = () => {
+    const validState = useState('verifyLinkToken', () => ({
         message: '',
         error: false,
         email: ''
@@ -13,8 +13,15 @@ export const userRegisterTokenError = () => {
         }
     };
 
+    const resetDefault = () => {
+        validState.value.error = false;
+        validState.value.message = '';
+        validState.value.email
+    }
+
     return {
         validState,
-        setValid
+        setValid,
+        resetDefault
     };
 }

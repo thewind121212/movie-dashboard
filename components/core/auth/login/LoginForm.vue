@@ -26,7 +26,7 @@ const validationSchema = toTypedSchema(
 );
 async function onSubmit(values) {
     authLoading.setLoading(true);
-    const isLoginSuccess =  await login(values.email, values.password, rememberMe.value);
+    const isLoginSuccess = await login(values.email, values.password, rememberMe.value);
     authLoading.setLoading(false);
     if (isLoginSuccess) {
         //redirect to dashboard
@@ -70,15 +70,16 @@ async function onSubmit(values) {
             <div class="h-auto w-full flex justify-between items-center">
                 <div class="w-full h-auto flex justify-start items-center gap-[0.625rem]">
                     <Field name="remember" type="checkbox" v-slot="{ field }" :value="true" :unchecked-value="false">
-                        <input type="checkbox" name="remember" v-bind="field" :checked="rememberMe" @change="toogleRememberMe" />
-                        <label for="remember"
-                            v-on:click="toogleRememberMe"
+                        <input type="checkbox" name="remember" v-bind="field" :checked="rememberMe"
+                            @change="toogleRememberMe" />
+                        <label for="remember" v-on:click="toogleRememberMe"
                             class="text-[#3D3D3D] text-[0.875rem] leading-[1.25rem] cursor-pointer">Remember
                             Me</label>
                     </Field>
                 </div>
-                <button @click="router.push('/forgot_password')" class="text-[0.875rem] leading-[1.25rem] text-[#3D3D3D] text-nowrap cursor-pointer">Forgot Password
-                </button>
+                <h3 @click="router.push('/forgot_password')"
+                    class="text-[0.875rem] leading-[1.25rem] text-[#3D3D3D] text-nowrap cursor-pointer">Forgot Password
+                </h3>
             </div>
         </div>
         <div class="submit-action w-full flex flex-col gap-[0.75rem]">

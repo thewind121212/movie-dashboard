@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import RegisterRequest from './RegisterRequestForm.vue';
 import RegisterFillForm from './RegisterFillForm.vue';
-import { userRegisterTokenError } from '~/composables/useRegisterTokenError';
+import { useVerifyLinkState } from '~/composables/useVerifyLink';
 import AuthResponse from '~/components/shared/utils/authResponse.utils.vue';
 
 type RegisterPhase = 'INIT' | 'REGISTER' | 'EMAIL_REVIEW' | 'SIGN_UP_PROCESSING' | 'SIGN_UP_RESPONSE'
 
-const { validState } = userRegisterTokenError()
+const { validState,  resetDefault } = useVerifyLinkState()
 
 
 
@@ -30,6 +30,11 @@ onMounted(() => {
     }
 
     registerPhase.value = 'REGISTER'
+})
+
+onBeforeUnmount(() => {
+    registerPhase.value = 'INIT'
+    resetDefault()
 })
 
 

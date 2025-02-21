@@ -1,7 +1,7 @@
 <script setup lang="ts">
 definePageMeta({
   middleware: [
-    'auth',
+    'verify-register-link',
   ],
 });
 
