@@ -1,10 +1,19 @@
 <script setup>
 import { Form, Field, ErrorMessage } from 'vee-validate';
 import { toTypedSchema } from '@vee-validate/zod';
+import { useAuthLoading } from '~/store/authLoading';
+import { login } from '~/actions/auth.action';
 import * as zod from 'zod';
 
 
 const showPassword = ref(false);
+const authLoading = useAuthLoading()
+const rememberMe = ref(false);
+
+
+const toogleRememberMe = () => {
+    rememberMe.value = !rememberMe.value
+}
 
 
 const validationSchema = toTypedSchema(
@@ -14,8 +23,14 @@ const validationSchema = toTypedSchema(
         remember: zod.boolean().default(false),
     })
 );
-function onSubmit(values) {
-    console.log(JSON.stringify(values));
+async function onSubmit(values) {
+    authLoading.setLoading(true);
+    const isLoginSuccess =  await login(values.email, values.password, rememberMe.value);
+    authLoading.setLoading(false);
+    if (isLoginSuccess) {
+        //redirect to dashboard
+        await navigateTo('/')
+    }
 }
 </script>
 
@@ -54,8 +69,9 @@ function onSubmit(values) {
             <div class="h-auto w-full flex justify-between items-center">
                 <div class="w-full h-auto flex justify-start items-center gap-[0.625rem]">
                     <Field name="remember" type="checkbox" v-slot="{ field }" :value="true" :unchecked-value="false">
-                        <input type="checkbox" name="remember" v-bind="field" :value="true" ref="" />
+                        <input type="checkbox" name="remember" v-bind="field" :checked="rememberMe" @change="toogleRememberMe" />
                         <label for="remember"
+                            v-on:click="toogleRememberMe"
                             class="text-[#3D3D3D] text-[0.875rem] leading-[1.25rem] cursor-pointer">Remember
                             Me</label>
                     </Field>

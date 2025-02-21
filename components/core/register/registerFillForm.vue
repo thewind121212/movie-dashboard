@@ -2,7 +2,7 @@
 import { Form, Field, ErrorMessage } from 'vee-validate';
 import { toTypedSchema } from '@vee-validate/zod';
 import * as zod from 'zod';
-import { register } from '~/actions/register.action'
+import { register } from '~/actions/auth.action'
 import { useAuthLoading } from '~/store/authLoading';
 
 
@@ -104,8 +104,8 @@ const onSubmitFillRegister = async (values) => {
                 <div class="w-full h-auto flex flex-col gap-2">
                     <label for="repeatPassword" class="text-[#121212] text-[1rem] leading-[1.5rem]">Confirm
                         Password</label>
-                    <Field name="repeatPassword" type="text" v-slot="{ field }">
-                        <input type="text" v-bind="field"
+                    <Field name="repeatPassword" type="password" v-slot="{ field }">
+                        <input type="password" v-bind="field"
                             class="bg-[#F5F7FA] aspect-[430/48] rounded-[0.75rem] px-[1rem] py-[0.875rem] text-[#6B6B6B] text-[0.875rem] leading-[1.25rem]"
                             placeholder="Confirm Password" />
                     </Field>
