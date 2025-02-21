@@ -3,7 +3,7 @@ import { Form as VeeForm, Field, ErrorMessage } from 'vee-validate';
 import { toTypedSchema } from '@vee-validate/zod';
 import * as zod from 'zod';
 import { useAuthLoading } from '~/store/authLoading';
-import { sendRegisterRequest } from '~/actions/register.action'
+import { sendRegisterRequest } from '~/actions/auth.action'
 
 const authLoading = useAuthLoading()
 
