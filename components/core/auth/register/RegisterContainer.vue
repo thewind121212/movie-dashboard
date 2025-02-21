@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import RegisterRequest from './RegisterRequestForm.vue';
 import RegisterFillForm from './RegisterFillForm.vue';
-import RegisterResponse from './RegisterResponse.vue';
 import { userRegisterTokenError } from '~/composables/useRegisterTokenError';
+import AuthResponse from '~/components/shared/utils/authResponse.utils.vue';
 
-const RegisterReview = defineAsyncComponent(() => import('./RegisterReview.vue'))
 type RegisterPhase = 'INIT' | 'REGISTER' | 'EMAIL_REVIEW' | 'SIGN_UP_PROCESSING' | 'SIGN_UP_RESPONSE'
 
 const { validState } = userRegisterTokenError()
+
 
 
 const router = useRouter()
@@ -28,7 +28,7 @@ onMounted(() => {
         registerPhase.value = 'SIGN_UP_PROCESSING'
         return
     }
-    
+
     registerPhase.value = 'REGISTER'
 })
 
@@ -57,11 +57,15 @@ onMounted(() => {
                 </div>
                 <RegisterRequest @setPhase="changeRegisterPhase"
                     v-bind:class="registerPhase !== 'REGISTER' && 'opacity-0'" />
-                <RegisterReview @setPhase="changeRegisterPhase"
+                <AuthResponse :heading="'Email Submitted'"
+                    :content="'Your email has been duly noted. We appreciate your submission and will respond via email as soon as possible.'"
+                    :animationConfig="{ url: '/animations/waiting.json', heigh: 200, width: 200 }"
                     v-bind:class="registerPhase !== 'EMAIL_REVIEW' && 'opacity-0'" />
                 <RegisterFillForm @setPhase="changeRegisterPhase"
                     v-bind:class="registerPhase !== 'SIGN_UP_PROCESSING' && 'opacity-0'" :email="validState.email" />
-                <RegisterResponse @setPhase="changeRegisterPhase" status="FAILED" :message="validState.message"
+                <AuthResponse :heading="validState.error ? 'Account Create Error' : 'Account Create Success'" :content="validState.message === 'Register request is valid' ?
+                    'Your account have been create successfully wellcome aboard!' : validState.message"
+                    :animationConfig="{ url: validState.error ? '/animations/fail.json' : '/animations/successed.json', heigh: 90, width: 90 }"
                     v-bind:class="registerPhase !== 'SIGN_UP_RESPONSE' && 'opacity-0'" />
             </div>
         </div>

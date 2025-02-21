@@ -1,13 +1,46 @@
+
+
 <script setup lang="ts">
 const route = useRoute()
 import { useAuthLoading } from '~/store/authLoading';
 import { computed } from 'vue';
 
-const authLoadingStore = useAuthLoading()
+defineProps({
+    currentAuthPath: String as PropType<'login' | 'register' | 'forgotPassword' | 'resetPassword'>
+})
 
+const authLoadingStore = useAuthLoading()
 const isLoading = computed(() => authLoadingStore.isLoading)
 
-const currentAuthPath = route.path.replace('/', '') as 'login' | 'register'
+const images = {
+    login: '/images/login-image.jpg',
+    register: '/images/register-image.png',
+    forgotPassword: '/images/forgot-password.png',
+    resetPassword: '/images/reset-password.png'
+}
+
+const header: Record<'login' | 'register' | 'forgotPassword' | 'resetPassword', {
+    id: string,
+    textArray: string[]
+}> = {
+    login: {
+        id: 'login',
+        textArray: ['MOVIE', 'EVERY MOVIE', 'YOUR WANT'],
+    }, 
+     register:
+    {
+        id: 'register',
+        textArray: ['EASY', 'CREATE HLS', 'STREAMING'],
+    },
+    forgotPassword: {
+        id: 'forgotPassword',
+        textArray: ['SUPPORT', 'MULTI-DEVICE'],
+    },
+    resetPassword: {
+        id: 'resetPassword',
+        textArray: ['ENJOY', 'YOU MOVIE', 'TODAY'],
+    }
+}
 
 
 </script>
@@ -16,7 +49,7 @@ const currentAuthPath = route.path.replace('/', '') as 'login' | 'register'
 <template>
     <section class="w-screen h-screen flex justify-start items-start p-[0.75rem] select-none gap-[0.75rem]">
         <div class="rounded-[1.25rem] overflow-hidden h-full min-w-[550px] w-1/2 relative">
-            <NuxtImg :src="currentAuthPath === 'login' ? '/images/login-image.jpg' : '/images/register-image.png'"
+            <NuxtImg :src="images[currentAuthPath!]"
                 alt="login" class="w-full h-full object-cover" />
             <div class="absolute w-full h-full bg-[#000] left-0 top-0 opacity-[0.35] z-10"></div>
             <div class="w-full h-full z-20 absolute top-0 left-0 flex flex-col">
@@ -28,9 +61,7 @@ const currentAuthPath = route.path.replace('/', '') as 'login' | 'register'
                 </div>
                 <div class="pl-[3rem] pb-[3rem] mt-auto flex flex-col gap-[1rem]">
                     <div class="font-noto text-white text-[4.5rem] leading-[4.5rem] font-[400]">
-                        <h1 class="w-full h-auto">{{ currentAuthPath === 'login' ? 'Upload' : 'Easy' }}</h1>
-                        <h1 class="w-full h-auto">{{ currentAuthPath === 'login' ? 'Every Movie' : 'Create HLS' }} </h1>
-                        <h1 class="w-full h-auto">{{ currentAuthPath === 'login' ? 'Your Want' : 'Streaming' }}</h1>
+                        <h1 class="w-full h-auto" v-for="(item, index) in header[currentAuthPath!].textArray" :key="index + currentAuthPath!">{{ item }}</h1>
                     </div>
                     <div class="w-3/5">
                         <p class="font-shatoshi text-[#ffffff] opacity-[0.88] text-[1rem] leading-[1.625rem]">As we
