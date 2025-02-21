@@ -6,7 +6,7 @@ definePageMeta({
 });
 
 
-import RegisterWrap from '~/components/core/register/RegisterContainer.vue';
+import RegisterWrap from '~/components/core/auth/register/RegisterContainer.vue';
 
 
 
@@ -14,7 +14,7 @@ import RegisterWrap from '~/components/core/register/RegisterContainer.vue';
 </script>
 
 <template>
-    <NuxtLayout name="auth-layout">
+    <NuxtLayout name="auth-layout" :currentAuthPath="'register'">
         <RegisterWrap />
     </NuxtLayout>
 </template>

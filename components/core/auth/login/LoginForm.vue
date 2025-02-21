@@ -9,6 +9,7 @@ import * as zod from 'zod';
 const showPassword = ref(false);
 const authLoading = useAuthLoading()
 const rememberMe = ref(false);
+const router = useRouter()
 
 
 const toogleRememberMe = () => {
@@ -76,8 +77,8 @@ async function onSubmit(values) {
                             Me</label>
                     </Field>
                 </div>
-                <p class="text-[0.875rem] leading-[1.25rem] text-[#3D3D3D] text-nowrap cursor-pointer">Forgot Password
-                </p>
+                <button @click="router.push('/forgot_password')" class="text-[0.875rem] leading-[1.25rem] text-[#3D3D3D] text-nowrap cursor-pointer">Forgot Password
+                </button>
             </div>
         </div>
         <div class="submit-action w-full flex flex-col gap-[0.75rem]">
