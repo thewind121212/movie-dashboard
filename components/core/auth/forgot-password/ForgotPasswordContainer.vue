@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import ForgotPasswordForm from './ForgotPasswordForm.vue';
-import AuthResponse from '~/components/shared/utils/authResponse.utils.vue';
+import AuthResponse from '~/components/shared/utils/AuthResponse.utils.vue';
 
 
 const router = useRouter()

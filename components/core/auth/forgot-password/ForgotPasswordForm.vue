@@ -4,6 +4,7 @@ import { toTypedSchema } from '@vee-validate/zod';
 import { useAuthLoading } from '~/store/authLoading';
 import { forgotPassword } from '~/actions/auth.action';
 import * as zod from 'zod';
+import CommonField from '~/components/shared/input/CommonField.vue';
 
 
 const authLoading = useAuthLoading()
@@ -42,15 +43,9 @@ async function onSubmit(values) {
         <Form :validation-schema="validationSchema" @submit="onSubmit"
             class="w-[60%] h-auto flex flex-col gap-[2rem] font-shatoshi">
             <div class="w-full h-auto flex flex-col gap-[1rem]">
-                <div class="w-full h-auto flex flex-col gap-2">
-                    <label for="email" class="text-[#121212] text-[1rem] leading-[1.5rem]">Email</label>
-                    <Field name="email" type="email" v-slot="{ field }">
-                        <input type="email" v-bind="field"
-                            class="bg-[#F5F7FA] aspect-[430/48] rounded-[0.75rem] px-[1rem] py-[0.875rem] text-[#6B6B6B] text-[0.875rem] leading-[1.25rem]"
-                            placeholder="Enter Your Email" />
-                    </Field>
-                    <ErrorMessage name="email" class="text-red-400 text-[0.75rem] leading-[0.75rem]" />
-                </div>
+                <!-- email field -->
+                <CommonField htmlFor="email" fieldName="email" type="email" label="Email" placeholder="Enter Your Email"
+                    fieldType="email" />
             </div>
             <div class="submit-action w-full flex flex-col gap-[0.75rem]">
                 <button

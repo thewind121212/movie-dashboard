@@ -2,7 +2,7 @@
 import RegisterRequest from './RegisterRequestForm.vue';
 import RegisterFillForm from './RegisterFillForm.vue';
 import { useVerifyLinkState } from '~/composables/useVerifyLink';
-import AuthResponse from '~/components/shared/utils/authResponse.utils.vue';
+import AuthResponse from '~/components/shared/utils/AuthResponse.utils.vue';
 
 type RegisterPhase = 'INIT' | 'REGISTER' | 'EMAIL_REVIEW' | 'SIGN_UP_PROCESSING' | 'SIGN_UP_RESPONSE'
 
@@ -34,7 +34,6 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
     registerPhase.value = 'INIT'
-    resetDefault()
 })
 
 
