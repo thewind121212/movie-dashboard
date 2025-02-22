@@ -77,6 +77,8 @@ Check out the [deployment documentation](https://nuxt.com/docs/getting-started/d
 ```
 movie-dashboard
 ├─ README.md
+├─ actions
+│  └─ auth.action.ts
 ├─ app.vue
 ├─ assets
 │  └─ css
@@ -84,29 +86,52 @@ movie-dashboard
 │     └─ fonts.css
 ├─ components
 │  ├─ core
-│  │  ├─ login
-│  │  │  ├─ LoginForm.vue
-│  │  │  └─ LoginWrap.vue
-│  │  └─ register
-│  │     ├─ RegisterFillForm.vue
-│  │     ├─ RegisterInitForm.vue
-│  │     ├─ RegisterResponse.vue
-│  │     ├─ RegisterReview.vue
-│  │     └─ RegisterWrap.vue
+│  │  └─ auth
+│  │     ├─ 2fa
+│  │     │  └─ OTPFill.vue
+│  │     ├─ forgot-password
+│  │     │  ├─ ForgotPasswordContainer.vue
+│  │     │  └─ ForgotPasswordForm.vue
+│  │     ├─ login
+│  │     │  ├─ LoginContainer.vue
+│  │     │  └─ LoginForm.vue
+│  │     ├─ register
+│  │     │  ├─ RegisterContainer.vue
+│  │     │  ├─ RegisterFillForm.vue
+│  │     │  └─ RegisterRequestForm.vue
+│  │     └─ reset-password
+│  │        ├─ ResetPasswordContainer.vue
+│  │        └─ ResetPasswordForm.vue
 │  └─ shared
-│     └─ input
-│        ├─ Password.input.vue
-│        └─ Text.input.vue
+│     ├─ input
+│     │  ├─ CommonField.vue
+│     │  └─ PasswordField.vue
+│     ├─ toast
+│     │  ├─ ErrorToastNotification.vue
+│     │  ├─ InfoToastNotification.vue
+│     │  └─ SuccessToastNotification.vue
+│     └─ utils
+│        └─ AuthResponse.utils.vue
+├─ composables
+│  └─ useVerifyLink.ts
+├─ content
 ├─ layouts
 │  └─ Auth.layout.vue
+├─ middleware
+│  ├─ verifyRegisterLink.ts
+│  └─ verifyResetPassLink.ts
 ├─ nuxt.config.ts
 ├─ package-lock.json
 ├─ package.json
 ├─ pages
-│  ├─ Index.vue
-│  ├─ Login.vue
-│  └─ Register.vue
+│  ├─ forgot_password.vue
+│  ├─ index.vue
+│  ├─ login.vue
+│  ├─ register.vue
+│  ├─ reset_password.vue
+│  └─ test.vue
 ├─ plugins
+│  ├─ Vue3-toastify.client.ts
 │  └─ Vue3Lottie.client.ts
 ├─ public
 │  ├─ animations
@@ -116,362 +141,22 @@ movie-dashboard
 │  │  └─ waiting.json
 │  ├─ favicon.ico
 │  ├─ icons
+│  │  ├─ copy.svg
+│  │  ├─ error.svg
 │  │  ├─ eye-slash.svg
 │  │  ├─ eye.svg
 │  │  ├─ facebook.svg
 │  │  ├─ google.svg
+│  │  ├─ info.svg
 │  │  ├─ loading.svg
-│  │  └─ logo-dark.webp
+│  │  ├─ logo-dark.webp
+│  │  └─ success.svg
 │  ├─ images
+│  │  ├─ forgot-password.png
 │  │  ├─ image.png
 │  │  ├─ login-image.jpg
-│  │  └─ register-image.png
-│  ├─ robots.txt
-│  └─ static
-│     └─ fonts
-│        ├─ Satoshi-Black.woff2
-│        ├─ Satoshi-Bold.woff2
-│        ├─ Satoshi-Light.woff2
-│        ├─ Satoshi-Medium.woff2
-│        ├─ Satoshi-Regular.woff2
-│        └─ Satoshi-Variable.woff2
-├─ server
-│  └─ tsconfig.json
-├─ tailwind.config.js
-└─ tsconfig.json
-
-```
-```
-movie-dashboard
-├─ README.md
-├─ app.vue
-├─ assets
-│  └─ css
-│     ├─ app.css
-│     └─ fonts.css
-├─ components
-│  ├─ core
-│  │  ├─ login
-│  │  │  ├─ LoginContainer.vue
-│  │  │  └─ LoginForm.vue
-│  │  └─ register
-│  │     ├─ RegisterContainer.vue
-│  │     ├─ RegisterFillForm.vue
-│  │     ├─ RegisterFn.ts
-│  │     ├─ RegisterInitForm.vue
-│  │     ├─ RegisterResponse.vue
-│  │     └─ RegisterReview.vue
-│  └─ shared
-│     └─ input
-│        ├─ PasswordInput.vue
-│        └─ TextInput.vue
-├─ layouts
-│  └─ Auth.layout.vue
-├─ nuxt.config.ts
-├─ package-lock.json
-├─ package.json
-├─ pages
-│  ├─ Index.vue
-│  ├─ Login.vue
-│  └─ Register.vue
-├─ plugins
-│  └─ Vue3Lottie.client.ts
-├─ public
-│  ├─ animations
-│  │  ├─ InternalError.json
-│  │  ├─ fail.json
-│  │  ├─ successed.json
-│  │  └─ waiting.json
-│  ├─ favicon.ico
-│  ├─ icons
-│  │  ├─ eye-slash.svg
-│  │  ├─ eye.svg
-│  │  ├─ facebook.svg
-│  │  ├─ google.svg
-│  │  ├─ loading.svg
-│  │  └─ logo-dark.webp
-│  ├─ images
-│  │  ├─ image.png
-│  │  ├─ login-image.jpg
-│  │  └─ register-image.png
-│  ├─ robots.txt
-│  └─ static
-│     └─ fonts
-│        ├─ Satoshi-Black.woff2
-│        ├─ Satoshi-Bold.woff2
-│        ├─ Satoshi-Light.woff2
-│        ├─ Satoshi-Medium.woff2
-│        ├─ Satoshi-Regular.woff2
-│        └─ Satoshi-Variable.woff2
-├─ server
-│  └─ tsconfig.json
-├─ tailwind.config.js
-└─ tsconfig.json
-
-```
-```
-movie-dashboard
-├─ --dotenv
-│  └─ nuxt.config.ts
-├─ README.md
-├─ app.vue
-├─ assets
-│  └─ css
-│     ├─ app.css
-│     └─ fonts.css
-├─ components
-│  ├─ core
-│  │  ├─ login
-│  │  │  ├─ LoginContainer.vue
-│  │  │  └─ LoginForm.vue
-│  │  └─ register
-│  │     ├─ RegisterContainer.vue
-│  │     ├─ RegisterFillForm.vue
-│  │     ├─ RegisterFn.ts
-│  │     ├─ RegisterInitForm.vue
-│  │     ├─ RegisterResponse.vue
-│  │     └─ RegisterReview.vue
-│  └─ shared
-│     └─ input
-│        ├─ PasswordInput.vue
-│        └─ TextInput.vue
-├─ layouts
-│  └─ Auth.layout.vue
-├─ nuxt.config.ts
-├─ package-lock.json
-├─ package.json
-├─ pages
-│  ├─ Index.vue
-│  ├─ Login.vue
-│  └─ Register.vue
-├─ plugins
-│  └─ Vue3Lottie.client.ts
-├─ public
-│  ├─ animations
-│  │  ├─ InternalError.json
-│  │  ├─ fail.json
-│  │  ├─ successed.json
-│  │  └─ waiting.json
-│  ├─ favicon.ico
-│  ├─ icons
-│  │  ├─ eye-slash.svg
-│  │  ├─ eye.svg
-│  │  ├─ facebook.svg
-│  │  ├─ google.svg
-│  │  ├─ loading.svg
-│  │  └─ logo-dark.webp
-│  ├─ images
-│  │  ├─ image.png
-│  │  ├─ login-image.jpg
-│  │  └─ register-image.png
-│  ├─ robots.txt
-│  └─ static
-│     └─ fonts
-│        ├─ Satoshi-Black.woff2
-│        ├─ Satoshi-Bold.woff2
-│        ├─ Satoshi-Light.woff2
-│        ├─ Satoshi-Medium.woff2
-│        ├─ Satoshi-Regular.woff2
-│        └─ Satoshi-Variable.woff2
-├─ server
-│  └─ tsconfig.json
-├─ tailwind.config.js
-└─ tsconfig.json
-
-```
-```
-movie-dashboard
-├─ README.md
-├─ app.vue
-├─ assets
-│  └─ css
-│     ├─ app.css
-│     └─ fonts.css
-├─ components
-│  ├─ core
-│  │  ├─ login
-│  │  │  ├─ LoginContainer.vue
-│  │  │  └─ LoginForm.vue
-│  │  └─ register
-│  │     ├─ RegisterContainer.vue
-│  │     ├─ RegisterFillForm.vue
-│  │     ├─ RegisterFn.ts
-│  │     ├─ RegisterInitForm.vue
-│  │     ├─ RegisterResponse.vue
-│  │     └─ RegisterReview.vue
-│  └─ shared
-│     └─ input
-│        ├─ PasswordInput.vue
-│        └─ TextInput.vue
-├─ layouts
-│  └─ Auth.layout.vue
-├─ nuxt.config.ts
-├─ package-lock.json
-├─ package.json
-├─ pages
-│  ├─ Index.vue
-│  ├─ Login.vue
-│  └─ Register.vue
-├─ plugins
-│  └─ Vue3Lottie.client.ts
-├─ public
-│  ├─ animations
-│  │  ├─ InternalError.json
-│  │  ├─ fail.json
-│  │  ├─ successed.json
-│  │  └─ waiting.json
-│  ├─ favicon.ico
-│  ├─ icons
-│  │  ├─ eye-slash.svg
-│  │  ├─ eye.svg
-│  │  ├─ facebook.svg
-│  │  ├─ google.svg
-│  │  ├─ loading.svg
-│  │  └─ logo-dark.webp
-│  ├─ images
-│  │  ├─ image.png
-│  │  ├─ login-image.jpg
-│  │  └─ register-image.png
-│  ├─ robots.txt
-│  └─ static
-│     └─ fonts
-│        ├─ Satoshi-Black.woff2
-│        ├─ Satoshi-Bold.woff2
-│        ├─ Satoshi-Light.woff2
-│        ├─ Satoshi-Medium.woff2
-│        ├─ Satoshi-Regular.woff2
-│        └─ Satoshi-Variable.woff2
-├─ server
-│  ├─ routes
-│  │  └─ ping.ts
-│  └─ tsconfig.json
-├─ tailwind.config.js
-└─ tsconfig.json
-
-```
-```
-movie-dashboard
-├─ README.md
-├─ app.vue
-├─ assets
-│  └─ css
-│     ├─ app.css
-│     └─ fonts.css
-├─ components
-│  ├─ core
-│  │  ├─ login
-│  │  │  ├─ LoginContainer.vue
-│  │  │  └─ LoginForm.vue
-│  │  └─ register
-│  │     ├─ RegisterContainer.vue
-│  │     ├─ RegisterFillForm.vue
-│  │     ├─ RegisterFn.ts
-│  │     ├─ RegisterInitForm.vue
-│  │     ├─ RegisterResponse.vue
-│  │     └─ RegisterReview.vue
-│  └─ shared
-│     └─ input
-│        ├─ PasswordInput.vue
-│        └─ TextInput.vue
-├─ layouts
-│  └─ Auth.layout.vue
-├─ nuxt.config.ts
-├─ package-lock.json
-├─ package.json
-├─ pages
-│  ├─ Index.vue
-│  ├─ Login.vue
-│  └─ Register.vue
-├─ plugins
-│  └─ Vue3Lottie.client.ts
-├─ public
-│  ├─ animations
-│  │  ├─ InternalError.json
-│  │  ├─ fail.json
-│  │  ├─ successed.json
-│  │  └─ waiting.json
-│  ├─ favicon.ico
-│  ├─ icons
-│  │  ├─ eye-slash.svg
-│  │  ├─ eye.svg
-│  │  ├─ facebook.svg
-│  │  ├─ google.svg
-│  │  ├─ loading.svg
-│  │  └─ logo-dark.webp
-│  ├─ images
-│  │  ├─ image.png
-│  │  ├─ login-image.jpg
-│  │  └─ register-image.png
-│  ├─ robots.txt
-│  └─ static
-│     └─ fonts
-│        ├─ Satoshi-Black.woff2
-│        ├─ Satoshi-Bold.woff2
-│        ├─ Satoshi-Light.woff2
-│        ├─ Satoshi-Medium.woff2
-│        ├─ Satoshi-Regular.woff2
-│        └─ Satoshi-Variable.woff2
-├─ server
-│  ├─ api
-│  │  └─ ping.ts
-│  └─ tsconfig.json
-├─ tailwind.config.js
-└─ tsconfig.json
-
-```
-```
-movie-dashboard
-├─ README.md
-├─ app.vue
-├─ assets
-│  └─ css
-│     ├─ app.css
-│     └─ fonts.css
-├─ components
-│  ├─ core
-│  │  ├─ login
-│  │  │  ├─ LoginContainer.vue
-│  │  │  └─ LoginForm.vue
-│  │  └─ register
-│  │     ├─ RegisterContainer.vue
-│  │     ├─ RegisterFillForm.vue
-│  │     ├─ RegisterFn.ts
-│  │     ├─ RegisterInitForm.vue
-│  │     ├─ RegisterResponse.vue
-│  │     └─ RegisterReview.vue
-│  └─ shared
-│     └─ input
-│        ├─ PasswordInput.vue
-│        └─ TextInput.vue
-├─ layouts
-│  └─ Auth.layout.vue
-├─ nuxt.config.ts
-├─ package-lock.json
-├─ package.json
-├─ pages
-│  ├─ Index.vue
-│  ├─ Login.vue
-│  └─ Register.vue
-├─ plugins
-│  └─ Vue3Lottie.client.ts
-├─ public
-│  ├─ animations
-│  │  ├─ InternalError.json
-│  │  ├─ fail.json
-│  │  ├─ successed.json
-│  │  └─ waiting.json
-│  ├─ favicon.ico
-│  ├─ icons
-│  │  ├─ eye-slash.svg
-│  │  ├─ eye.svg
-│  │  ├─ facebook.svg
-│  │  ├─ google.svg
-│  │  ├─ loading.svg
-│  │  └─ logo-dark.webp
-│  ├─ images
-│  │  ├─ image.png
-│  │  ├─ login-image.jpg
-│  │  └─ register-image.png
+│  │  ├─ register-image.png
+│  │  └─ reset-password.png
 │  ├─ robots.txt
 │  └─ static
 │     └─ fonts
@@ -484,15 +169,26 @@ movie-dashboard
 ├─ server
 │  ├─ api
 │  │  └─ auth
+│  │     ├─ forgotPassword.ts
+│  │     ├─ forgotSubmit.ts
+│  │     ├─ login.ts
+│  │     ├─ register.ts
 │  │     └─ registerRequest.ts
 │  └─ tsconfig.json
+├─ store
+│  └─ authLoading.ts
 ├─ tailwind.config.js
-└─ tsconfig.json
+├─ tsconfig.json
+└─ utils
+   ├─ string.ts
+   └─ toastNotification.ts
 
 ```
 ```
 movie-dashboard
 ├─ README.md
+├─ actions
+│  └─ auth.action.ts
 ├─ app.vue
 ├─ assets
 │  └─ css
@@ -500,30 +196,53 @@ movie-dashboard
 │     └─ fonts.css
 ├─ components
 │  ├─ core
-│  │  ├─ login
-│  │  │  ├─ LoginContainer.vue
-│  │  │  └─ LoginForm.vue
-│  │  └─ register
-│  │     ├─ RegisterContainer.vue
-│  │     ├─ RegisterFillForm.vue
-│  │     ├─ RegisterFn.ts
-│  │     ├─ RegisterInitForm.vue
-│  │     ├─ RegisterResponse.vue
-│  │     └─ RegisterReview.vue
+│  │  └─ auth
+│  │     ├─ 2fa
+│  │     │  └─ OTPFill.vue
+│  │     ├─ forgot-password
+│  │     │  ├─ ForgotPasswordContainer.vue
+│  │     │  └─ ForgotPasswordForm.vue
+│  │     ├─ login
+│  │     │  ├─ LoginContainer.vue
+│  │     │  └─ LoginForm.vue
+│  │     ├─ register
+│  │     │  ├─ RegisterContainer.vue
+│  │     │  ├─ RegisterFillForm.vue
+│  │     │  └─ RegisterRequestForm.vue
+│  │     └─ reset-password
+│  │        ├─ ResetPasswordContainer.vue
+│  │        └─ ResetPasswordForm.vue
 │  └─ shared
-│     └─ input
-│        ├─ PasswordInput.vue
-│        └─ TextInput.vue
+│     ├─ input
+│     │  ├─ CommonField.vue
+│     │  ├─ OTPField.vue
+│     │  └─ PasswordField.vue
+│     ├─ toast
+│     │  ├─ ErrorToastNotification.vue
+│     │  ├─ InfoToastNotification.vue
+│     │  └─ SuccessToastNotification.vue
+│     └─ utils
+│        └─ AuthResponse.utils.vue
+├─ composables
+│  └─ useVerifyLink.ts
+├─ content
 ├─ layouts
 │  └─ Auth.layout.vue
+├─ middleware
+│  ├─ verifyRegisterLink.ts
+│  └─ verifyResetPassLink.ts
 ├─ nuxt.config.ts
 ├─ package-lock.json
 ├─ package.json
 ├─ pages
-│  ├─ Index.vue
-│  ├─ Login.vue
-│  └─ Register.vue
+│  ├─ forgot_password.vue
+│  ├─ index.vue
+│  ├─ login.vue
+│  ├─ register.vue
+│  ├─ reset_password.vue
+│  └─ test.vue
 ├─ plugins
+│  ├─ Vue3-toastify.client.ts
 │  └─ Vue3Lottie.client.ts
 ├─ public
 │  ├─ animations
@@ -533,16 +252,22 @@ movie-dashboard
 │  │  └─ waiting.json
 │  ├─ favicon.ico
 │  ├─ icons
+│  │  ├─ copy.svg
+│  │  ├─ error.svg
 │  │  ├─ eye-slash.svg
 │  │  ├─ eye.svg
 │  │  ├─ facebook.svg
 │  │  ├─ google.svg
+│  │  ├─ info.svg
 │  │  ├─ loading.svg
-│  │  └─ logo-dark.webp
+│  │  ├─ logo-dark.webp
+│  │  └─ success.svg
 │  ├─ images
+│  │  ├─ forgot-password.png
 │  │  ├─ image.png
 │  │  ├─ login-image.jpg
-│  │  └─ register-image.png
+│  │  ├─ register-image.png
+│  │  └─ reset-password.png
 │  ├─ robots.txt
 │  └─ static
 │     └─ fonts
@@ -555,9 +280,6012 @@ movie-dashboard
 ├─ server
 │  ├─ api
 │  │  └─ auth
+│  │     ├─ forgotPassword.ts
+│  │     ├─ forgotSubmit.ts
+│  │     ├─ login.ts
+│  │     ├─ register.ts
 │  │     └─ registerRequest.ts
 │  └─ tsconfig.json
+├─ store
+│  └─ authLoading.ts
 ├─ tailwind.config.js
-└─ tsconfig.json
+├─ tsconfig.json
+└─ utils
+   ├─ string.ts
+   └─ toastNotification.ts
+
+```
+```
+movie-dashboard
+├─ README.md
+├─ actions
+│  └─ auth.action.ts
+├─ app.vue
+├─ assets
+│  └─ css
+│     ├─ app.css
+│     └─ fonts.css
+├─ components
+│  ├─ core
+│  │  └─ auth
+│  │     ├─ 2fa
+│  │     │  └─ OTPFill.vue
+│  │     ├─ forgot-password
+│  │     │  ├─ ForgotPasswordContainer.vue
+│  │     │  └─ ForgotPasswordForm.vue
+│  │     ├─ login
+│  │     │  ├─ LoginContainer.vue
+│  │     │  └─ LoginForm.vue
+│  │     ├─ register
+│  │     │  ├─ RegisterContainer.vue
+│  │     │  ├─ RegisterFillForm.vue
+│  │     │  └─ RegisterRequestForm.vue
+│  │     └─ reset-password
+│  │        ├─ ResetPasswordContainer.vue
+│  │        └─ ResetPasswordForm.vue
+│  └─ shared
+│     ├─ input
+│     │  ├─ CommonField.vue
+│     │  ├─ OTPField.vue
+│     │  └─ PasswordField.vue
+│     ├─ toast
+│     │  ├─ ErrorToastNotification.vue
+│     │  ├─ InfoToastNotification.vue
+│     │  └─ SuccessToastNotification.vue
+│     └─ utils
+│        └─ AuthResponse.utils.vue
+├─ composables
+│  └─ useVerifyLink.ts
+├─ content
+├─ layouts
+│  └─ Auth.layout.vue
+├─ middleware
+│  ├─ verifyRegisterLink.ts
+│  └─ verifyResetPassLink.ts
+├─ nuxt.config.ts
+├─ package-lock.json
+├─ package.json
+├─ pages
+│  ├─ forgot_password.vue
+│  ├─ index.vue
+│  ├─ login.vue
+│  ├─ register.vue
+│  ├─ reset_password.vue
+│  └─ test.vue
+├─ plugins
+│  ├─ Vue3-toastify.client.ts
+│  └─ Vue3Lottie.client.ts
+├─ public
+│  ├─ animations
+│  │  ├─ InternalError.json
+│  │  ├─ fail.json
+│  │  ├─ successed.json
+│  │  └─ waiting.json
+│  ├─ favicon.ico
+│  ├─ icons
+│  │  ├─ copy.svg
+│  │  ├─ error.svg
+│  │  ├─ eye-slash.svg
+│  │  ├─ eye.svg
+│  │  ├─ facebook.svg
+│  │  ├─ google.svg
+│  │  ├─ info.svg
+│  │  ├─ loading.svg
+│  │  ├─ logo-dark.webp
+│  │  └─ success.svg
+│  ├─ images
+│  │  ├─ forgot-password.png
+│  │  ├─ image.png
+│  │  ├─ login-image.jpg
+│  │  ├─ register-image.png
+│  │  └─ reset-password.png
+│  ├─ robots.txt
+│  └─ static
+│     └─ fonts
+│        ├─ Satoshi-Black.woff2
+│        ├─ Satoshi-Bold.woff2
+│        ├─ Satoshi-Light.woff2
+│        ├─ Satoshi-Medium.woff2
+│        ├─ Satoshi-Regular.woff2
+│        └─ Satoshi-Variable.woff2
+├─ server
+│  ├─ api
+│  │  └─ auth
+│  │     ├─ forgotPassword.ts
+│  │     ├─ forgotSubmit.ts
+│  │     ├─ login.ts
+│  │     ├─ register.ts
+│  │     └─ registerRequest.ts
+│  └─ tsconfig.json
+├─ store
+│  └─ authLoading.ts
+├─ tailwind.config.js
+├─ tsconfig.json
+└─ utils
+   ├─ string.ts
+   └─ toastNotification.ts
+
+```
+```
+movie-dashboard
+├─ README.md
+├─ actions
+│  └─ auth.action.ts
+├─ app.vue
+├─ assets
+│  └─ css
+│     ├─ app.css
+│     └─ fonts.css
+├─ components
+│  ├─ core
+│  │  └─ auth
+│  │     ├─ 2fa
+│  │     │  └─ OTPFill.vue
+│  │     ├─ forgot-password
+│  │     │  ├─ ForgotPasswordContainer.vue
+│  │     │  └─ ForgotPasswordForm.vue
+│  │     ├─ login
+│  │     │  ├─ LoginContainer.vue
+│  │     │  └─ LoginForm.vue
+│  │     ├─ register
+│  │     │  ├─ RegisterContainer.vue
+│  │     │  ├─ RegisterFillForm.vue
+│  │     │  └─ RegisterRequestForm.vue
+│  │     └─ reset-password
+│  │        ├─ ResetPasswordContainer.vue
+│  │        └─ ResetPasswordForm.vue
+│  └─ shared
+│     ├─ input
+│     │  ├─ CommonField.vue
+│     │  ├─ OTPField.vue
+│     │  └─ PasswordField.vue
+│     ├─ toast
+│     │  ├─ ErrorToastNotification.vue
+│     │  ├─ InfoToastNotification.vue
+│     │  └─ SuccessToastNotification.vue
+│     └─ utils
+│        └─ AuthResponse.utils.vue
+├─ composables
+│  └─ useVerifyLink.ts
+├─ content
+├─ layouts
+│  └─ Auth.layout.vue
+├─ middleware
+│  ├─ verifyRegisterLink.ts
+│  └─ verifyResetPassLink.ts
+├─ nuxt.config.ts
+├─ package-lock.json
+├─ package.json
+├─ pages
+│  ├─ forgot_password.vue
+│  ├─ index.vue
+│  ├─ login.vue
+│  ├─ register.vue
+│  ├─ reset_password.vue
+│  └─ test.vue
+├─ plugins
+│  ├─ Vue3-toastify.client.ts
+│  └─ Vue3Lottie.client.ts
+├─ public
+│  ├─ animations
+│  │  ├─ InternalError.json
+│  │  ├─ fail.json
+│  │  ├─ successed.json
+│  │  └─ waiting.json
+│  ├─ favicon.ico
+│  ├─ icons
+│  │  ├─ copy.svg
+│  │  ├─ error.svg
+│  │  ├─ eye-slash.svg
+│  │  ├─ eye.svg
+│  │  ├─ facebook.svg
+│  │  ├─ google.svg
+│  │  ├─ info.svg
+│  │  ├─ loading.svg
+│  │  ├─ logo-dark.webp
+│  │  └─ success.svg
+│  ├─ images
+│  │  ├─ forgot-password.png
+│  │  ├─ image.png
+│  │  ├─ login-image.jpg
+│  │  ├─ register-image.png
+│  │  └─ reset-password.png
+│  ├─ robots.txt
+│  └─ static
+│     └─ fonts
+│        ├─ Satoshi-Black.woff2
+│        ├─ Satoshi-Bold.woff2
+│        ├─ Satoshi-Light.woff2
+│        ├─ Satoshi-Medium.woff2
+│        ├─ Satoshi-Regular.woff2
+│        └─ Satoshi-Variable.woff2
+├─ server
+│  ├─ api
+│  │  └─ auth
+│  │     ├─ forgotPassword.ts
+│  │     ├─ forgotSubmit.ts
+│  │     ├─ login.ts
+│  │     ├─ register.ts
+│  │     └─ registerRequest.ts
+│  └─ tsconfig.json
+├─ store
+│  └─ authLoading.ts
+├─ tailwind.config.js
+├─ tsconfig.json
+└─ utils
+   ├─ string.ts
+   └─ toastNotification.ts
+
+```
+```
+movie-dashboard
+├─ README.md
+├─ actions
+│  └─ auth.action.ts
+├─ app.vue
+├─ assets
+│  └─ css
+│     ├─ app.css
+│     └─ fonts.css
+├─ components
+│  ├─ core
+│  │  └─ auth
+│  │     ├─ 2fa
+│  │     │  └─ OTPFill.vue
+│  │     ├─ forgot-password
+│  │     │  ├─ ForgotPasswordContainer.vue
+│  │     │  └─ ForgotPasswordForm.vue
+│  │     ├─ login
+│  │     │  ├─ LoginContainer.vue
+│  │     │  └─ LoginForm.vue
+│  │     ├─ register
+│  │     │  ├─ RegisterContainer.vue
+│  │     │  ├─ RegisterFillForm.vue
+│  │     │  └─ RegisterRequestForm.vue
+│  │     └─ reset-password
+│  │        ├─ ResetPasswordContainer.vue
+│  │        └─ ResetPasswordForm.vue
+│  └─ shared
+│     ├─ input
+│     │  ├─ CommonField.vue
+│     │  ├─ OTPField.vue
+│     │  └─ PasswordField.vue
+│     ├─ toast
+│     │  ├─ ErrorToastNotification.vue
+│     │  ├─ InfoToastNotification.vue
+│     │  └─ SuccessToastNotification.vue
+│     └─ utils
+│        └─ AuthResponse.utils.vue
+├─ composables
+│  └─ useVerifyLink.ts
+├─ content
+├─ layouts
+│  └─ Auth.layout.vue
+├─ middleware
+│  ├─ verifyRegisterLink.ts
+│  └─ verifyResetPassLink.ts
+├─ nuxt.config.ts
+├─ package-lock.json
+├─ package.json
+├─ pages
+│  ├─ forgot_password.vue
+│  ├─ index.vue
+│  ├─ login.vue
+│  ├─ register.vue
+│  ├─ reset_password.vue
+│  └─ test.vue
+├─ plugins
+│  ├─ Vue3-toastify.client.ts
+│  └─ Vue3Lottie.client.ts
+├─ public
+│  ├─ animations
+│  │  ├─ InternalError.json
+│  │  ├─ fail.json
+│  │  ├─ successed.json
+│  │  └─ waiting.json
+│  ├─ favicon.ico
+│  ├─ icons
+│  │  ├─ copy.svg
+│  │  ├─ error.svg
+│  │  ├─ eye-slash.svg
+│  │  ├─ eye.svg
+│  │  ├─ facebook.svg
+│  │  ├─ google.svg
+│  │  ├─ info.svg
+│  │  ├─ loading.svg
+│  │  ├─ logo-dark.webp
+│  │  └─ success.svg
+│  ├─ images
+│  │  ├─ forgot-password.png
+│  │  ├─ image.png
+│  │  ├─ login-image.jpg
+│  │  ├─ register-image.png
+│  │  └─ reset-password.png
+│  ├─ robots.txt
+│  └─ static
+│     └─ fonts
+│        ├─ Satoshi-Black.woff2
+│        ├─ Satoshi-Bold.woff2
+│        ├─ Satoshi-Light.woff2
+│        ├─ Satoshi-Medium.woff2
+│        ├─ Satoshi-Regular.woff2
+│        └─ Satoshi-Variable.woff2
+├─ server
+│  ├─ api
+│  │  └─ auth
+│  │     ├─ forgotPassword.ts
+│  │     ├─ forgotSubmit.ts
+│  │     ├─ login.ts
+│  │     ├─ register.ts
+│  │     └─ registerRequest.ts
+│  └─ tsconfig.json
+├─ store
+│  └─ authLoading.ts
+├─ tailwind.config.js
+├─ tsconfig.json
+└─ utils
+   ├─ string.ts
+   └─ toastNotification.ts
+
+```
+```
+movie-dashboard
+├─ README.md
+├─ actions
+│  └─ auth.action.ts
+├─ app.vue
+├─ assets
+│  └─ css
+│     ├─ app.css
+│     └─ fonts.css
+├─ components
+│  ├─ core
+│  │  └─ auth
+│  │     ├─ 2fa
+│  │     │  └─ OTPFill.vue
+│  │     ├─ forgot-password
+│  │     │  ├─ ForgotPasswordContainer.vue
+│  │     │  └─ ForgotPasswordForm.vue
+│  │     ├─ login
+│  │     │  ├─ LoginContainer.vue
+│  │     │  └─ LoginForm.vue
+│  │     ├─ register
+│  │     │  ├─ RegisterContainer.vue
+│  │     │  ├─ RegisterFillForm.vue
+│  │     │  └─ RegisterRequestForm.vue
+│  │     └─ reset-password
+│  │        ├─ ResetPasswordContainer.vue
+│  │        └─ ResetPasswordForm.vue
+│  └─ shared
+│     ├─ input
+│     │  ├─ CommonField.vue
+│     │  ├─ OTPField.vue
+│     │  └─ PasswordField.vue
+│     ├─ toast
+│     │  ├─ ErrorToastNotification.vue
+│     │  ├─ InfoToastNotification.vue
+│     │  └─ SuccessToastNotification.vue
+│     └─ utils
+│        └─ AuthResponse.utils.vue
+├─ composables
+│  └─ useVerifyLink.ts
+├─ content
+├─ layouts
+│  └─ Auth.layout.vue
+├─ middleware
+│  ├─ verifyRegisterLink.ts
+│  └─ verifyResetPassLink.ts
+├─ nuxt.config.ts
+├─ package-lock.json
+├─ package.json
+├─ pages
+│  ├─ forgot_password.vue
+│  ├─ index.vue
+│  ├─ login.vue
+│  ├─ register.vue
+│  ├─ reset_password.vue
+│  └─ test.vue
+├─ plugins
+│  ├─ Vue3-toastify.client.ts
+│  └─ Vue3Lottie.client.ts
+├─ public
+│  ├─ animations
+│  │  ├─ InternalError.json
+│  │  ├─ fail.json
+│  │  ├─ successed.json
+│  │  └─ waiting.json
+│  ├─ favicon.ico
+│  ├─ icons
+│  │  ├─ copy.svg
+│  │  ├─ error.svg
+│  │  ├─ eye-slash.svg
+│  │  ├─ eye.svg
+│  │  ├─ facebook.svg
+│  │  ├─ google.svg
+│  │  ├─ info.svg
+│  │  ├─ loading.svg
+│  │  ├─ logo-dark.webp
+│  │  └─ success.svg
+│  ├─ images
+│  │  ├─ forgot-password.png
+│  │  ├─ image.png
+│  │  ├─ login-image.jpg
+│  │  ├─ register-image.png
+│  │  └─ reset-password.png
+│  ├─ robots.txt
+│  └─ static
+│     └─ fonts
+│        ├─ Satoshi-Black.woff2
+│        ├─ Satoshi-Bold.woff2
+│        ├─ Satoshi-Light.woff2
+│        ├─ Satoshi-Medium.woff2
+│        ├─ Satoshi-Regular.woff2
+│        └─ Satoshi-Variable.woff2
+├─ server
+│  ├─ api
+│  │  └─ auth
+│  │     ├─ forgotPassword.ts
+│  │     ├─ forgotSubmit.ts
+│  │     ├─ login.ts
+│  │     ├─ register.ts
+│  │     └─ registerRequest.ts
+│  └─ tsconfig.json
+├─ store
+│  └─ authLoading.ts
+├─ tailwind.config.js
+├─ tsconfig.json
+└─ utils
+   ├─ string.ts
+   └─ toastNotification.ts
+
+```
+```
+movie-dashboard
+├─ README.md
+├─ actions
+│  └─ auth.action.ts
+├─ app.vue
+├─ assets
+│  └─ css
+│     ├─ app.css
+│     └─ fonts.css
+├─ components
+│  ├─ core
+│  │  └─ auth
+│  │     ├─ 2fa
+│  │     │  └─ OTPFill.vue
+│  │     ├─ forgot-password
+│  │     │  ├─ ForgotPasswordContainer.vue
+│  │     │  └─ ForgotPasswordForm.vue
+│  │     ├─ login
+│  │     │  ├─ LoginContainer.vue
+│  │     │  └─ LoginForm.vue
+│  │     ├─ register
+│  │     │  ├─ RegisterContainer.vue
+│  │     │  ├─ RegisterFillForm.vue
+│  │     │  └─ RegisterRequestForm.vue
+│  │     └─ reset-password
+│  │        ├─ ResetPasswordContainer.vue
+│  │        └─ ResetPasswordForm.vue
+│  └─ shared
+│     ├─ input
+│     │  ├─ CommonField.vue
+│     │  ├─ OTPField.vue
+│     │  └─ PasswordField.vue
+│     ├─ toast
+│     │  ├─ ErrorToastNotification.vue
+│     │  ├─ InfoToastNotification.vue
+│     │  └─ SuccessToastNotification.vue
+│     └─ utils
+│        └─ AuthResponse.utils.vue
+├─ composables
+│  └─ useVerifyLink.ts
+├─ content
+├─ layouts
+│  └─ Auth.layout.vue
+├─ middleware
+│  ├─ verifyRegisterLink.ts
+│  └─ verifyResetPassLink.ts
+├─ nuxt.config.ts
+├─ package-lock.json
+├─ package.json
+├─ pages
+│  ├─ forgot_password.vue
+│  ├─ index.vue
+│  ├─ login.vue
+│  ├─ register.vue
+│  ├─ reset_password.vue
+│  └─ test.vue
+├─ plugins
+│  ├─ Vue3-toastify.client.ts
+│  └─ Vue3Lottie.client.ts
+├─ public
+│  ├─ animations
+│  │  ├─ InternalError.json
+│  │  ├─ fail.json
+│  │  ├─ successed.json
+│  │  └─ waiting.json
+│  ├─ favicon.ico
+│  ├─ icons
+│  │  ├─ copy.svg
+│  │  ├─ error.svg
+│  │  ├─ eye-slash.svg
+│  │  ├─ eye.svg
+│  │  ├─ facebook.svg
+│  │  ├─ google.svg
+│  │  ├─ info.svg
+│  │  ├─ loading.svg
+│  │  ├─ logo-dark.webp
+│  │  └─ success.svg
+│  ├─ images
+│  │  ├─ forgot-password.png
+│  │  ├─ image.png
+│  │  ├─ login-image.jpg
+│  │  ├─ register-image.png
+│  │  └─ reset-password.png
+│  ├─ robots.txt
+│  └─ static
+│     └─ fonts
+│        ├─ Satoshi-Black.woff2
+│        ├─ Satoshi-Bold.woff2
+│        ├─ Satoshi-Light.woff2
+│        ├─ Satoshi-Medium.woff2
+│        ├─ Satoshi-Regular.woff2
+│        └─ Satoshi-Variable.woff2
+├─ server
+│  ├─ api
+│  │  └─ auth
+│  │     ├─ forgotPassword.ts
+│  │     ├─ forgotSubmit.ts
+│  │     ├─ login.ts
+│  │     ├─ register.ts
+│  │     └─ registerRequest.ts
+│  └─ tsconfig.json
+├─ store
+│  └─ authLoading.ts
+├─ tailwind.config.js
+├─ tsconfig.json
+└─ utils
+   ├─ string.ts
+   └─ toastNotification.ts
+
+```
+```
+movie-dashboard
+├─ README.md
+├─ actions
+│  └─ auth.action.ts
+├─ app.vue
+├─ assets
+│  └─ css
+│     ├─ app.css
+│     └─ fonts.css
+├─ components
+│  ├─ core
+│  │  └─ auth
+│  │     ├─ 2fa
+│  │     │  └─ OTPFill.vue
+│  │     ├─ forgot-password
+│  │     │  ├─ ForgotPasswordContainer.vue
+│  │     │  └─ ForgotPasswordForm.vue
+│  │     ├─ login
+│  │     │  ├─ LoginContainer.vue
+│  │     │  └─ LoginForm.vue
+│  │     ├─ register
+│  │     │  ├─ RegisterContainer.vue
+│  │     │  ├─ RegisterFillForm.vue
+│  │     │  └─ RegisterRequestForm.vue
+│  │     └─ reset-password
+│  │        ├─ ResetPasswordContainer.vue
+│  │        └─ ResetPasswordForm.vue
+│  └─ shared
+│     ├─ input
+│     │  ├─ CommonField.vue
+│     │  ├─ OTPField.vue
+│     │  └─ PasswordField.vue
+│     ├─ toast
+│     │  ├─ ErrorToastNotification.vue
+│     │  ├─ InfoToastNotification.vue
+│     │  └─ SuccessToastNotification.vue
+│     └─ utils
+│        └─ AuthResponse.utils.vue
+├─ composables
+│  └─ useVerifyLink.ts
+├─ content
+├─ layouts
+│  └─ Auth.layout.vue
+├─ middleware
+│  ├─ verifyRegisterLink.ts
+│  └─ verifyResetPassLink.ts
+├─ nuxt.config.ts
+├─ package-lock.json
+├─ package.json
+├─ pages
+│  ├─ forgot_password.vue
+│  ├─ index.vue
+│  ├─ login.vue
+│  ├─ register.vue
+│  ├─ reset_password.vue
+│  └─ test.vue
+├─ plugins
+│  ├─ Vue3-toastify.client.ts
+│  └─ Vue3Lottie.client.ts
+├─ public
+│  ├─ animations
+│  │  ├─ InternalError.json
+│  │  ├─ fail.json
+│  │  ├─ successed.json
+│  │  └─ waiting.json
+│  ├─ favicon.ico
+│  ├─ icons
+│  │  ├─ copy.svg
+│  │  ├─ error.svg
+│  │  ├─ eye-slash.svg
+│  │  ├─ eye.svg
+│  │  ├─ facebook.svg
+│  │  ├─ google.svg
+│  │  ├─ info.svg
+│  │  ├─ loading.svg
+│  │  ├─ logo-dark.webp
+│  │  └─ success.svg
+│  ├─ images
+│  │  ├─ forgot-password.png
+│  │  ├─ image.png
+│  │  ├─ login-image.jpg
+│  │  ├─ register-image.png
+│  │  └─ reset-password.png
+│  ├─ robots.txt
+│  └─ static
+│     └─ fonts
+│        ├─ Satoshi-Black.woff2
+│        ├─ Satoshi-Bold.woff2
+│        ├─ Satoshi-Light.woff2
+│        ├─ Satoshi-Medium.woff2
+│        ├─ Satoshi-Regular.woff2
+│        └─ Satoshi-Variable.woff2
+├─ server
+│  ├─ api
+│  │  └─ auth
+│  │     ├─ forgotPassword.ts
+│  │     ├─ forgotSubmit.ts
+│  │     ├─ login.ts
+│  │     ├─ register.ts
+│  │     └─ registerRequest.ts
+│  └─ tsconfig.json
+├─ store
+│  └─ authLoading.ts
+├─ tailwind.config.js
+├─ tsconfig.json
+└─ utils
+   ├─ string.ts
+   └─ toastNotification.ts
+
+```
+```
+movie-dashboard
+├─ README.md
+├─ actions
+│  └─ auth.action.ts
+├─ app.vue
+├─ assets
+│  └─ css
+│     ├─ app.css
+│     └─ fonts.css
+├─ components
+│  ├─ core
+│  │  └─ auth
+│  │     ├─ 2fa
+│  │     │  └─ OTPFill.vue
+│  │     ├─ forgot-password
+│  │     │  ├─ ForgotPasswordContainer.vue
+│  │     │  └─ ForgotPasswordForm.vue
+│  │     ├─ login
+│  │     │  ├─ LoginContainer.vue
+│  │     │  └─ LoginForm.vue
+│  │     ├─ register
+│  │     │  ├─ RegisterContainer.vue
+│  │     │  ├─ RegisterFillForm.vue
+│  │     │  └─ RegisterRequestForm.vue
+│  │     └─ reset-password
+│  │        ├─ ResetPasswordContainer.vue
+│  │        └─ ResetPasswordForm.vue
+│  └─ shared
+│     ├─ input
+│     │  ├─ CommonField.vue
+│     │  ├─ OTPField.vue
+│     │  └─ PasswordField.vue
+│     ├─ toast
+│     │  ├─ ErrorToastNotification.vue
+│     │  ├─ InfoToastNotification.vue
+│     │  └─ SuccessToastNotification.vue
+│     └─ utils
+│        └─ AuthResponse.utils.vue
+├─ composables
+│  └─ useVerifyLink.ts
+├─ content
+├─ layouts
+│  └─ Auth.layout.vue
+├─ middleware
+│  ├─ verifyRegisterLink.ts
+│  └─ verifyResetPassLink.ts
+├─ nuxt.config.ts
+├─ package-lock.json
+├─ package.json
+├─ pages
+│  ├─ forgot_password.vue
+│  ├─ index.vue
+│  ├─ login.vue
+│  ├─ register.vue
+│  ├─ reset_password.vue
+│  └─ test.vue
+├─ plugins
+│  ├─ Vue3-toastify.client.ts
+│  └─ Vue3Lottie.client.ts
+├─ public
+│  ├─ animations
+│  │  ├─ InternalError.json
+│  │  ├─ fail.json
+│  │  ├─ successed.json
+│  │  └─ waiting.json
+│  ├─ favicon.ico
+│  ├─ icons
+│  │  ├─ copy.svg
+│  │  ├─ error.svg
+│  │  ├─ eye-slash.svg
+│  │  ├─ eye.svg
+│  │  ├─ facebook.svg
+│  │  ├─ google.svg
+│  │  ├─ info.svg
+│  │  ├─ loading.svg
+│  │  ├─ logo-dark.webp
+│  │  └─ success.svg
+│  ├─ images
+│  │  ├─ forgot-password.png
+│  │  ├─ image.png
+│  │  ├─ login-image.jpg
+│  │  ├─ register-image.png
+│  │  └─ reset-password.png
+│  ├─ robots.txt
+│  └─ static
+│     └─ fonts
+│        ├─ Satoshi-Black.woff2
+│        ├─ Satoshi-Bold.woff2
+│        ├─ Satoshi-Light.woff2
+│        ├─ Satoshi-Medium.woff2
+│        ├─ Satoshi-Regular.woff2
+│        └─ Satoshi-Variable.woff2
+├─ server
+│  ├─ api
+│  │  └─ auth
+│  │     ├─ forgotPassword.ts
+│  │     ├─ forgotSubmit.ts
+│  │     ├─ login.ts
+│  │     ├─ register.ts
+│  │     └─ registerRequest.ts
+│  └─ tsconfig.json
+├─ store
+│  └─ authLoading.ts
+├─ tailwind.config.js
+├─ tsconfig.json
+└─ utils
+   ├─ string.ts
+   └─ toastNotification.ts
+
+```
+```
+movie-dashboard
+├─ README.md
+├─ actions
+│  └─ auth.action.ts
+├─ app.vue
+├─ assets
+│  └─ css
+│     ├─ app.css
+│     └─ fonts.css
+├─ components
+│  ├─ core
+│  │  └─ auth
+│  │     ├─ 2fa
+│  │     │  └─ OTPFill.vue
+│  │     ├─ forgot-password
+│  │     │  ├─ ForgotPasswordContainer.vue
+│  │     │  └─ ForgotPasswordForm.vue
+│  │     ├─ login
+│  │     │  ├─ LoginContainer.vue
+│  │     │  └─ LoginForm.vue
+│  │     ├─ register
+│  │     │  ├─ RegisterContainer.vue
+│  │     │  ├─ RegisterFillForm.vue
+│  │     │  └─ RegisterRequestForm.vue
+│  │     └─ reset-password
+│  │        ├─ ResetPasswordContainer.vue
+│  │        └─ ResetPasswordForm.vue
+│  └─ shared
+│     ├─ input
+│     │  ├─ CommonField.vue
+│     │  ├─ OTPField.vue
+│     │  └─ PasswordField.vue
+│     ├─ toast
+│     │  ├─ ErrorToastNotification.vue
+│     │  ├─ InfoToastNotification.vue
+│     │  └─ SuccessToastNotification.vue
+│     └─ utils
+│        └─ AuthResponse.utils.vue
+├─ composables
+│  └─ useVerifyLink.ts
+├─ content
+├─ layouts
+│  └─ Auth.layout.vue
+├─ middleware
+│  ├─ verifyRegisterLink.ts
+│  └─ verifyResetPassLink.ts
+├─ nuxt.config.ts
+├─ package-lock.json
+├─ package.json
+├─ pages
+│  ├─ forgot_password.vue
+│  ├─ index.vue
+│  ├─ login.vue
+│  ├─ register.vue
+│  ├─ reset_password.vue
+│  └─ test.vue
+├─ plugins
+│  ├─ Vue3-toastify.client.ts
+│  └─ Vue3Lottie.client.ts
+├─ public
+│  ├─ animations
+│  │  ├─ InternalError.json
+│  │  ├─ fail.json
+│  │  ├─ successed.json
+│  │  └─ waiting.json
+│  ├─ favicon.ico
+│  ├─ icons
+│  │  ├─ copy.svg
+│  │  ├─ error.svg
+│  │  ├─ eye-slash.svg
+│  │  ├─ eye.svg
+│  │  ├─ facebook.svg
+│  │  ├─ google.svg
+│  │  ├─ info.svg
+│  │  ├─ loading.svg
+│  │  ├─ logo-dark.webp
+│  │  └─ success.svg
+│  ├─ images
+│  │  ├─ forgot-password.png
+│  │  ├─ image.png
+│  │  ├─ login-image.jpg
+│  │  ├─ register-image.png
+│  │  └─ reset-password.png
+│  ├─ robots.txt
+│  └─ static
+│     └─ fonts
+│        ├─ Satoshi-Black.woff2
+│        ├─ Satoshi-Bold.woff2
+│        ├─ Satoshi-Light.woff2
+│        ├─ Satoshi-Medium.woff2
+│        ├─ Satoshi-Regular.woff2
+│        └─ Satoshi-Variable.woff2
+├─ server
+│  ├─ api
+│  │  └─ auth
+│  │     ├─ forgotPassword.ts
+│  │     ├─ forgotSubmit.ts
+│  │     ├─ login.ts
+│  │     ├─ register.ts
+│  │     └─ registerRequest.ts
+│  └─ tsconfig.json
+├─ store
+│  └─ authLoading.ts
+├─ tailwind.config.js
+├─ tsconfig.json
+└─ utils
+   ├─ string.ts
+   └─ toastNotification.ts
+
+```
+```
+movie-dashboard
+├─ README.md
+├─ actions
+│  └─ auth.action.ts
+├─ app.vue
+├─ assets
+│  └─ css
+│     ├─ app.css
+│     └─ fonts.css
+├─ components
+│  ├─ core
+│  │  └─ auth
+│  │     ├─ 2fa
+│  │     │  └─ OTPFill.vue
+│  │     ├─ forgot-password
+│  │     │  ├─ ForgotPasswordContainer.vue
+│  │     │  └─ ForgotPasswordForm.vue
+│  │     ├─ login
+│  │     │  ├─ LoginContainer.vue
+│  │     │  └─ LoginForm.vue
+│  │     ├─ register
+│  │     │  ├─ RegisterContainer.vue
+│  │     │  ├─ RegisterFillForm.vue
+│  │     │  └─ RegisterRequestForm.vue
+│  │     └─ reset-password
+│  │        ├─ ResetPasswordContainer.vue
+│  │        └─ ResetPasswordForm.vue
+│  └─ shared
+│     ├─ input
+│     │  ├─ CommonField.vue
+│     │  ├─ OTPField.vue
+│     │  └─ PasswordField.vue
+│     ├─ toast
+│     │  ├─ ErrorToastNotification.vue
+│     │  ├─ InfoToastNotification.vue
+│     │  └─ SuccessToastNotification.vue
+│     └─ utils
+│        └─ AuthResponse.utils.vue
+├─ composables
+│  └─ useVerifyLink.ts
+├─ content
+├─ layouts
+│  └─ Auth.layout.vue
+├─ middleware
+│  ├─ verifyRegisterLink.ts
+│  └─ verifyResetPassLink.ts
+├─ nuxt.config.ts
+├─ package-lock.json
+├─ package.json
+├─ pages
+│  ├─ forgot_password.vue
+│  ├─ index.vue
+│  ├─ login.vue
+│  ├─ register.vue
+│  ├─ reset_password.vue
+│  └─ test.vue
+├─ plugins
+│  ├─ Vue3-toastify.client.ts
+│  └─ Vue3Lottie.client.ts
+├─ public
+│  ├─ animations
+│  │  ├─ InternalError.json
+│  │  ├─ fail.json
+│  │  ├─ successed.json
+│  │  └─ waiting.json
+│  ├─ favicon.ico
+│  ├─ icons
+│  │  ├─ copy.svg
+│  │  ├─ error.svg
+│  │  ├─ eye-slash.svg
+│  │  ├─ eye.svg
+│  │  ├─ facebook.svg
+│  │  ├─ google.svg
+│  │  ├─ info.svg
+│  │  ├─ loading.svg
+│  │  ├─ logo-dark.webp
+│  │  └─ success.svg
+│  ├─ images
+│  │  ├─ forgot-password.png
+│  │  ├─ image.png
+│  │  ├─ login-image.jpg
+│  │  ├─ register-image.png
+│  │  └─ reset-password.png
+│  ├─ robots.txt
+│  └─ static
+│     └─ fonts
+│        ├─ Satoshi-Black.woff2
+│        ├─ Satoshi-Bold.woff2
+│        ├─ Satoshi-Light.woff2
+│        ├─ Satoshi-Medium.woff2
+│        ├─ Satoshi-Regular.woff2
+│        └─ Satoshi-Variable.woff2
+├─ server
+│  ├─ api
+│  │  └─ auth
+│  │     ├─ forgotPassword.ts
+│  │     ├─ forgotSubmit.ts
+│  │     ├─ login.ts
+│  │     ├─ register.ts
+│  │     └─ registerRequest.ts
+│  └─ tsconfig.json
+├─ store
+│  └─ authLoading.ts
+├─ tailwind.config.js
+├─ tsconfig.json
+└─ utils
+   ├─ string.ts
+   └─ toastNotification.ts
+
+```
+```
+movie-dashboard
+├─ README.md
+├─ actions
+│  └─ auth.action.ts
+├─ app.vue
+├─ assets
+│  └─ css
+│     ├─ app.css
+│     └─ fonts.css
+├─ components
+│  ├─ core
+│  │  └─ auth
+│  │     ├─ 2fa
+│  │     │  └─ OTPFill.vue
+│  │     ├─ forgot-password
+│  │     │  ├─ ForgotPasswordContainer.vue
+│  │     │  └─ ForgotPasswordForm.vue
+│  │     ├─ login
+│  │     │  ├─ LoginContainer.vue
+│  │     │  └─ LoginForm.vue
+│  │     ├─ register
+│  │     │  ├─ RegisterContainer.vue
+│  │     │  ├─ RegisterFillForm.vue
+│  │     │  └─ RegisterRequestForm.vue
+│  │     └─ reset-password
+│  │        ├─ ResetPasswordContainer.vue
+│  │        └─ ResetPasswordForm.vue
+│  └─ shared
+│     ├─ input
+│     │  ├─ CommonField.vue
+│     │  ├─ OTPField.vue
+│     │  └─ PasswordField.vue
+│     ├─ toast
+│     │  ├─ ErrorToastNotification.vue
+│     │  ├─ InfoToastNotification.vue
+│     │  └─ SuccessToastNotification.vue
+│     └─ utils
+│        └─ AuthResponse.utils.vue
+├─ composables
+│  └─ useVerifyLink.ts
+├─ content
+├─ layouts
+│  └─ Auth.layout.vue
+├─ middleware
+│  ├─ verifyRegisterLink.ts
+│  └─ verifyResetPassLink.ts
+├─ nuxt.config.ts
+├─ package-lock.json
+├─ package.json
+├─ pages
+│  ├─ forgot_password.vue
+│  ├─ index.vue
+│  ├─ login.vue
+│  ├─ register.vue
+│  ├─ reset_password.vue
+│  └─ test.vue
+├─ plugins
+│  ├─ Vue3-toastify.client.ts
+│  └─ Vue3Lottie.client.ts
+├─ public
+│  ├─ animations
+│  │  ├─ InternalError.json
+│  │  ├─ fail.json
+│  │  ├─ successed.json
+│  │  └─ waiting.json
+│  ├─ favicon.ico
+│  ├─ icons
+│  │  ├─ copy.svg
+│  │  ├─ error.svg
+│  │  ├─ eye-slash.svg
+│  │  ├─ eye.svg
+│  │  ├─ facebook.svg
+│  │  ├─ google.svg
+│  │  ├─ info.svg
+│  │  ├─ loading.svg
+│  │  ├─ logo-dark.webp
+│  │  └─ success.svg
+│  ├─ images
+│  │  ├─ forgot-password.png
+│  │  ├─ image.png
+│  │  ├─ login-image.jpg
+│  │  ├─ register-image.png
+│  │  └─ reset-password.png
+│  ├─ robots.txt
+│  └─ static
+│     └─ fonts
+│        ├─ Satoshi-Black.woff2
+│        ├─ Satoshi-Bold.woff2
+│        ├─ Satoshi-Light.woff2
+│        ├─ Satoshi-Medium.woff2
+│        ├─ Satoshi-Regular.woff2
+│        └─ Satoshi-Variable.woff2
+├─ server
+│  ├─ api
+│  │  └─ auth
+│  │     ├─ forgotPassword.ts
+│  │     ├─ forgotSubmit.ts
+│  │     ├─ login.ts
+│  │     ├─ register.ts
+│  │     └─ registerRequest.ts
+│  └─ tsconfig.json
+├─ store
+│  └─ authLoading.ts
+├─ tailwind.config.js
+├─ tsconfig.json
+└─ utils
+   ├─ string.ts
+   └─ toastNotification.ts
+
+```
+```
+movie-dashboard
+├─ README.md
+├─ actions
+│  └─ auth.action.ts
+├─ app.vue
+├─ assets
+│  └─ css
+│     ├─ app.css
+│     └─ fonts.css
+├─ components
+│  ├─ core
+│  │  └─ auth
+│  │     ├─ 2fa
+│  │     │  └─ OTPFill.vue
+│  │     ├─ forgot-password
+│  │     │  ├─ ForgotPasswordContainer.vue
+│  │     │  └─ ForgotPasswordForm.vue
+│  │     ├─ login
+│  │     │  ├─ LoginContainer.vue
+│  │     │  └─ LoginForm.vue
+│  │     ├─ register
+│  │     │  ├─ RegisterContainer.vue
+│  │     │  ├─ RegisterFillForm.vue
+│  │     │  └─ RegisterRequestForm.vue
+│  │     └─ reset-password
+│  │        ├─ ResetPasswordContainer.vue
+│  │        └─ ResetPasswordForm.vue
+│  └─ shared
+│     ├─ input
+│     │  ├─ CommonField.vue
+│     │  ├─ OTPField.vue
+│     │  └─ PasswordField.vue
+│     ├─ toast
+│     │  ├─ ErrorToastNotification.vue
+│     │  ├─ InfoToastNotification.vue
+│     │  └─ SuccessToastNotification.vue
+│     └─ utils
+│        └─ AuthResponse.utils.vue
+├─ composables
+│  └─ useVerifyLink.ts
+├─ content
+├─ layouts
+│  └─ Auth.layout.vue
+├─ middleware
+│  ├─ verifyRegisterLink.ts
+│  └─ verifyResetPassLink.ts
+├─ nuxt.config.ts
+├─ package-lock.json
+├─ package.json
+├─ pages
+│  ├─ forgot_password.vue
+│  ├─ index.vue
+│  ├─ login.vue
+│  ├─ register.vue
+│  ├─ reset_password.vue
+│  └─ test.vue
+├─ plugins
+│  ├─ Vue3-toastify.client.ts
+│  └─ Vue3Lottie.client.ts
+├─ public
+│  ├─ animations
+│  │  ├─ InternalError.json
+│  │  ├─ fail.json
+│  │  ├─ successed.json
+│  │  └─ waiting.json
+│  ├─ favicon.ico
+│  ├─ icons
+│  │  ├─ copy.svg
+│  │  ├─ error.svg
+│  │  ├─ eye-slash.svg
+│  │  ├─ eye.svg
+│  │  ├─ facebook.svg
+│  │  ├─ google.svg
+│  │  ├─ info.svg
+│  │  ├─ loading.svg
+│  │  ├─ logo-dark.webp
+│  │  └─ success.svg
+│  ├─ images
+│  │  ├─ forgot-password.png
+│  │  ├─ image.png
+│  │  ├─ login-image.jpg
+│  │  ├─ register-image.png
+│  │  └─ reset-password.png
+│  ├─ robots.txt
+│  └─ static
+│     └─ fonts
+│        ├─ Satoshi-Black.woff2
+│        ├─ Satoshi-Bold.woff2
+│        ├─ Satoshi-Light.woff2
+│        ├─ Satoshi-Medium.woff2
+│        ├─ Satoshi-Regular.woff2
+│        └─ Satoshi-Variable.woff2
+├─ server
+│  ├─ api
+│  │  └─ auth
+│  │     ├─ forgotPassword.ts
+│  │     ├─ forgotSubmit.ts
+│  │     ├─ login.ts
+│  │     ├─ register.ts
+│  │     └─ registerRequest.ts
+│  └─ tsconfig.json
+├─ store
+│  └─ authLoading.ts
+├─ tailwind.config.js
+├─ tsconfig.json
+└─ utils
+   ├─ string.ts
+   └─ toastNotification.ts
+
+```
+```
+movie-dashboard
+├─ README.md
+├─ actions
+│  └─ auth.action.ts
+├─ app.vue
+├─ assets
+│  └─ css
+│     ├─ app.css
+│     └─ fonts.css
+├─ components
+│  ├─ core
+│  │  └─ auth
+│  │     ├─ 2fa
+│  │     │  └─ OTPFill.vue
+│  │     ├─ forgot-password
+│  │     │  ├─ ForgotPasswordContainer.vue
+│  │     │  └─ ForgotPasswordForm.vue
+│  │     ├─ login
+│  │     │  ├─ LoginContainer.vue
+│  │     │  └─ LoginForm.vue
+│  │     ├─ register
+│  │     │  ├─ RegisterContainer.vue
+│  │     │  ├─ RegisterFillForm.vue
+│  │     │  └─ RegisterRequestForm.vue
+│  │     └─ reset-password
+│  │        ├─ ResetPasswordContainer.vue
+│  │        └─ ResetPasswordForm.vue
+│  └─ shared
+│     ├─ input
+│     │  ├─ CommonField.vue
+│     │  ├─ OTPField.vue
+│     │  └─ PasswordField.vue
+│     ├─ toast
+│     │  ├─ ErrorToastNotification.vue
+│     │  ├─ InfoToastNotification.vue
+│     │  └─ SuccessToastNotification.vue
+│     └─ utils
+│        └─ AuthResponse.utils.vue
+├─ composables
+│  └─ useVerifyLink.ts
+├─ content
+├─ layouts
+│  └─ Auth.layout.vue
+├─ middleware
+│  ├─ verifyRegisterLink.ts
+│  └─ verifyResetPassLink.ts
+├─ nuxt.config.ts
+├─ package-lock.json
+├─ package.json
+├─ pages
+│  ├─ forgot_password.vue
+│  ├─ index.vue
+│  ├─ login.vue
+│  ├─ register.vue
+│  ├─ reset_password.vue
+│  └─ test.vue
+├─ plugins
+│  ├─ Vue3-toastify.client.ts
+│  └─ Vue3Lottie.client.ts
+├─ public
+│  ├─ animations
+│  │  ├─ InternalError.json
+│  │  ├─ fail.json
+│  │  ├─ successed.json
+│  │  └─ waiting.json
+│  ├─ favicon.ico
+│  ├─ icons
+│  │  ├─ copy.svg
+│  │  ├─ error.svg
+│  │  ├─ eye-slash.svg
+│  │  ├─ eye.svg
+│  │  ├─ facebook.svg
+│  │  ├─ google.svg
+│  │  ├─ info.svg
+│  │  ├─ loading.svg
+│  │  ├─ logo-dark.webp
+│  │  └─ success.svg
+│  ├─ images
+│  │  ├─ forgot-password.png
+│  │  ├─ image.png
+│  │  ├─ login-image.jpg
+│  │  ├─ register-image.png
+│  │  └─ reset-password.png
+│  ├─ robots.txt
+│  └─ static
+│     └─ fonts
+│        ├─ Satoshi-Black.woff2
+│        ├─ Satoshi-Bold.woff2
+│        ├─ Satoshi-Light.woff2
+│        ├─ Satoshi-Medium.woff2
+│        ├─ Satoshi-Regular.woff2
+│        └─ Satoshi-Variable.woff2
+├─ server
+│  ├─ api
+│  │  └─ auth
+│  │     ├─ forgotPassword.ts
+│  │     ├─ forgotSubmit.ts
+│  │     ├─ login.ts
+│  │     ├─ register.ts
+│  │     └─ registerRequest.ts
+│  └─ tsconfig.json
+├─ store
+│  └─ authLoading.ts
+├─ tailwind.config.js
+├─ tsconfig.json
+└─ utils
+   ├─ string.ts
+   └─ toastNotification.ts
+
+```
+```
+movie-dashboard
+├─ README.md
+├─ actions
+│  └─ auth.action.ts
+├─ app.vue
+├─ assets
+│  └─ css
+│     ├─ app.css
+│     └─ fonts.css
+├─ components
+│  ├─ core
+│  │  └─ auth
+│  │     ├─ 2fa
+│  │     │  └─ OTPFill.vue
+│  │     ├─ forgot-password
+│  │     │  ├─ ForgotPasswordContainer.vue
+│  │     │  └─ ForgotPasswordForm.vue
+│  │     ├─ login
+│  │     │  ├─ LoginContainer.vue
+│  │     │  └─ LoginForm.vue
+│  │     ├─ register
+│  │     │  ├─ RegisterContainer.vue
+│  │     │  ├─ RegisterFillForm.vue
+│  │     │  └─ RegisterRequestForm.vue
+│  │     └─ reset-password
+│  │        ├─ ResetPasswordContainer.vue
+│  │        └─ ResetPasswordForm.vue
+│  └─ shared
+│     ├─ input
+│     │  ├─ CommonField.vue
+│     │  ├─ OTPField.vue
+│     │  └─ PasswordField.vue
+│     ├─ toast
+│     │  ├─ ErrorToastNotification.vue
+│     │  ├─ InfoToastNotification.vue
+│     │  └─ SuccessToastNotification.vue
+│     └─ utils
+│        └─ AuthResponse.utils.vue
+├─ composables
+│  └─ useVerifyLink.ts
+├─ content
+├─ layouts
+│  └─ Auth.layout.vue
+├─ middleware
+│  ├─ verifyRegisterLink.ts
+│  └─ verifyResetPassLink.ts
+├─ nuxt.config.ts
+├─ package-lock.json
+├─ package.json
+├─ pages
+│  ├─ forgot_password.vue
+│  ├─ index.vue
+│  ├─ login.vue
+│  ├─ register.vue
+│  ├─ reset_password.vue
+│  └─ test.vue
+├─ plugins
+│  ├─ Vue3-toastify.client.ts
+│  └─ Vue3Lottie.client.ts
+├─ public
+│  ├─ animations
+│  │  ├─ InternalError.json
+│  │  ├─ fail.json
+│  │  ├─ successed.json
+│  │  └─ waiting.json
+│  ├─ favicon.ico
+│  ├─ icons
+│  │  ├─ copy.svg
+│  │  ├─ error.svg
+│  │  ├─ eye-slash.svg
+│  │  ├─ eye.svg
+│  │  ├─ facebook.svg
+│  │  ├─ google.svg
+│  │  ├─ info.svg
+│  │  ├─ loading.svg
+│  │  ├─ logo-dark.webp
+│  │  └─ success.svg
+│  ├─ images
+│  │  ├─ forgot-password.png
+│  │  ├─ image.png
+│  │  ├─ login-image.jpg
+│  │  ├─ register-image.png
+│  │  └─ reset-password.png
+│  ├─ robots.txt
+│  └─ static
+│     └─ fonts
+│        ├─ Satoshi-Black.woff2
+│        ├─ Satoshi-Bold.woff2
+│        ├─ Satoshi-Light.woff2
+│        ├─ Satoshi-Medium.woff2
+│        ├─ Satoshi-Regular.woff2
+│        └─ Satoshi-Variable.woff2
+├─ server
+│  ├─ api
+│  │  └─ auth
+│  │     ├─ forgotPassword.ts
+│  │     ├─ forgotSubmit.ts
+│  │     ├─ login.ts
+│  │     ├─ register.ts
+│  │     └─ registerRequest.ts
+│  └─ tsconfig.json
+├─ store
+│  └─ authLoading.ts
+├─ tailwind.config.js
+├─ tsconfig.json
+└─ utils
+   ├─ string.ts
+   └─ toastNotification.ts
+
+```
+```
+movie-dashboard
+├─ README.md
+├─ actions
+│  └─ auth.action.ts
+├─ app.vue
+├─ assets
+│  └─ css
+│     ├─ app.css
+│     └─ fonts.css
+├─ components
+│  ├─ core
+│  │  └─ auth
+│  │     ├─ 2fa
+│  │     │  └─ OTPFill.vue
+│  │     ├─ forgot-password
+│  │     │  ├─ ForgotPasswordContainer.vue
+│  │     │  └─ ForgotPasswordForm.vue
+│  │     ├─ login
+│  │     │  ├─ LoginContainer.vue
+│  │     │  └─ LoginForm.vue
+│  │     ├─ register
+│  │     │  ├─ RegisterContainer.vue
+│  │     │  ├─ RegisterFillForm.vue
+│  │     │  └─ RegisterRequestForm.vue
+│  │     └─ reset-password
+│  │        ├─ ResetPasswordContainer.vue
+│  │        └─ ResetPasswordForm.vue
+│  └─ shared
+│     ├─ input
+│     │  ├─ CommonField.vue
+│     │  ├─ OTPField.vue
+│     │  └─ PasswordField.vue
+│     ├─ toast
+│     │  ├─ ErrorToastNotification.vue
+│     │  ├─ InfoToastNotification.vue
+│     │  └─ SuccessToastNotification.vue
+│     └─ utils
+│        └─ AuthResponse.utils.vue
+├─ composables
+│  └─ useVerifyLink.ts
+├─ content
+├─ layouts
+│  └─ Auth.layout.vue
+├─ middleware
+│  ├─ verifyRegisterLink.ts
+│  └─ verifyResetPassLink.ts
+├─ nuxt.config.ts
+├─ package-lock.json
+├─ package.json
+├─ pages
+│  ├─ forgot_password.vue
+│  ├─ index.vue
+│  ├─ login.vue
+│  ├─ register.vue
+│  ├─ reset_password.vue
+│  └─ test.vue
+├─ plugins
+│  ├─ Vue3-toastify.client.ts
+│  └─ Vue3Lottie.client.ts
+├─ public
+│  ├─ animations
+│  │  ├─ InternalError.json
+│  │  ├─ fail.json
+│  │  ├─ successed.json
+│  │  └─ waiting.json
+│  ├─ favicon.ico
+│  ├─ icons
+│  │  ├─ copy.svg
+│  │  ├─ error.svg
+│  │  ├─ eye-slash.svg
+│  │  ├─ eye.svg
+│  │  ├─ facebook.svg
+│  │  ├─ google.svg
+│  │  ├─ info.svg
+│  │  ├─ loading.svg
+│  │  ├─ logo-dark.webp
+│  │  └─ success.svg
+│  ├─ images
+│  │  ├─ forgot-password.png
+│  │  ├─ image.png
+│  │  ├─ login-image.jpg
+│  │  ├─ register-image.png
+│  │  └─ reset-password.png
+│  ├─ robots.txt
+│  └─ static
+│     └─ fonts
+│        ├─ Satoshi-Black.woff2
+│        ├─ Satoshi-Bold.woff2
+│        ├─ Satoshi-Light.woff2
+│        ├─ Satoshi-Medium.woff2
+│        ├─ Satoshi-Regular.woff2
+│        └─ Satoshi-Variable.woff2
+├─ server
+│  ├─ api
+│  │  └─ auth
+│  │     ├─ forgotPassword.ts
+│  │     ├─ forgotSubmit.ts
+│  │     ├─ login.ts
+│  │     ├─ register.ts
+│  │     └─ registerRequest.ts
+│  └─ tsconfig.json
+├─ store
+│  └─ authLoading.ts
+├─ tailwind.config.js
+├─ tsconfig.json
+└─ utils
+   ├─ string.ts
+   └─ toastNotification.ts
+
+```
+```
+movie-dashboard
+├─ README.md
+├─ actions
+│  └─ auth.action.ts
+├─ app.vue
+├─ assets
+│  └─ css
+│     ├─ app.css
+│     └─ fonts.css
+├─ components
+│  ├─ core
+│  │  └─ auth
+│  │     ├─ 2fa
+│  │     │  └─ OTPFill.vue
+│  │     ├─ forgot-password
+│  │     │  ├─ ForgotPasswordContainer.vue
+│  │     │  └─ ForgotPasswordForm.vue
+│  │     ├─ login
+│  │     │  ├─ LoginContainer.vue
+│  │     │  └─ LoginForm.vue
+│  │     ├─ register
+│  │     │  ├─ RegisterContainer.vue
+│  │     │  ├─ RegisterFillForm.vue
+│  │     │  └─ RegisterRequestForm.vue
+│  │     └─ reset-password
+│  │        ├─ ResetPasswordContainer.vue
+│  │        └─ ResetPasswordForm.vue
+│  └─ shared
+│     ├─ input
+│     │  ├─ CommonField.vue
+│     │  ├─ OTPField.vue
+│     │  └─ PasswordField.vue
+│     ├─ toast
+│     │  ├─ ErrorToastNotification.vue
+│     │  ├─ InfoToastNotification.vue
+│     │  └─ SuccessToastNotification.vue
+│     └─ utils
+│        └─ AuthResponse.utils.vue
+├─ composables
+│  └─ useVerifyLink.ts
+├─ content
+├─ layouts
+│  └─ Auth.layout.vue
+├─ middleware
+│  ├─ verifyRegisterLink.ts
+│  └─ verifyResetPassLink.ts
+├─ nuxt.config.ts
+├─ package-lock.json
+├─ package.json
+├─ pages
+│  ├─ forgot_password.vue
+│  ├─ index.vue
+│  ├─ login.vue
+│  ├─ register.vue
+│  ├─ reset_password.vue
+│  └─ test.vue
+├─ plugins
+│  ├─ Vue3-toastify.client.ts
+│  └─ Vue3Lottie.client.ts
+├─ public
+│  ├─ animations
+│  │  ├─ InternalError.json
+│  │  ├─ fail.json
+│  │  ├─ successed.json
+│  │  └─ waiting.json
+│  ├─ favicon.ico
+│  ├─ icons
+│  │  ├─ copy.svg
+│  │  ├─ error.svg
+│  │  ├─ eye-slash.svg
+│  │  ├─ eye.svg
+│  │  ├─ facebook.svg
+│  │  ├─ google.svg
+│  │  ├─ info.svg
+│  │  ├─ loading.svg
+│  │  ├─ logo-dark.webp
+│  │  └─ success.svg
+│  ├─ images
+│  │  ├─ forgot-password.png
+│  │  ├─ image.png
+│  │  ├─ login-image.jpg
+│  │  ├─ register-image.png
+│  │  └─ reset-password.png
+│  ├─ robots.txt
+│  └─ static
+│     └─ fonts
+│        ├─ Satoshi-Black.woff2
+│        ├─ Satoshi-Bold.woff2
+│        ├─ Satoshi-Light.woff2
+│        ├─ Satoshi-Medium.woff2
+│        ├─ Satoshi-Regular.woff2
+│        └─ Satoshi-Variable.woff2
+├─ server
+│  ├─ api
+│  │  └─ auth
+│  │     ├─ forgotPassword.ts
+│  │     ├─ forgotSubmit.ts
+│  │     ├─ login.ts
+│  │     ├─ register.ts
+│  │     └─ registerRequest.ts
+│  └─ tsconfig.json
+├─ store
+│  └─ authLoading.ts
+├─ tailwind.config.js
+├─ tsconfig.json
+└─ utils
+   ├─ string.ts
+   └─ toastNotification.ts
+
+```
+```
+movie-dashboard
+├─ README.md
+├─ actions
+│  └─ auth.action.ts
+├─ app.vue
+├─ assets
+│  └─ css
+│     ├─ app.css
+│     └─ fonts.css
+├─ components
+│  ├─ core
+│  │  └─ auth
+│  │     ├─ 2fa
+│  │     │  └─ OTPFill.vue
+│  │     ├─ forgot-password
+│  │     │  ├─ ForgotPasswordContainer.vue
+│  │     │  └─ ForgotPasswordForm.vue
+│  │     ├─ login
+│  │     │  ├─ LoginContainer.vue
+│  │     │  └─ LoginForm.vue
+│  │     ├─ register
+│  │     │  ├─ RegisterContainer.vue
+│  │     │  ├─ RegisterFillForm.vue
+│  │     │  └─ RegisterRequestForm.vue
+│  │     └─ reset-password
+│  │        ├─ ResetPasswordContainer.vue
+│  │        └─ ResetPasswordForm.vue
+│  └─ shared
+│     ├─ input
+│     │  ├─ CommonField.vue
+│     │  ├─ OTPField.vue
+│     │  └─ PasswordField.vue
+│     ├─ toast
+│     │  ├─ ErrorToastNotification.vue
+│     │  ├─ InfoToastNotification.vue
+│     │  └─ SuccessToastNotification.vue
+│     └─ utils
+│        └─ AuthResponse.utils.vue
+├─ composables
+│  └─ useVerifyLink.ts
+├─ content
+├─ layouts
+│  └─ Auth.layout.vue
+├─ middleware
+│  ├─ verifyRegisterLink.ts
+│  └─ verifyResetPassLink.ts
+├─ nuxt.config.ts
+├─ package-lock.json
+├─ package.json
+├─ pages
+│  ├─ forgot_password.vue
+│  ├─ index.vue
+│  ├─ login.vue
+│  ├─ register.vue
+│  ├─ reset_password.vue
+│  └─ test.vue
+├─ plugins
+│  ├─ Vue3-toastify.client.ts
+│  └─ Vue3Lottie.client.ts
+├─ public
+│  ├─ animations
+│  │  ├─ InternalError.json
+│  │  ├─ fail.json
+│  │  ├─ successed.json
+│  │  └─ waiting.json
+│  ├─ favicon.ico
+│  ├─ icons
+│  │  ├─ copy.svg
+│  │  ├─ error.svg
+│  │  ├─ eye-slash.svg
+│  │  ├─ eye.svg
+│  │  ├─ facebook.svg
+│  │  ├─ google.svg
+│  │  ├─ info.svg
+│  │  ├─ loading.svg
+│  │  ├─ logo-dark.webp
+│  │  └─ success.svg
+│  ├─ images
+│  │  ├─ forgot-password.png
+│  │  ├─ image.png
+│  │  ├─ login-image.jpg
+│  │  ├─ register-image.png
+│  │  └─ reset-password.png
+│  ├─ robots.txt
+│  └─ static
+│     └─ fonts
+│        ├─ Satoshi-Black.woff2
+│        ├─ Satoshi-Bold.woff2
+│        ├─ Satoshi-Light.woff2
+│        ├─ Satoshi-Medium.woff2
+│        ├─ Satoshi-Regular.woff2
+│        └─ Satoshi-Variable.woff2
+├─ server
+│  ├─ api
+│  │  └─ auth
+│  │     ├─ forgotPassword.ts
+│  │     ├─ forgotSubmit.ts
+│  │     ├─ login.ts
+│  │     ├─ register.ts
+│  │     └─ registerRequest.ts
+│  └─ tsconfig.json
+├─ store
+│  └─ authLoading.ts
+├─ tailwind.config.js
+├─ tsconfig.json
+└─ utils
+   ├─ string.ts
+   └─ toastNotification.ts
+
+```
+```
+movie-dashboard
+├─ README.md
+├─ actions
+│  └─ auth.action.ts
+├─ app.vue
+├─ assets
+│  └─ css
+│     ├─ app.css
+│     └─ fonts.css
+├─ components
+│  ├─ core
+│  │  └─ auth
+│  │     ├─ 2fa
+│  │     │  └─ OTPFill.vue
+│  │     ├─ forgot-password
+│  │     │  ├─ ForgotPasswordContainer.vue
+│  │     │  └─ ForgotPasswordForm.vue
+│  │     ├─ login
+│  │     │  ├─ LoginContainer.vue
+│  │     │  └─ LoginForm.vue
+│  │     ├─ register
+│  │     │  ├─ RegisterContainer.vue
+│  │     │  ├─ RegisterFillForm.vue
+│  │     │  └─ RegisterRequestForm.vue
+│  │     └─ reset-password
+│  │        ├─ ResetPasswordContainer.vue
+│  │        └─ ResetPasswordForm.vue
+│  └─ shared
+│     ├─ input
+│     │  ├─ CommonField.vue
+│     │  ├─ OTPField.vue
+│     │  └─ PasswordField.vue
+│     ├─ toast
+│     │  ├─ ErrorToastNotification.vue
+│     │  ├─ InfoToastNotification.vue
+│     │  └─ SuccessToastNotification.vue
+│     └─ utils
+│        └─ AuthResponse.utils.vue
+├─ composables
+│  └─ useVerifyLink.ts
+├─ content
+├─ layouts
+│  └─ Auth.layout.vue
+├─ middleware
+│  ├─ verifyRegisterLink.ts
+│  └─ verifyResetPassLink.ts
+├─ nuxt.config.ts
+├─ package-lock.json
+├─ package.json
+├─ pages
+│  ├─ forgot_password.vue
+│  ├─ index.vue
+│  ├─ login.vue
+│  ├─ register.vue
+│  ├─ reset_password.vue
+│  └─ test.vue
+├─ plugins
+│  ├─ Vue3-toastify.client.ts
+│  └─ Vue3Lottie.client.ts
+├─ public
+│  ├─ animations
+│  │  ├─ InternalError.json
+│  │  ├─ fail.json
+│  │  ├─ successed.json
+│  │  └─ waiting.json
+│  ├─ favicon.ico
+│  ├─ icons
+│  │  ├─ copy.svg
+│  │  ├─ error.svg
+│  │  ├─ eye-slash.svg
+│  │  ├─ eye.svg
+│  │  ├─ facebook.svg
+│  │  ├─ google.svg
+│  │  ├─ info.svg
+│  │  ├─ loading.svg
+│  │  ├─ logo-dark.webp
+│  │  └─ success.svg
+│  ├─ images
+│  │  ├─ forgot-password.png
+│  │  ├─ image.png
+│  │  ├─ login-image.jpg
+│  │  ├─ register-image.png
+│  │  └─ reset-password.png
+│  ├─ robots.txt
+│  └─ static
+│     └─ fonts
+│        ├─ Satoshi-Black.woff2
+│        ├─ Satoshi-Bold.woff2
+│        ├─ Satoshi-Light.woff2
+│        ├─ Satoshi-Medium.woff2
+│        ├─ Satoshi-Regular.woff2
+│        └─ Satoshi-Variable.woff2
+├─ server
+│  ├─ api
+│  │  └─ auth
+│  │     ├─ forgotPassword.ts
+│  │     ├─ forgotSubmit.ts
+│  │     ├─ login.ts
+│  │     ├─ register.ts
+│  │     └─ registerRequest.ts
+│  └─ tsconfig.json
+├─ store
+│  └─ authLoading.ts
+├─ tailwind.config.js
+├─ tsconfig.json
+└─ utils
+   ├─ string.ts
+   └─ toastNotification.ts
+
+```
+```
+movie-dashboard
+├─ README.md
+├─ actions
+│  └─ auth.action.ts
+├─ app.vue
+├─ assets
+│  └─ css
+│     ├─ app.css
+│     └─ fonts.css
+├─ components
+│  ├─ core
+│  │  └─ auth
+│  │     ├─ 2fa
+│  │     │  └─ OTPFill.vue
+│  │     ├─ forgot-password
+│  │     │  ├─ ForgotPasswordContainer.vue
+│  │     │  └─ ForgotPasswordForm.vue
+│  │     ├─ login
+│  │     │  ├─ LoginContainer.vue
+│  │     │  └─ LoginForm.vue
+│  │     ├─ register
+│  │     │  ├─ RegisterContainer.vue
+│  │     │  ├─ RegisterFillForm.vue
+│  │     │  └─ RegisterRequestForm.vue
+│  │     └─ reset-password
+│  │        ├─ ResetPasswordContainer.vue
+│  │        └─ ResetPasswordForm.vue
+│  └─ shared
+│     ├─ input
+│     │  ├─ CommonField.vue
+│     │  ├─ OTPField.vue
+│     │  └─ PasswordField.vue
+│     ├─ toast
+│     │  ├─ ErrorToastNotification.vue
+│     │  ├─ InfoToastNotification.vue
+│     │  └─ SuccessToastNotification.vue
+│     └─ utils
+│        └─ AuthResponse.utils.vue
+├─ composables
+│  └─ useVerifyLink.ts
+├─ content
+├─ layouts
+│  └─ Auth.layout.vue
+├─ middleware
+│  ├─ verifyRegisterLink.ts
+│  └─ verifyResetPassLink.ts
+├─ nuxt.config.ts
+├─ package-lock.json
+├─ package.json
+├─ pages
+│  ├─ forgot_password.vue
+│  ├─ index.vue
+│  ├─ login.vue
+│  ├─ register.vue
+│  ├─ reset_password.vue
+│  └─ test.vue
+├─ plugins
+│  ├─ Vue3-toastify.client.ts
+│  └─ Vue3Lottie.client.ts
+├─ public
+│  ├─ animations
+│  │  ├─ InternalError.json
+│  │  ├─ fail.json
+│  │  ├─ successed.json
+│  │  └─ waiting.json
+│  ├─ favicon.ico
+│  ├─ icons
+│  │  ├─ copy.svg
+│  │  ├─ error.svg
+│  │  ├─ eye-slash.svg
+│  │  ├─ eye.svg
+│  │  ├─ facebook.svg
+│  │  ├─ google.svg
+│  │  ├─ info.svg
+│  │  ├─ loading.svg
+│  │  ├─ logo-dark.webp
+│  │  └─ success.svg
+│  ├─ images
+│  │  ├─ forgot-password.png
+│  │  ├─ image.png
+│  │  ├─ login-image.jpg
+│  │  ├─ register-image.png
+│  │  └─ reset-password.png
+│  ├─ robots.txt
+│  └─ static
+│     └─ fonts
+│        ├─ Satoshi-Black.woff2
+│        ├─ Satoshi-Bold.woff2
+│        ├─ Satoshi-Light.woff2
+│        ├─ Satoshi-Medium.woff2
+│        ├─ Satoshi-Regular.woff2
+│        └─ Satoshi-Variable.woff2
+├─ server
+│  ├─ api
+│  │  └─ auth
+│  │     ├─ forgotPassword.ts
+│  │     ├─ forgotSubmit.ts
+│  │     ├─ login.ts
+│  │     ├─ register.ts
+│  │     └─ registerRequest.ts
+│  └─ tsconfig.json
+├─ store
+│  └─ authLoading.ts
+├─ tailwind.config.js
+├─ tsconfig.json
+└─ utils
+   ├─ string.ts
+   └─ toastNotification.ts
+
+```
+```
+movie-dashboard
+├─ README.md
+├─ actions
+│  └─ auth.action.ts
+├─ app.vue
+├─ assets
+│  └─ css
+│     ├─ app.css
+│     └─ fonts.css
+├─ components
+│  ├─ core
+│  │  └─ auth
+│  │     ├─ 2fa
+│  │     │  └─ OTPFill.vue
+│  │     ├─ forgot-password
+│  │     │  ├─ ForgotPasswordContainer.vue
+│  │     │  └─ ForgotPasswordForm.vue
+│  │     ├─ login
+│  │     │  ├─ LoginContainer.vue
+│  │     │  └─ LoginForm.vue
+│  │     ├─ register
+│  │     │  ├─ RegisterContainer.vue
+│  │     │  ├─ RegisterFillForm.vue
+│  │     │  └─ RegisterRequestForm.vue
+│  │     └─ reset-password
+│  │        ├─ ResetPasswordContainer.vue
+│  │        └─ ResetPasswordForm.vue
+│  └─ shared
+│     ├─ input
+│     │  ├─ CommonField.vue
+│     │  ├─ OTPField.vue
+│     │  └─ PasswordField.vue
+│     ├─ toast
+│     │  ├─ ErrorToastNotification.vue
+│     │  ├─ InfoToastNotification.vue
+│     │  └─ SuccessToastNotification.vue
+│     └─ utils
+│        └─ AuthResponse.utils.vue
+├─ composables
+│  └─ useVerifyLink.ts
+├─ content
+├─ layouts
+│  └─ Auth.layout.vue
+├─ middleware
+│  ├─ verifyRegisterLink.ts
+│  └─ verifyResetPassLink.ts
+├─ nuxt.config.ts
+├─ package-lock.json
+├─ package.json
+├─ pages
+│  ├─ forgot_password.vue
+│  ├─ index.vue
+│  ├─ login.vue
+│  ├─ register.vue
+│  ├─ reset_password.vue
+│  └─ test.vue
+├─ plugins
+│  ├─ Vue3-toastify.client.ts
+│  └─ Vue3Lottie.client.ts
+├─ public
+│  ├─ animations
+│  │  ├─ InternalError.json
+│  │  ├─ fail.json
+│  │  ├─ successed.json
+│  │  └─ waiting.json
+│  ├─ favicon.ico
+│  ├─ icons
+│  │  ├─ copy.svg
+│  │  ├─ error.svg
+│  │  ├─ eye-slash.svg
+│  │  ├─ eye.svg
+│  │  ├─ facebook.svg
+│  │  ├─ google.svg
+│  │  ├─ info.svg
+│  │  ├─ loading.svg
+│  │  ├─ logo-dark.webp
+│  │  └─ success.svg
+│  ├─ images
+│  │  ├─ forgot-password.png
+│  │  ├─ image.png
+│  │  ├─ login-image.jpg
+│  │  ├─ register-image.png
+│  │  └─ reset-password.png
+│  ├─ robots.txt
+│  └─ static
+│     └─ fonts
+│        ├─ Satoshi-Black.woff2
+│        ├─ Satoshi-Bold.woff2
+│        ├─ Satoshi-Light.woff2
+│        ├─ Satoshi-Medium.woff2
+│        ├─ Satoshi-Regular.woff2
+│        └─ Satoshi-Variable.woff2
+├─ server
+│  ├─ api
+│  │  └─ auth
+│  │     ├─ forgotPassword.ts
+│  │     ├─ forgotSubmit.ts
+│  │     ├─ login.ts
+│  │     ├─ register.ts
+│  │     └─ registerRequest.ts
+│  └─ tsconfig.json
+├─ store
+│  └─ authLoading.ts
+├─ tailwind.config.js
+├─ tsconfig.json
+└─ utils
+   ├─ string.ts
+   └─ toastNotification.ts
+
+```
+```
+movie-dashboard
+├─ README.md
+├─ actions
+│  └─ auth.action.ts
+├─ app.vue
+├─ assets
+│  └─ css
+│     ├─ app.css
+│     └─ fonts.css
+├─ components
+│  ├─ core
+│  │  └─ auth
+│  │     ├─ 2fa
+│  │     │  └─ OTPFill.vue
+│  │     ├─ forgot-password
+│  │     │  ├─ ForgotPasswordContainer.vue
+│  │     │  └─ ForgotPasswordForm.vue
+│  │     ├─ login
+│  │     │  ├─ LoginContainer.vue
+│  │     │  └─ LoginForm.vue
+│  │     ├─ register
+│  │     │  ├─ RegisterContainer.vue
+│  │     │  ├─ RegisterFillForm.vue
+│  │     │  └─ RegisterRequestForm.vue
+│  │     └─ reset-password
+│  │        ├─ ResetPasswordContainer.vue
+│  │        └─ ResetPasswordForm.vue
+│  └─ shared
+│     ├─ input
+│     │  ├─ CommonField.vue
+│     │  ├─ OTPField.vue
+│     │  └─ PasswordField.vue
+│     ├─ toast
+│     │  ├─ ErrorToastNotification.vue
+│     │  ├─ InfoToastNotification.vue
+│     │  └─ SuccessToastNotification.vue
+│     └─ utils
+│        └─ AuthResponse.utils.vue
+├─ composables
+│  └─ useVerifyLink.ts
+├─ content
+├─ layouts
+│  └─ Auth.layout.vue
+├─ middleware
+│  ├─ verifyRegisterLink.ts
+│  └─ verifyResetPassLink.ts
+├─ nuxt.config.ts
+├─ package-lock.json
+├─ package.json
+├─ pages
+│  ├─ forgot_password.vue
+│  ├─ index.vue
+│  ├─ login.vue
+│  ├─ register.vue
+│  ├─ reset_password.vue
+│  └─ test.vue
+├─ plugins
+│  ├─ Vue3-toastify.client.ts
+│  └─ Vue3Lottie.client.ts
+├─ public
+│  ├─ animations
+│  │  ├─ InternalError.json
+│  │  ├─ fail.json
+│  │  ├─ successed.json
+│  │  └─ waiting.json
+│  ├─ favicon.ico
+│  ├─ icons
+│  │  ├─ copy.svg
+│  │  ├─ error.svg
+│  │  ├─ eye-slash.svg
+│  │  ├─ eye.svg
+│  │  ├─ facebook.svg
+│  │  ├─ google.svg
+│  │  ├─ info.svg
+│  │  ├─ loading.svg
+│  │  ├─ logo-dark.webp
+│  │  └─ success.svg
+│  ├─ images
+│  │  ├─ forgot-password.png
+│  │  ├─ image.png
+│  │  ├─ login-image.jpg
+│  │  ├─ register-image.png
+│  │  └─ reset-password.png
+│  ├─ robots.txt
+│  └─ static
+│     └─ fonts
+│        ├─ Satoshi-Black.woff2
+│        ├─ Satoshi-Bold.woff2
+│        ├─ Satoshi-Light.woff2
+│        ├─ Satoshi-Medium.woff2
+│        ├─ Satoshi-Regular.woff2
+│        └─ Satoshi-Variable.woff2
+├─ server
+│  ├─ api
+│  │  └─ auth
+│  │     ├─ forgotPassword.ts
+│  │     ├─ forgotSubmit.ts
+│  │     ├─ login.ts
+│  │     ├─ register.ts
+│  │     └─ registerRequest.ts
+│  └─ tsconfig.json
+├─ store
+│  └─ authLoading.ts
+├─ tailwind.config.js
+├─ tsconfig.json
+└─ utils
+   ├─ string.ts
+   └─ toastNotification.ts
+
+```
+```
+movie-dashboard
+├─ README.md
+├─ actions
+│  └─ auth.action.ts
+├─ app.vue
+├─ assets
+│  └─ css
+│     ├─ app.css
+│     └─ fonts.css
+├─ components
+│  ├─ core
+│  │  └─ auth
+│  │     ├─ 2fa
+│  │     │  └─ OTPFill.vue
+│  │     ├─ forgot-password
+│  │     │  ├─ ForgotPasswordContainer.vue
+│  │     │  └─ ForgotPasswordForm.vue
+│  │     ├─ login
+│  │     │  ├─ LoginContainer.vue
+│  │     │  └─ LoginForm.vue
+│  │     ├─ register
+│  │     │  ├─ RegisterContainer.vue
+│  │     │  ├─ RegisterFillForm.vue
+│  │     │  └─ RegisterRequestForm.vue
+│  │     └─ reset-password
+│  │        ├─ ResetPasswordContainer.vue
+│  │        └─ ResetPasswordForm.vue
+│  └─ shared
+│     ├─ input
+│     │  ├─ CommonField.vue
+│     │  ├─ OTPField.vue
+│     │  └─ PasswordField.vue
+│     ├─ toast
+│     │  ├─ ErrorToastNotification.vue
+│     │  ├─ InfoToastNotification.vue
+│     │  └─ SuccessToastNotification.vue
+│     └─ utils
+│        └─ AuthResponse.utils.vue
+├─ composables
+│  └─ useVerifyLink.ts
+├─ content
+├─ layouts
+│  └─ Auth.layout.vue
+├─ middleware
+│  ├─ verifyRegisterLink.ts
+│  └─ verifyResetPassLink.ts
+├─ nuxt.config.ts
+├─ package-lock.json
+├─ package.json
+├─ pages
+│  ├─ forgot_password.vue
+│  ├─ index.vue
+│  ├─ login.vue
+│  ├─ register.vue
+│  ├─ reset_password.vue
+│  └─ test.vue
+├─ plugins
+│  ├─ Vue3-toastify.client.ts
+│  └─ Vue3Lottie.client.ts
+├─ public
+│  ├─ animations
+│  │  ├─ InternalError.json
+│  │  ├─ fail.json
+│  │  ├─ successed.json
+│  │  └─ waiting.json
+│  ├─ favicon.ico
+│  ├─ icons
+│  │  ├─ copy.svg
+│  │  ├─ error.svg
+│  │  ├─ eye-slash.svg
+│  │  ├─ eye.svg
+│  │  ├─ facebook.svg
+│  │  ├─ google.svg
+│  │  ├─ info.svg
+│  │  ├─ loading.svg
+│  │  ├─ logo-dark.webp
+│  │  └─ success.svg
+│  ├─ images
+│  │  ├─ forgot-password.png
+│  │  ├─ image.png
+│  │  ├─ login-image.jpg
+│  │  ├─ register-image.png
+│  │  └─ reset-password.png
+│  ├─ robots.txt
+│  └─ static
+│     └─ fonts
+│        ├─ Satoshi-Black.woff2
+│        ├─ Satoshi-Bold.woff2
+│        ├─ Satoshi-Light.woff2
+│        ├─ Satoshi-Medium.woff2
+│        ├─ Satoshi-Regular.woff2
+│        └─ Satoshi-Variable.woff2
+├─ server
+│  ├─ api
+│  │  └─ auth
+│  │     ├─ forgotPassword.ts
+│  │     ├─ forgotSubmit.ts
+│  │     ├─ login.ts
+│  │     ├─ register.ts
+│  │     └─ registerRequest.ts
+│  └─ tsconfig.json
+├─ store
+│  └─ authLoading.ts
+├─ tailwind.config.js
+├─ tsconfig.json
+└─ utils
+   ├─ string.ts
+   └─ toastNotification.ts
+
+```
+```
+movie-dashboard
+├─ README.md
+├─ actions
+│  └─ auth.action.ts
+├─ app.vue
+├─ assets
+│  └─ css
+│     ├─ app.css
+│     └─ fonts.css
+├─ components
+│  ├─ core
+│  │  └─ auth
+│  │     ├─ 2fa
+│  │     │  └─ OTPFill.vue
+│  │     ├─ forgot-password
+│  │     │  ├─ ForgotPasswordContainer.vue
+│  │     │  └─ ForgotPasswordForm.vue
+│  │     ├─ login
+│  │     │  ├─ LoginContainer.vue
+│  │     │  └─ LoginForm.vue
+│  │     ├─ register
+│  │     │  ├─ RegisterContainer.vue
+│  │     │  ├─ RegisterFillForm.vue
+│  │     │  └─ RegisterRequestForm.vue
+│  │     └─ reset-password
+│  │        ├─ ResetPasswordContainer.vue
+│  │        └─ ResetPasswordForm.vue
+│  └─ shared
+│     ├─ input
+│     │  ├─ CommonField.vue
+│     │  ├─ OTPField.vue
+│     │  └─ PasswordField.vue
+│     ├─ toast
+│     │  ├─ ErrorToastNotification.vue
+│     │  ├─ InfoToastNotification.vue
+│     │  └─ SuccessToastNotification.vue
+│     └─ utils
+│        └─ AuthResponse.utils.vue
+├─ composables
+│  └─ useVerifyLink.ts
+├─ content
+├─ layouts
+│  └─ Auth.layout.vue
+├─ middleware
+│  ├─ verifyRegisterLink.ts
+│  └─ verifyResetPassLink.ts
+├─ nuxt.config.ts
+├─ package-lock.json
+├─ package.json
+├─ pages
+│  ├─ forgot_password.vue
+│  ├─ index.vue
+│  ├─ login.vue
+│  ├─ register.vue
+│  ├─ reset_password.vue
+│  └─ test.vue
+├─ plugins
+│  ├─ Vue3-toastify.client.ts
+│  └─ Vue3Lottie.client.ts
+├─ public
+│  ├─ animations
+│  │  ├─ InternalError.json
+│  │  ├─ fail.json
+│  │  ├─ successed.json
+│  │  └─ waiting.json
+│  ├─ favicon.ico
+│  ├─ icons
+│  │  ├─ copy.svg
+│  │  ├─ error.svg
+│  │  ├─ eye-slash.svg
+│  │  ├─ eye.svg
+│  │  ├─ facebook.svg
+│  │  ├─ google.svg
+│  │  ├─ info.svg
+│  │  ├─ loading.svg
+│  │  ├─ logo-dark.webp
+│  │  └─ success.svg
+│  ├─ images
+│  │  ├─ forgot-password.png
+│  │  ├─ image.png
+│  │  ├─ login-image.jpg
+│  │  ├─ register-image.png
+│  │  └─ reset-password.png
+│  ├─ robots.txt
+│  └─ static
+│     └─ fonts
+│        ├─ Satoshi-Black.woff2
+│        ├─ Satoshi-Bold.woff2
+│        ├─ Satoshi-Light.woff2
+│        ├─ Satoshi-Medium.woff2
+│        ├─ Satoshi-Regular.woff2
+│        └─ Satoshi-Variable.woff2
+├─ server
+│  ├─ api
+│  │  └─ auth
+│  │     ├─ forgotPassword.ts
+│  │     ├─ forgotSubmit.ts
+│  │     ├─ login.ts
+│  │     ├─ register.ts
+│  │     └─ registerRequest.ts
+│  └─ tsconfig.json
+├─ store
+│  └─ authLoading.ts
+├─ tailwind.config.js
+├─ tsconfig.json
+└─ utils
+   ├─ string.ts
+   └─ toastNotification.ts
+
+```
+```
+movie-dashboard
+├─ README.md
+├─ actions
+│  └─ auth.action.ts
+├─ app.vue
+├─ assets
+│  └─ css
+│     ├─ app.css
+│     └─ fonts.css
+├─ components
+│  ├─ core
+│  │  └─ auth
+│  │     ├─ 2fa
+│  │     │  └─ OTPFill.vue
+│  │     ├─ forgot-password
+│  │     │  ├─ ForgotPasswordContainer.vue
+│  │     │  └─ ForgotPasswordForm.vue
+│  │     ├─ login
+│  │     │  ├─ LoginContainer.vue
+│  │     │  └─ LoginForm.vue
+│  │     ├─ register
+│  │     │  ├─ RegisterContainer.vue
+│  │     │  ├─ RegisterFillForm.vue
+│  │     │  └─ RegisterRequestForm.vue
+│  │     └─ reset-password
+│  │        ├─ ResetPasswordContainer.vue
+│  │        └─ ResetPasswordForm.vue
+│  └─ shared
+│     ├─ input
+│     │  ├─ CommonField.vue
+│     │  ├─ OTPField.vue
+│     │  └─ PasswordField.vue
+│     ├─ toast
+│     │  ├─ ErrorToastNotification.vue
+│     │  ├─ InfoToastNotification.vue
+│     │  └─ SuccessToastNotification.vue
+│     └─ utils
+│        └─ AuthResponse.utils.vue
+├─ composables
+│  └─ useVerifyLink.ts
+├─ content
+├─ layouts
+│  └─ Auth.layout.vue
+├─ middleware
+│  ├─ verifyRegisterLink.ts
+│  └─ verifyResetPassLink.ts
+├─ nuxt.config.ts
+├─ package-lock.json
+├─ package.json
+├─ pages
+│  ├─ forgot_password.vue
+│  ├─ index.vue
+│  ├─ login.vue
+│  ├─ register.vue
+│  ├─ reset_password.vue
+│  └─ test.vue
+├─ plugins
+│  ├─ Vue3-toastify.client.ts
+│  └─ Vue3Lottie.client.ts
+├─ public
+│  ├─ animations
+│  │  ├─ InternalError.json
+│  │  ├─ fail.json
+│  │  ├─ successed.json
+│  │  └─ waiting.json
+│  ├─ favicon.ico
+│  ├─ icons
+│  │  ├─ copy.svg
+│  │  ├─ error.svg
+│  │  ├─ eye-slash.svg
+│  │  ├─ eye.svg
+│  │  ├─ facebook.svg
+│  │  ├─ google.svg
+│  │  ├─ info.svg
+│  │  ├─ loading.svg
+│  │  ├─ logo-dark.webp
+│  │  └─ success.svg
+│  ├─ images
+│  │  ├─ forgot-password.png
+│  │  ├─ image.png
+│  │  ├─ login-image.jpg
+│  │  ├─ register-image.png
+│  │  └─ reset-password.png
+│  ├─ robots.txt
+│  └─ static
+│     └─ fonts
+│        ├─ Satoshi-Black.woff2
+│        ├─ Satoshi-Bold.woff2
+│        ├─ Satoshi-Light.woff2
+│        ├─ Satoshi-Medium.woff2
+│        ├─ Satoshi-Regular.woff2
+│        └─ Satoshi-Variable.woff2
+├─ server
+│  ├─ api
+│  │  └─ auth
+│  │     ├─ forgotPassword.ts
+│  │     ├─ forgotSubmit.ts
+│  │     ├─ login.ts
+│  │     ├─ register.ts
+│  │     └─ registerRequest.ts
+│  └─ tsconfig.json
+├─ store
+│  └─ authLoading.ts
+├─ tailwind.config.js
+├─ tsconfig.json
+└─ utils
+   ├─ string.ts
+   └─ toastNotification.ts
+
+```
+```
+movie-dashboard
+├─ README.md
+├─ actions
+│  └─ auth.action.ts
+├─ app.vue
+├─ assets
+│  └─ css
+│     ├─ app.css
+│     └─ fonts.css
+├─ components
+│  ├─ core
+│  │  └─ auth
+│  │     ├─ 2fa
+│  │     │  └─ OTPFill.vue
+│  │     ├─ forgot-password
+│  │     │  ├─ ForgotPasswordContainer.vue
+│  │     │  └─ ForgotPasswordForm.vue
+│  │     ├─ login
+│  │     │  ├─ LoginContainer.vue
+│  │     │  └─ LoginForm.vue
+│  │     ├─ register
+│  │     │  ├─ RegisterContainer.vue
+│  │     │  ├─ RegisterFillForm.vue
+│  │     │  └─ RegisterRequestForm.vue
+│  │     └─ reset-password
+│  │        ├─ ResetPasswordContainer.vue
+│  │        └─ ResetPasswordForm.vue
+│  └─ shared
+│     ├─ input
+│     │  ├─ CommonField.vue
+│     │  ├─ OTPField.vue
+│     │  └─ PasswordField.vue
+│     ├─ toast
+│     │  ├─ ErrorToastNotification.vue
+│     │  ├─ InfoToastNotification.vue
+│     │  └─ SuccessToastNotification.vue
+│     └─ utils
+│        └─ AuthResponse.utils.vue
+├─ composables
+│  └─ useVerifyLink.ts
+├─ content
+├─ layouts
+│  └─ Auth.layout.vue
+├─ middleware
+│  ├─ verifyRegisterLink.ts
+│  └─ verifyResetPassLink.ts
+├─ nuxt.config.ts
+├─ package-lock.json
+├─ package.json
+├─ pages
+│  ├─ forgot_password.vue
+│  ├─ index.vue
+│  ├─ login.vue
+│  ├─ register.vue
+│  ├─ reset_password.vue
+│  └─ test.vue
+├─ plugins
+│  ├─ Vue3-toastify.client.ts
+│  └─ Vue3Lottie.client.ts
+├─ public
+│  ├─ animations
+│  │  ├─ InternalError.json
+│  │  ├─ fail.json
+│  │  ├─ successed.json
+│  │  └─ waiting.json
+│  ├─ favicon.ico
+│  ├─ icons
+│  │  ├─ copy.svg
+│  │  ├─ error.svg
+│  │  ├─ eye-slash.svg
+│  │  ├─ eye.svg
+│  │  ├─ facebook.svg
+│  │  ├─ google.svg
+│  │  ├─ info.svg
+│  │  ├─ loading.svg
+│  │  ├─ logo-dark.webp
+│  │  └─ success.svg
+│  ├─ images
+│  │  ├─ forgot-password.png
+│  │  ├─ image.png
+│  │  ├─ login-image.jpg
+│  │  ├─ register-image.png
+│  │  └─ reset-password.png
+│  ├─ robots.txt
+│  └─ static
+│     └─ fonts
+│        ├─ Satoshi-Black.woff2
+│        ├─ Satoshi-Bold.woff2
+│        ├─ Satoshi-Light.woff2
+│        ├─ Satoshi-Medium.woff2
+│        ├─ Satoshi-Regular.woff2
+│        └─ Satoshi-Variable.woff2
+├─ server
+│  ├─ api
+│  │  └─ auth
+│  │     ├─ forgotPassword.ts
+│  │     ├─ forgotSubmit.ts
+│  │     ├─ login.ts
+│  │     ├─ register.ts
+│  │     └─ registerRequest.ts
+│  └─ tsconfig.json
+├─ store
+│  └─ authLoading.ts
+├─ tailwind.config.js
+├─ tsconfig.json
+└─ utils
+   ├─ string.ts
+   └─ toastNotification.ts
+
+```
+```
+movie-dashboard
+├─ README.md
+├─ actions
+│  └─ auth.action.ts
+├─ app.vue
+├─ assets
+│  └─ css
+│     ├─ app.css
+│     └─ fonts.css
+├─ components
+│  ├─ core
+│  │  └─ auth
+│  │     ├─ 2fa
+│  │     │  └─ OTPFill.vue
+│  │     ├─ forgot-password
+│  │     │  ├─ ForgotPasswordContainer.vue
+│  │     │  └─ ForgotPasswordForm.vue
+│  │     ├─ login
+│  │     │  ├─ LoginContainer.vue
+│  │     │  └─ LoginForm.vue
+│  │     ├─ register
+│  │     │  ├─ RegisterContainer.vue
+│  │     │  ├─ RegisterFillForm.vue
+│  │     │  └─ RegisterRequestForm.vue
+│  │     └─ reset-password
+│  │        ├─ ResetPasswordContainer.vue
+│  │        └─ ResetPasswordForm.vue
+│  └─ shared
+│     ├─ input
+│     │  ├─ CommonField.vue
+│     │  ├─ OTPField.vue
+│     │  └─ PasswordField.vue
+│     ├─ toast
+│     │  ├─ ErrorToastNotification.vue
+│     │  ├─ InfoToastNotification.vue
+│     │  └─ SuccessToastNotification.vue
+│     └─ utils
+│        └─ AuthResponse.utils.vue
+├─ composables
+│  └─ useVerifyLink.ts
+├─ content
+├─ layouts
+│  └─ Auth.layout.vue
+├─ middleware
+│  ├─ verifyRegisterLink.ts
+│  └─ verifyResetPassLink.ts
+├─ nuxt.config.ts
+├─ package-lock.json
+├─ package.json
+├─ pages
+│  ├─ forgot_password.vue
+│  ├─ index.vue
+│  ├─ login.vue
+│  ├─ register.vue
+│  ├─ reset_password.vue
+│  └─ test.vue
+├─ plugins
+│  ├─ Vue3-toastify.client.ts
+│  └─ Vue3Lottie.client.ts
+├─ public
+│  ├─ animations
+│  │  ├─ InternalError.json
+│  │  ├─ fail.json
+│  │  ├─ successed.json
+│  │  └─ waiting.json
+│  ├─ favicon.ico
+│  ├─ icons
+│  │  ├─ copy.svg
+│  │  ├─ error.svg
+│  │  ├─ eye-slash.svg
+│  │  ├─ eye.svg
+│  │  ├─ facebook.svg
+│  │  ├─ google.svg
+│  │  ├─ info.svg
+│  │  ├─ loading.svg
+│  │  ├─ logo-dark.webp
+│  │  └─ success.svg
+│  ├─ images
+│  │  ├─ forgot-password.png
+│  │  ├─ image.png
+│  │  ├─ login-image.jpg
+│  │  ├─ register-image.png
+│  │  └─ reset-password.png
+│  ├─ robots.txt
+│  └─ static
+│     └─ fonts
+│        ├─ Satoshi-Black.woff2
+│        ├─ Satoshi-Bold.woff2
+│        ├─ Satoshi-Light.woff2
+│        ├─ Satoshi-Medium.woff2
+│        ├─ Satoshi-Regular.woff2
+│        └─ Satoshi-Variable.woff2
+├─ server
+│  ├─ api
+│  │  └─ auth
+│  │     ├─ forgotPassword.ts
+│  │     ├─ forgotSubmit.ts
+│  │     ├─ login.ts
+│  │     ├─ register.ts
+│  │     └─ registerRequest.ts
+│  └─ tsconfig.json
+├─ store
+│  └─ authLoading.ts
+├─ tailwind.config.js
+├─ tsconfig.json
+└─ utils
+   ├─ string.ts
+   └─ toastNotification.ts
+
+```
+```
+movie-dashboard
+├─ README.md
+├─ actions
+│  └─ auth.action.ts
+├─ app.vue
+├─ assets
+│  └─ css
+│     ├─ app.css
+│     └─ fonts.css
+├─ components
+│  ├─ core
+│  │  └─ auth
+│  │     ├─ 2fa
+│  │     │  └─ OTPFill.vue
+│  │     ├─ forgot-password
+│  │     │  ├─ ForgotPasswordContainer.vue
+│  │     │  └─ ForgotPasswordForm.vue
+│  │     ├─ login
+│  │     │  ├─ LoginContainer.vue
+│  │     │  └─ LoginForm.vue
+│  │     ├─ register
+│  │     │  ├─ RegisterContainer.vue
+│  │     │  ├─ RegisterFillForm.vue
+│  │     │  └─ RegisterRequestForm.vue
+│  │     └─ reset-password
+│  │        ├─ ResetPasswordContainer.vue
+│  │        └─ ResetPasswordForm.vue
+│  └─ shared
+│     ├─ input
+│     │  ├─ CommonField.vue
+│     │  ├─ OTPField.vue
+│     │  └─ PasswordField.vue
+│     ├─ toast
+│     │  ├─ ErrorToastNotification.vue
+│     │  ├─ InfoToastNotification.vue
+│     │  └─ SuccessToastNotification.vue
+│     └─ utils
+│        └─ AuthResponse.utils.vue
+├─ composables
+│  └─ useVerifyLink.ts
+├─ content
+├─ layouts
+│  └─ Auth.layout.vue
+├─ middleware
+│  ├─ verifyRegisterLink.ts
+│  └─ verifyResetPassLink.ts
+├─ nuxt.config.ts
+├─ package-lock.json
+├─ package.json
+├─ pages
+│  ├─ forgot_password.vue
+│  ├─ index.vue
+│  ├─ login.vue
+│  ├─ register.vue
+│  ├─ reset_password.vue
+│  └─ test.vue
+├─ plugins
+│  ├─ Vue3-toastify.client.ts
+│  └─ Vue3Lottie.client.ts
+├─ public
+│  ├─ animations
+│  │  ├─ InternalError.json
+│  │  ├─ fail.json
+│  │  ├─ successed.json
+│  │  └─ waiting.json
+│  ├─ favicon.ico
+│  ├─ icons
+│  │  ├─ copy.svg
+│  │  ├─ error.svg
+│  │  ├─ eye-slash.svg
+│  │  ├─ eye.svg
+│  │  ├─ facebook.svg
+│  │  ├─ google.svg
+│  │  ├─ info.svg
+│  │  ├─ loading.svg
+│  │  ├─ logo-dark.webp
+│  │  └─ success.svg
+│  ├─ images
+│  │  ├─ forgot-password.png
+│  │  ├─ image.png
+│  │  ├─ login-image.jpg
+│  │  ├─ register-image.png
+│  │  └─ reset-password.png
+│  ├─ robots.txt
+│  └─ static
+│     └─ fonts
+│        ├─ Satoshi-Black.woff2
+│        ├─ Satoshi-Bold.woff2
+│        ├─ Satoshi-Light.woff2
+│        ├─ Satoshi-Medium.woff2
+│        ├─ Satoshi-Regular.woff2
+│        └─ Satoshi-Variable.woff2
+├─ server
+│  ├─ api
+│  │  └─ auth
+│  │     ├─ forgotPassword.ts
+│  │     ├─ forgotSubmit.ts
+│  │     ├─ login.ts
+│  │     ├─ register.ts
+│  │     └─ registerRequest.ts
+│  └─ tsconfig.json
+├─ store
+│  └─ authLoading.ts
+├─ tailwind.config.js
+├─ tsconfig.json
+└─ utils
+   ├─ string.ts
+   └─ toastNotification.ts
+
+```
+```
+movie-dashboard
+├─ README.md
+├─ actions
+│  └─ auth.action.ts
+├─ app.vue
+├─ assets
+│  └─ css
+│     ├─ app.css
+│     └─ fonts.css
+├─ components
+│  ├─ core
+│  │  └─ auth
+│  │     ├─ 2fa
+│  │     │  └─ OTPFill.vue
+│  │     ├─ forgot-password
+│  │     │  ├─ ForgotPasswordContainer.vue
+│  │     │  └─ ForgotPasswordForm.vue
+│  │     ├─ login
+│  │     │  ├─ LoginContainer.vue
+│  │     │  └─ LoginForm.vue
+│  │     ├─ register
+│  │     │  ├─ RegisterContainer.vue
+│  │     │  ├─ RegisterFillForm.vue
+│  │     │  └─ RegisterRequestForm.vue
+│  │     └─ reset-password
+│  │        ├─ ResetPasswordContainer.vue
+│  │        └─ ResetPasswordForm.vue
+│  └─ shared
+│     ├─ input
+│     │  ├─ CommonField.vue
+│     │  ├─ OTPField.vue
+│     │  └─ PasswordField.vue
+│     ├─ toast
+│     │  ├─ ErrorToastNotification.vue
+│     │  ├─ InfoToastNotification.vue
+│     │  └─ SuccessToastNotification.vue
+│     └─ utils
+│        └─ AuthResponse.utils.vue
+├─ composables
+│  └─ useVerifyLink.ts
+├─ content
+├─ layouts
+│  └─ Auth.layout.vue
+├─ middleware
+│  ├─ verifyRegisterLink.ts
+│  └─ verifyResetPassLink.ts
+├─ nuxt.config.ts
+├─ package-lock.json
+├─ package.json
+├─ pages
+│  ├─ forgot_password.vue
+│  ├─ index.vue
+│  ├─ login.vue
+│  ├─ register.vue
+│  ├─ reset_password.vue
+│  └─ test.vue
+├─ plugins
+│  ├─ Vue3-toastify.client.ts
+│  └─ Vue3Lottie.client.ts
+├─ public
+│  ├─ animations
+│  │  ├─ InternalError.json
+│  │  ├─ fail.json
+│  │  ├─ successed.json
+│  │  └─ waiting.json
+│  ├─ favicon.ico
+│  ├─ icons
+│  │  ├─ copy.svg
+│  │  ├─ error.svg
+│  │  ├─ eye-slash.svg
+│  │  ├─ eye.svg
+│  │  ├─ facebook.svg
+│  │  ├─ google.svg
+│  │  ├─ info.svg
+│  │  ├─ loading.svg
+│  │  ├─ logo-dark.webp
+│  │  └─ success.svg
+│  ├─ images
+│  │  ├─ forgot-password.png
+│  │  ├─ image.png
+│  │  ├─ login-image.jpg
+│  │  ├─ register-image.png
+│  │  └─ reset-password.png
+│  ├─ robots.txt
+│  └─ static
+│     └─ fonts
+│        ├─ Satoshi-Black.woff2
+│        ├─ Satoshi-Bold.woff2
+│        ├─ Satoshi-Light.woff2
+│        ├─ Satoshi-Medium.woff2
+│        ├─ Satoshi-Regular.woff2
+│        └─ Satoshi-Variable.woff2
+├─ server
+│  ├─ api
+│  │  └─ auth
+│  │     ├─ forgotPassword.ts
+│  │     ├─ forgotSubmit.ts
+│  │     ├─ login.ts
+│  │     ├─ register.ts
+│  │     └─ registerRequest.ts
+│  └─ tsconfig.json
+├─ store
+│  └─ authLoading.ts
+├─ tailwind.config.js
+├─ tsconfig.json
+└─ utils
+   ├─ string.ts
+   └─ toastNotification.ts
+
+```
+```
+movie-dashboard
+├─ README.md
+├─ actions
+│  └─ auth.action.ts
+├─ app.vue
+├─ assets
+│  └─ css
+│     ├─ app.css
+│     └─ fonts.css
+├─ components
+│  ├─ core
+│  │  └─ auth
+│  │     ├─ 2fa
+│  │     │  └─ OTPFill.vue
+│  │     ├─ forgot-password
+│  │     │  ├─ ForgotPasswordContainer.vue
+│  │     │  └─ ForgotPasswordForm.vue
+│  │     ├─ login
+│  │     │  ├─ LoginContainer.vue
+│  │     │  └─ LoginForm.vue
+│  │     ├─ register
+│  │     │  ├─ RegisterContainer.vue
+│  │     │  ├─ RegisterFillForm.vue
+│  │     │  └─ RegisterRequestForm.vue
+│  │     └─ reset-password
+│  │        ├─ ResetPasswordContainer.vue
+│  │        └─ ResetPasswordForm.vue
+│  └─ shared
+│     ├─ input
+│     │  ├─ CommonField.vue
+│     │  ├─ OTPField.vue
+│     │  └─ PasswordField.vue
+│     ├─ toast
+│     │  ├─ ErrorToastNotification.vue
+│     │  ├─ InfoToastNotification.vue
+│     │  └─ SuccessToastNotification.vue
+│     └─ utils
+│        └─ AuthResponse.utils.vue
+├─ composables
+│  └─ useVerifyLink.ts
+├─ content
+├─ layouts
+│  └─ Auth.layout.vue
+├─ middleware
+│  ├─ verifyRegisterLink.ts
+│  └─ verifyResetPassLink.ts
+├─ nuxt.config.ts
+├─ package-lock.json
+├─ package.json
+├─ pages
+│  ├─ forgot_password.vue
+│  ├─ index.vue
+│  ├─ login.vue
+│  ├─ register.vue
+│  ├─ reset_password.vue
+│  └─ test.vue
+├─ plugins
+│  ├─ Vue3-toastify.client.ts
+│  └─ Vue3Lottie.client.ts
+├─ public
+│  ├─ animations
+│  │  ├─ InternalError.json
+│  │  ├─ fail.json
+│  │  ├─ successed.json
+│  │  └─ waiting.json
+│  ├─ favicon.ico
+│  ├─ icons
+│  │  ├─ copy.svg
+│  │  ├─ error.svg
+│  │  ├─ eye-slash.svg
+│  │  ├─ eye.svg
+│  │  ├─ facebook.svg
+│  │  ├─ google.svg
+│  │  ├─ info.svg
+│  │  ├─ loading.svg
+│  │  ├─ logo-dark.webp
+│  │  └─ success.svg
+│  ├─ images
+│  │  ├─ forgot-password.png
+│  │  ├─ image.png
+│  │  ├─ login-image.jpg
+│  │  ├─ register-image.png
+│  │  └─ reset-password.png
+│  ├─ robots.txt
+│  └─ static
+│     └─ fonts
+│        ├─ Satoshi-Black.woff2
+│        ├─ Satoshi-Bold.woff2
+│        ├─ Satoshi-Light.woff2
+│        ├─ Satoshi-Medium.woff2
+│        ├─ Satoshi-Regular.woff2
+│        └─ Satoshi-Variable.woff2
+├─ server
+│  ├─ api
+│  │  └─ auth
+│  │     ├─ forgotPassword.ts
+│  │     ├─ forgotSubmit.ts
+│  │     ├─ login.ts
+│  │     ├─ register.ts
+│  │     └─ registerRequest.ts
+│  └─ tsconfig.json
+├─ store
+│  └─ authLoading.ts
+├─ tailwind.config.js
+├─ tsconfig.json
+└─ utils
+   ├─ string.ts
+   └─ toastNotification.ts
+
+```
+```
+movie-dashboard
+├─ README.md
+├─ actions
+│  └─ auth.action.ts
+├─ app.vue
+├─ assets
+│  └─ css
+│     ├─ app.css
+│     └─ fonts.css
+├─ components
+│  ├─ core
+│  │  └─ auth
+│  │     ├─ 2fa
+│  │     │  └─ OTPFill.vue
+│  │     ├─ forgot-password
+│  │     │  ├─ ForgotPasswordContainer.vue
+│  │     │  └─ ForgotPasswordForm.vue
+│  │     ├─ login
+│  │     │  ├─ LoginContainer.vue
+│  │     │  └─ LoginForm.vue
+│  │     ├─ register
+│  │     │  ├─ RegisterContainer.vue
+│  │     │  ├─ RegisterFillForm.vue
+│  │     │  └─ RegisterRequestForm.vue
+│  │     └─ reset-password
+│  │        ├─ ResetPasswordContainer.vue
+│  │        └─ ResetPasswordForm.vue
+│  └─ shared
+│     ├─ input
+│     │  ├─ CommonField.vue
+│     │  ├─ OTPField.vue
+│     │  └─ PasswordField.vue
+│     ├─ toast
+│     │  ├─ ErrorToastNotification.vue
+│     │  ├─ InfoToastNotification.vue
+│     │  └─ SuccessToastNotification.vue
+│     └─ utils
+│        └─ AuthResponse.utils.vue
+├─ composables
+│  └─ useVerifyLink.ts
+├─ content
+├─ layouts
+│  └─ Auth.layout.vue
+├─ middleware
+│  ├─ verifyRegisterLink.ts
+│  └─ verifyResetPassLink.ts
+├─ nuxt.config.ts
+├─ package-lock.json
+├─ package.json
+├─ pages
+│  ├─ forgot_password.vue
+│  ├─ index.vue
+│  ├─ login.vue
+│  ├─ register.vue
+│  ├─ reset_password.vue
+│  └─ test.vue
+├─ plugins
+│  ├─ Vue3-toastify.client.ts
+│  └─ Vue3Lottie.client.ts
+├─ public
+│  ├─ animations
+│  │  ├─ InternalError.json
+│  │  ├─ fail.json
+│  │  ├─ successed.json
+│  │  └─ waiting.json
+│  ├─ favicon.ico
+│  ├─ icons
+│  │  ├─ copy.svg
+│  │  ├─ error.svg
+│  │  ├─ eye-slash.svg
+│  │  ├─ eye.svg
+│  │  ├─ facebook.svg
+│  │  ├─ google.svg
+│  │  ├─ info.svg
+│  │  ├─ loading.svg
+│  │  ├─ logo-dark.webp
+│  │  └─ success.svg
+│  ├─ images
+│  │  ├─ forgot-password.png
+│  │  ├─ image.png
+│  │  ├─ login-image.jpg
+│  │  ├─ register-image.png
+│  │  └─ reset-password.png
+│  ├─ robots.txt
+│  └─ static
+│     └─ fonts
+│        ├─ Satoshi-Black.woff2
+│        ├─ Satoshi-Bold.woff2
+│        ├─ Satoshi-Light.woff2
+│        ├─ Satoshi-Medium.woff2
+│        ├─ Satoshi-Regular.woff2
+│        └─ Satoshi-Variable.woff2
+├─ server
+│  ├─ api
+│  │  └─ auth
+│  │     ├─ forgotPassword.ts
+│  │     ├─ forgotSubmit.ts
+│  │     ├─ login.ts
+│  │     ├─ register.ts
+│  │     └─ registerRequest.ts
+│  └─ tsconfig.json
+├─ store
+│  └─ authLoading.ts
+├─ tailwind.config.js
+├─ tsconfig.json
+└─ utils
+   ├─ string.ts
+   └─ toastNotification.ts
+
+```
+```
+movie-dashboard
+├─ README.md
+├─ actions
+│  └─ auth.action.ts
+├─ app.vue
+├─ assets
+│  └─ css
+│     ├─ app.css
+│     └─ fonts.css
+├─ components
+│  ├─ core
+│  │  └─ auth
+│  │     ├─ 2fa
+│  │     │  └─ OTPFill.vue
+│  │     ├─ forgot-password
+│  │     │  ├─ ForgotPasswordContainer.vue
+│  │     │  └─ ForgotPasswordForm.vue
+│  │     ├─ login
+│  │     │  ├─ LoginContainer.vue
+│  │     │  └─ LoginForm.vue
+│  │     ├─ register
+│  │     │  ├─ RegisterContainer.vue
+│  │     │  ├─ RegisterFillForm.vue
+│  │     │  └─ RegisterRequestForm.vue
+│  │     └─ reset-password
+│  │        ├─ ResetPasswordContainer.vue
+│  │        └─ ResetPasswordForm.vue
+│  └─ shared
+│     ├─ input
+│     │  ├─ CommonField.vue
+│     │  ├─ OTPField.vue
+│     │  └─ PasswordField.vue
+│     ├─ toast
+│     │  ├─ ErrorToastNotification.vue
+│     │  ├─ InfoToastNotification.vue
+│     │  └─ SuccessToastNotification.vue
+│     └─ utils
+│        └─ AuthResponse.utils.vue
+├─ composables
+│  └─ useVerifyLink.ts
+├─ content
+├─ layouts
+│  └─ Auth.layout.vue
+├─ middleware
+│  ├─ verifyRegisterLink.ts
+│  └─ verifyResetPassLink.ts
+├─ nuxt.config.ts
+├─ package-lock.json
+├─ package.json
+├─ pages
+│  ├─ forgot_password.vue
+│  ├─ index.vue
+│  ├─ login.vue
+│  ├─ register.vue
+│  ├─ reset_password.vue
+│  └─ test.vue
+├─ plugins
+│  ├─ Vue3-toastify.client.ts
+│  └─ Vue3Lottie.client.ts
+├─ public
+│  ├─ animations
+│  │  ├─ InternalError.json
+│  │  ├─ fail.json
+│  │  ├─ successed.json
+│  │  └─ waiting.json
+│  ├─ favicon.ico
+│  ├─ icons
+│  │  ├─ copy.svg
+│  │  ├─ error.svg
+│  │  ├─ eye-slash.svg
+│  │  ├─ eye.svg
+│  │  ├─ facebook.svg
+│  │  ├─ google.svg
+│  │  ├─ info.svg
+│  │  ├─ loading.svg
+│  │  ├─ logo-dark.webp
+│  │  └─ success.svg
+│  ├─ images
+│  │  ├─ forgot-password.png
+│  │  ├─ image.png
+│  │  ├─ login-image.jpg
+│  │  ├─ register-image.png
+│  │  └─ reset-password.png
+│  ├─ robots.txt
+│  └─ static
+│     └─ fonts
+│        ├─ Satoshi-Black.woff2
+│        ├─ Satoshi-Bold.woff2
+│        ├─ Satoshi-Light.woff2
+│        ├─ Satoshi-Medium.woff2
+│        ├─ Satoshi-Regular.woff2
+│        └─ Satoshi-Variable.woff2
+├─ server
+│  ├─ api
+│  │  └─ auth
+│  │     ├─ forgotPassword.ts
+│  │     ├─ forgotSubmit.ts
+│  │     ├─ login.ts
+│  │     ├─ register.ts
+│  │     └─ registerRequest.ts
+│  └─ tsconfig.json
+├─ store
+│  └─ authLoading.ts
+├─ tailwind.config.js
+├─ tsconfig.json
+└─ utils
+   ├─ string.ts
+   └─ toastNotification.ts
+
+```
+```
+movie-dashboard
+├─ README.md
+├─ actions
+│  └─ auth.action.ts
+├─ app.vue
+├─ assets
+│  └─ css
+│     ├─ app.css
+│     └─ fonts.css
+├─ components
+│  ├─ core
+│  │  └─ auth
+│  │     ├─ 2fa
+│  │     │  └─ OTPFill.vue
+│  │     ├─ forgot-password
+│  │     │  ├─ ForgotPasswordContainer.vue
+│  │     │  └─ ForgotPasswordForm.vue
+│  │     ├─ login
+│  │     │  ├─ LoginContainer.vue
+│  │     │  └─ LoginForm.vue
+│  │     ├─ register
+│  │     │  ├─ RegisterContainer.vue
+│  │     │  ├─ RegisterFillForm.vue
+│  │     │  └─ RegisterRequestForm.vue
+│  │     └─ reset-password
+│  │        ├─ ResetPasswordContainer.vue
+│  │        └─ ResetPasswordForm.vue
+│  └─ shared
+│     ├─ input
+│     │  ├─ CommonField.vue
+│     │  ├─ OTPField.vue
+│     │  └─ PasswordField.vue
+│     ├─ toast
+│     │  ├─ ErrorToastNotification.vue
+│     │  ├─ InfoToastNotification.vue
+│     │  └─ SuccessToastNotification.vue
+│     └─ utils
+│        └─ AuthResponse.utils.vue
+├─ composables
+│  └─ useVerifyLink.ts
+├─ content
+├─ layouts
+│  └─ Auth.layout.vue
+├─ middleware
+│  ├─ verifyRegisterLink.ts
+│  └─ verifyResetPassLink.ts
+├─ nuxt.config.ts
+├─ package-lock.json
+├─ package.json
+├─ pages
+│  ├─ forgot_password.vue
+│  ├─ index.vue
+│  ├─ login.vue
+│  ├─ register.vue
+│  ├─ reset_password.vue
+│  └─ test.vue
+├─ plugins
+│  ├─ Vue3-toastify.client.ts
+│  └─ Vue3Lottie.client.ts
+├─ public
+│  ├─ animations
+│  │  ├─ InternalError.json
+│  │  ├─ fail.json
+│  │  ├─ successed.json
+│  │  └─ waiting.json
+│  ├─ favicon.ico
+│  ├─ icons
+│  │  ├─ copy.svg
+│  │  ├─ error.svg
+│  │  ├─ eye-slash.svg
+│  │  ├─ eye.svg
+│  │  ├─ facebook.svg
+│  │  ├─ google.svg
+│  │  ├─ info.svg
+│  │  ├─ loading.svg
+│  │  ├─ logo-dark.webp
+│  │  └─ success.svg
+│  ├─ images
+│  │  ├─ forgot-password.png
+│  │  ├─ image.png
+│  │  ├─ login-image.jpg
+│  │  ├─ register-image.png
+│  │  └─ reset-password.png
+│  ├─ robots.txt
+│  └─ static
+│     └─ fonts
+│        ├─ Satoshi-Black.woff2
+│        ├─ Satoshi-Bold.woff2
+│        ├─ Satoshi-Light.woff2
+│        ├─ Satoshi-Medium.woff2
+│        ├─ Satoshi-Regular.woff2
+│        └─ Satoshi-Variable.woff2
+├─ server
+│  ├─ api
+│  │  └─ auth
+│  │     ├─ forgotPassword.ts
+│  │     ├─ forgotSubmit.ts
+│  │     ├─ login.ts
+│  │     ├─ register.ts
+│  │     └─ registerRequest.ts
+│  └─ tsconfig.json
+├─ store
+│  └─ authLoading.ts
+├─ tailwind.config.js
+├─ tsconfig.json
+└─ utils
+   ├─ string.ts
+   └─ toastNotification.ts
+
+```
+```
+movie-dashboard
+├─ README.md
+├─ actions
+│  └─ auth.action.ts
+├─ app.vue
+├─ assets
+│  └─ css
+│     ├─ app.css
+│     └─ fonts.css
+├─ components
+│  ├─ core
+│  │  └─ auth
+│  │     ├─ 2fa
+│  │     │  └─ OTPFill.vue
+│  │     ├─ forgot-password
+│  │     │  ├─ ForgotPasswordContainer.vue
+│  │     │  └─ ForgotPasswordForm.vue
+│  │     ├─ login
+│  │     │  ├─ LoginContainer.vue
+│  │     │  └─ LoginForm.vue
+│  │     ├─ register
+│  │     │  ├─ RegisterContainer.vue
+│  │     │  ├─ RegisterFillForm.vue
+│  │     │  └─ RegisterRequestForm.vue
+│  │     └─ reset-password
+│  │        ├─ ResetPasswordContainer.vue
+│  │        └─ ResetPasswordForm.vue
+│  └─ shared
+│     ├─ input
+│     │  ├─ CommonField.vue
+│     │  ├─ OTPField.vue
+│     │  └─ PasswordField.vue
+│     ├─ toast
+│     │  ├─ ErrorToastNotification.vue
+│     │  ├─ InfoToastNotification.vue
+│     │  └─ SuccessToastNotification.vue
+│     └─ utils
+│        └─ AuthResponse.utils.vue
+├─ composables
+│  └─ useVerifyLink.ts
+├─ content
+├─ layouts
+│  └─ Auth.layout.vue
+├─ middleware
+│  ├─ verifyRegisterLink.ts
+│  └─ verifyResetPassLink.ts
+├─ nuxt.config.ts
+├─ package-lock.json
+├─ package.json
+├─ pages
+│  ├─ forgot_password.vue
+│  ├─ index.vue
+│  ├─ login.vue
+│  ├─ register.vue
+│  ├─ reset_password.vue
+│  └─ test.vue
+├─ plugins
+│  ├─ Vue3-toastify.client.ts
+│  └─ Vue3Lottie.client.ts
+├─ public
+│  ├─ animations
+│  │  ├─ InternalError.json
+│  │  ├─ fail.json
+│  │  ├─ successed.json
+│  │  └─ waiting.json
+│  ├─ favicon.ico
+│  ├─ icons
+│  │  ├─ copy.svg
+│  │  ├─ error.svg
+│  │  ├─ eye-slash.svg
+│  │  ├─ eye.svg
+│  │  ├─ facebook.svg
+│  │  ├─ google.svg
+│  │  ├─ info.svg
+│  │  ├─ loading.svg
+│  │  ├─ logo-dark.webp
+│  │  └─ success.svg
+│  ├─ images
+│  │  ├─ forgot-password.png
+│  │  ├─ image.png
+│  │  ├─ login-image.jpg
+│  │  ├─ register-image.png
+│  │  └─ reset-password.png
+│  ├─ robots.txt
+│  └─ static
+│     └─ fonts
+│        ├─ Satoshi-Black.woff2
+│        ├─ Satoshi-Bold.woff2
+│        ├─ Satoshi-Light.woff2
+│        ├─ Satoshi-Medium.woff2
+│        ├─ Satoshi-Regular.woff2
+│        └─ Satoshi-Variable.woff2
+├─ server
+│  ├─ api
+│  │  └─ auth
+│  │     ├─ forgotPassword.ts
+│  │     ├─ forgotSubmit.ts
+│  │     ├─ login.ts
+│  │     ├─ register.ts
+│  │     └─ registerRequest.ts
+│  └─ tsconfig.json
+├─ store
+│  └─ authLoading.ts
+├─ tailwind.config.js
+├─ tsconfig.json
+└─ utils
+   ├─ string.ts
+   └─ toastNotification.ts
+
+```
+```
+movie-dashboard
+├─ README.md
+├─ actions
+│  └─ auth.action.ts
+├─ app.vue
+├─ assets
+│  └─ css
+│     ├─ app.css
+│     └─ fonts.css
+├─ components
+│  ├─ core
+│  │  └─ auth
+│  │     ├─ 2fa
+│  │     │  └─ OTPFill.vue
+│  │     ├─ forgot-password
+│  │     │  ├─ ForgotPasswordContainer.vue
+│  │     │  └─ ForgotPasswordForm.vue
+│  │     ├─ login
+│  │     │  ├─ LoginContainer.vue
+│  │     │  └─ LoginForm.vue
+│  │     ├─ register
+│  │     │  ├─ RegisterContainer.vue
+│  │     │  ├─ RegisterFillForm.vue
+│  │     │  └─ RegisterRequestForm.vue
+│  │     └─ reset-password
+│  │        ├─ ResetPasswordContainer.vue
+│  │        └─ ResetPasswordForm.vue
+│  └─ shared
+│     ├─ input
+│     │  ├─ CommonField.vue
+│     │  ├─ OTPField.vue
+│     │  └─ PasswordField.vue
+│     ├─ toast
+│     │  ├─ ErrorToastNotification.vue
+│     │  ├─ InfoToastNotification.vue
+│     │  └─ SuccessToastNotification.vue
+│     └─ utils
+│        └─ AuthResponse.utils.vue
+├─ composables
+│  └─ useVerifyLink.ts
+├─ content
+├─ layouts
+│  └─ Auth.layout.vue
+├─ middleware
+│  ├─ verifyRegisterLink.ts
+│  └─ verifyResetPassLink.ts
+├─ nuxt.config.ts
+├─ package-lock.json
+├─ package.json
+├─ pages
+│  ├─ forgot_password.vue
+│  ├─ index.vue
+│  ├─ login.vue
+│  ├─ register.vue
+│  ├─ reset_password.vue
+│  └─ test.vue
+├─ plugins
+│  ├─ Vue3-toastify.client.ts
+│  └─ Vue3Lottie.client.ts
+├─ public
+│  ├─ animations
+│  │  ├─ InternalError.json
+│  │  ├─ fail.json
+│  │  ├─ successed.json
+│  │  └─ waiting.json
+│  ├─ favicon.ico
+│  ├─ icons
+│  │  ├─ copy.svg
+│  │  ├─ error.svg
+│  │  ├─ eye-slash.svg
+│  │  ├─ eye.svg
+│  │  ├─ facebook.svg
+│  │  ├─ google.svg
+│  │  ├─ info.svg
+│  │  ├─ loading.svg
+│  │  ├─ logo-dark.webp
+│  │  └─ success.svg
+│  ├─ images
+│  │  ├─ forgot-password.png
+│  │  ├─ image.png
+│  │  ├─ login-image.jpg
+│  │  ├─ register-image.png
+│  │  └─ reset-password.png
+│  ├─ robots.txt
+│  └─ static
+│     └─ fonts
+│        ├─ Satoshi-Black.woff2
+│        ├─ Satoshi-Bold.woff2
+│        ├─ Satoshi-Light.woff2
+│        ├─ Satoshi-Medium.woff2
+│        ├─ Satoshi-Regular.woff2
+│        └─ Satoshi-Variable.woff2
+├─ server
+│  ├─ api
+│  │  └─ auth
+│  │     ├─ forgotPassword.ts
+│  │     ├─ forgotSubmit.ts
+│  │     ├─ login.ts
+│  │     ├─ register.ts
+│  │     └─ registerRequest.ts
+│  └─ tsconfig.json
+├─ store
+│  └─ authLoading.ts
+├─ tailwind.config.js
+├─ tsconfig.json
+└─ utils
+   ├─ string.ts
+   └─ toastNotification.ts
+
+```
+```
+movie-dashboard
+├─ README.md
+├─ actions
+│  └─ auth.action.ts
+├─ app.vue
+├─ assets
+│  └─ css
+│     ├─ app.css
+│     └─ fonts.css
+├─ components
+│  ├─ core
+│  │  └─ auth
+│  │     ├─ 2fa
+│  │     │  └─ OTPFill.vue
+│  │     ├─ forgot-password
+│  │     │  ├─ ForgotPasswordContainer.vue
+│  │     │  └─ ForgotPasswordForm.vue
+│  │     ├─ login
+│  │     │  ├─ LoginContainer.vue
+│  │     │  └─ LoginForm.vue
+│  │     ├─ register
+│  │     │  ├─ RegisterContainer.vue
+│  │     │  ├─ RegisterFillForm.vue
+│  │     │  └─ RegisterRequestForm.vue
+│  │     └─ reset-password
+│  │        ├─ ResetPasswordContainer.vue
+│  │        └─ ResetPasswordForm.vue
+│  └─ shared
+│     ├─ input
+│     │  ├─ CommonField.vue
+│     │  ├─ OTPField.vue
+│     │  └─ PasswordField.vue
+│     ├─ toast
+│     │  ├─ ErrorToastNotification.vue
+│     │  ├─ InfoToastNotification.vue
+│     │  └─ SuccessToastNotification.vue
+│     └─ utils
+│        └─ AuthResponse.utils.vue
+├─ composables
+│  └─ useVerifyLink.ts
+├─ content
+├─ layouts
+│  └─ Auth.layout.vue
+├─ middleware
+│  ├─ verifyRegisterLink.ts
+│  └─ verifyResetPassLink.ts
+├─ nuxt.config.ts
+├─ package-lock.json
+├─ package.json
+├─ pages
+│  ├─ forgot_password.vue
+│  ├─ index.vue
+│  ├─ login.vue
+│  ├─ register.vue
+│  ├─ reset_password.vue
+│  └─ test.vue
+├─ plugins
+│  ├─ Vue3-toastify.client.ts
+│  └─ Vue3Lottie.client.ts
+├─ public
+│  ├─ animations
+│  │  ├─ InternalError.json
+│  │  ├─ fail.json
+│  │  ├─ successed.json
+│  │  └─ waiting.json
+│  ├─ favicon.ico
+│  ├─ icons
+│  │  ├─ copy.svg
+│  │  ├─ error.svg
+│  │  ├─ eye-slash.svg
+│  │  ├─ eye.svg
+│  │  ├─ facebook.svg
+│  │  ├─ google.svg
+│  │  ├─ info.svg
+│  │  ├─ loading.svg
+│  │  ├─ logo-dark.webp
+│  │  └─ success.svg
+│  ├─ images
+│  │  ├─ forgot-password.png
+│  │  ├─ image.png
+│  │  ├─ login-image.jpg
+│  │  ├─ register-image.png
+│  │  └─ reset-password.png
+│  ├─ robots.txt
+│  └─ static
+│     └─ fonts
+│        ├─ Satoshi-Black.woff2
+│        ├─ Satoshi-Bold.woff2
+│        ├─ Satoshi-Light.woff2
+│        ├─ Satoshi-Medium.woff2
+│        ├─ Satoshi-Regular.woff2
+│        └─ Satoshi-Variable.woff2
+├─ server
+│  ├─ api
+│  │  └─ auth
+│  │     ├─ forgotPassword.ts
+│  │     ├─ forgotSubmit.ts
+│  │     ├─ login.ts
+│  │     ├─ register.ts
+│  │     └─ registerRequest.ts
+│  └─ tsconfig.json
+├─ store
+│  └─ authLoading.ts
+├─ tailwind.config.js
+├─ tsconfig.json
+└─ utils
+   ├─ string.ts
+   └─ toastNotification.ts
+
+```
+```
+movie-dashboard
+├─ README.md
+├─ actions
+│  └─ auth.action.ts
+├─ app.vue
+├─ assets
+│  └─ css
+│     ├─ app.css
+│     └─ fonts.css
+├─ components
+│  ├─ core
+│  │  └─ auth
+│  │     ├─ 2fa
+│  │     │  └─ OTPFill.vue
+│  │     ├─ forgot-password
+│  │     │  ├─ ForgotPasswordContainer.vue
+│  │     │  └─ ForgotPasswordForm.vue
+│  │     ├─ login
+│  │     │  ├─ LoginContainer.vue
+│  │     │  └─ LoginForm.vue
+│  │     ├─ register
+│  │     │  ├─ RegisterContainer.vue
+│  │     │  ├─ RegisterFillForm.vue
+│  │     │  └─ RegisterRequestForm.vue
+│  │     └─ reset-password
+│  │        ├─ ResetPasswordContainer.vue
+│  │        └─ ResetPasswordForm.vue
+│  └─ shared
+│     ├─ input
+│     │  ├─ CommonField.vue
+│     │  ├─ OTPField.vue
+│     │  └─ PasswordField.vue
+│     ├─ toast
+│     │  ├─ ErrorToastNotification.vue
+│     │  ├─ InfoToastNotification.vue
+│     │  └─ SuccessToastNotification.vue
+│     └─ utils
+│        └─ AuthResponse.utils.vue
+├─ composables
+│  └─ useVerifyLink.ts
+├─ content
+├─ layouts
+│  └─ Auth.layout.vue
+├─ middleware
+│  ├─ verifyRegisterLink.ts
+│  └─ verifyResetPassLink.ts
+├─ nuxt.config.ts
+├─ package-lock.json
+├─ package.json
+├─ pages
+│  ├─ forgot_password.vue
+│  ├─ index.vue
+│  ├─ login.vue
+│  ├─ register.vue
+│  ├─ reset_password.vue
+│  └─ test.vue
+├─ plugins
+│  ├─ Vue3-toastify.client.ts
+│  └─ Vue3Lottie.client.ts
+├─ public
+│  ├─ animations
+│  │  ├─ InternalError.json
+│  │  ├─ fail.json
+│  │  ├─ successed.json
+│  │  └─ waiting.json
+│  ├─ favicon.ico
+│  ├─ icons
+│  │  ├─ copy.svg
+│  │  ├─ error.svg
+│  │  ├─ eye-slash.svg
+│  │  ├─ eye.svg
+│  │  ├─ facebook.svg
+│  │  ├─ google.svg
+│  │  ├─ info.svg
+│  │  ├─ loading.svg
+│  │  ├─ logo-dark.webp
+│  │  └─ success.svg
+│  ├─ images
+│  │  ├─ forgot-password.png
+│  │  ├─ image.png
+│  │  ├─ login-image.jpg
+│  │  ├─ register-image.png
+│  │  └─ reset-password.png
+│  ├─ robots.txt
+│  └─ static
+│     └─ fonts
+│        ├─ Satoshi-Black.woff2
+│        ├─ Satoshi-Bold.woff2
+│        ├─ Satoshi-Light.woff2
+│        ├─ Satoshi-Medium.woff2
+│        ├─ Satoshi-Regular.woff2
+│        └─ Satoshi-Variable.woff2
+├─ server
+│  ├─ api
+│  │  └─ auth
+│  │     ├─ forgotPassword.ts
+│  │     ├─ forgotSubmit.ts
+│  │     ├─ login.ts
+│  │     ├─ register.ts
+│  │     └─ registerRequest.ts
+│  └─ tsconfig.json
+├─ store
+│  └─ authLoading.ts
+├─ tailwind.config.js
+├─ tsconfig.json
+└─ utils
+   ├─ string.ts
+   └─ toastNotification.ts
+
+```
+```
+movie-dashboard
+├─ README.md
+├─ actions
+│  └─ auth.action.ts
+├─ app.vue
+├─ assets
+│  └─ css
+│     ├─ app.css
+│     └─ fonts.css
+├─ components
+│  ├─ core
+│  │  └─ auth
+│  │     ├─ 2fa
+│  │     │  └─ OTPFill.vue
+│  │     ├─ forgot-password
+│  │     │  ├─ ForgotPasswordContainer.vue
+│  │     │  └─ ForgotPasswordForm.vue
+│  │     ├─ login
+│  │     │  ├─ LoginContainer.vue
+│  │     │  └─ LoginForm.vue
+│  │     ├─ register
+│  │     │  ├─ RegisterContainer.vue
+│  │     │  ├─ RegisterFillForm.vue
+│  │     │  └─ RegisterRequestForm.vue
+│  │     └─ reset-password
+│  │        ├─ ResetPasswordContainer.vue
+│  │        └─ ResetPasswordForm.vue
+│  └─ shared
+│     ├─ input
+│     │  ├─ CommonField.vue
+│     │  ├─ OTPField.vue
+│     │  └─ PasswordField.vue
+│     ├─ toast
+│     │  ├─ ErrorToastNotification.vue
+│     │  ├─ InfoToastNotification.vue
+│     │  └─ SuccessToastNotification.vue
+│     └─ utils
+│        └─ AuthResponse.utils.vue
+├─ composables
+│  └─ useVerifyLink.ts
+├─ content
+├─ layouts
+│  └─ Auth.layout.vue
+├─ middleware
+│  ├─ verifyRegisterLink.ts
+│  └─ verifyResetPassLink.ts
+├─ nuxt.config.ts
+├─ package-lock.json
+├─ package.json
+├─ pages
+│  ├─ forgot_password.vue
+│  ├─ index.vue
+│  ├─ login.vue
+│  ├─ register.vue
+│  ├─ reset_password.vue
+│  └─ test.vue
+├─ plugins
+│  ├─ Vue3-toastify.client.ts
+│  └─ Vue3Lottie.client.ts
+├─ public
+│  ├─ animations
+│  │  ├─ InternalError.json
+│  │  ├─ fail.json
+│  │  ├─ successed.json
+│  │  └─ waiting.json
+│  ├─ favicon.ico
+│  ├─ icons
+│  │  ├─ copy.svg
+│  │  ├─ error.svg
+│  │  ├─ eye-slash.svg
+│  │  ├─ eye.svg
+│  │  ├─ facebook.svg
+│  │  ├─ google.svg
+│  │  ├─ info.svg
+│  │  ├─ loading.svg
+│  │  ├─ logo-dark.webp
+│  │  └─ success.svg
+│  ├─ images
+│  │  ├─ forgot-password.png
+│  │  ├─ image.png
+│  │  ├─ login-image.jpg
+│  │  ├─ register-image.png
+│  │  └─ reset-password.png
+│  ├─ robots.txt
+│  └─ static
+│     └─ fonts
+│        ├─ Satoshi-Black.woff2
+│        ├─ Satoshi-Bold.woff2
+│        ├─ Satoshi-Light.woff2
+│        ├─ Satoshi-Medium.woff2
+│        ├─ Satoshi-Regular.woff2
+│        └─ Satoshi-Variable.woff2
+├─ server
+│  ├─ api
+│  │  └─ auth
+│  │     ├─ forgotPassword.ts
+│  │     ├─ forgotSubmit.ts
+│  │     ├─ login.ts
+│  │     ├─ register.ts
+│  │     └─ registerRequest.ts
+│  └─ tsconfig.json
+├─ store
+│  └─ authLoading.ts
+├─ tailwind.config.js
+├─ tsconfig.json
+└─ utils
+   ├─ string.ts
+   └─ toastNotification.ts
+
+```
+```
+movie-dashboard
+├─ README.md
+├─ actions
+│  └─ auth.action.ts
+├─ app.vue
+├─ assets
+│  └─ css
+│     ├─ app.css
+│     └─ fonts.css
+├─ components
+│  ├─ core
+│  │  └─ auth
+│  │     ├─ 2fa
+│  │     │  └─ OTPFill.vue
+│  │     ├─ forgot-password
+│  │     │  ├─ ForgotPasswordContainer.vue
+│  │     │  └─ ForgotPasswordForm.vue
+│  │     ├─ login
+│  │     │  ├─ LoginContainer.vue
+│  │     │  └─ LoginForm.vue
+│  │     ├─ register
+│  │     │  ├─ RegisterContainer.vue
+│  │     │  ├─ RegisterFillForm.vue
+│  │     │  └─ RegisterRequestForm.vue
+│  │     └─ reset-password
+│  │        ├─ ResetPasswordContainer.vue
+│  │        └─ ResetPasswordForm.vue
+│  └─ shared
+│     ├─ input
+│     │  ├─ CommonField.vue
+│     │  ├─ OTPField.vue
+│     │  └─ PasswordField.vue
+│     ├─ toast
+│     │  ├─ ErrorToastNotification.vue
+│     │  ├─ InfoToastNotification.vue
+│     │  └─ SuccessToastNotification.vue
+│     └─ utils
+│        └─ AuthResponse.utils.vue
+├─ composables
+│  └─ useVerifyLink.ts
+├─ content
+├─ layouts
+│  └─ Auth.layout.vue
+├─ middleware
+│  ├─ verifyRegisterLink.ts
+│  └─ verifyResetPassLink.ts
+├─ nuxt.config.ts
+├─ package-lock.json
+├─ package.json
+├─ pages
+│  ├─ forgot_password.vue
+│  ├─ index.vue
+│  ├─ login.vue
+│  ├─ register.vue
+│  ├─ reset_password.vue
+│  └─ test.vue
+├─ plugins
+│  ├─ Vue3-toastify.client.ts
+│  └─ Vue3Lottie.client.ts
+├─ public
+│  ├─ animations
+│  │  ├─ InternalError.json
+│  │  ├─ fail.json
+│  │  ├─ successed.json
+│  │  └─ waiting.json
+│  ├─ favicon.ico
+│  ├─ icons
+│  │  ├─ copy.svg
+│  │  ├─ error.svg
+│  │  ├─ eye-slash.svg
+│  │  ├─ eye.svg
+│  │  ├─ facebook.svg
+│  │  ├─ google.svg
+│  │  ├─ info.svg
+│  │  ├─ loading.svg
+│  │  ├─ logo-dark.webp
+│  │  └─ success.svg
+│  ├─ images
+│  │  ├─ forgot-password.png
+│  │  ├─ image.png
+│  │  ├─ login-image.jpg
+│  │  ├─ register-image.png
+│  │  └─ reset-password.png
+│  ├─ robots.txt
+│  └─ static
+│     └─ fonts
+│        ├─ Satoshi-Black.woff2
+│        ├─ Satoshi-Bold.woff2
+│        ├─ Satoshi-Light.woff2
+│        ├─ Satoshi-Medium.woff2
+│        ├─ Satoshi-Regular.woff2
+│        └─ Satoshi-Variable.woff2
+├─ server
+│  ├─ api
+│  │  └─ auth
+│  │     ├─ forgotPassword.ts
+│  │     ├─ forgotSubmit.ts
+│  │     ├─ login.ts
+│  │     ├─ register.ts
+│  │     └─ registerRequest.ts
+│  └─ tsconfig.json
+├─ store
+│  └─ authLoading.ts
+├─ tailwind.config.js
+├─ tsconfig.json
+└─ utils
+   ├─ string.ts
+   └─ toastNotification.ts
+
+```
+```
+movie-dashboard
+├─ README.md
+├─ actions
+│  └─ auth.action.ts
+├─ app.vue
+├─ assets
+│  └─ css
+│     ├─ app.css
+│     └─ fonts.css
+├─ components
+│  ├─ core
+│  │  └─ auth
+│  │     ├─ 2fa
+│  │     │  └─ OTPFill.vue
+│  │     ├─ forgot-password
+│  │     │  ├─ ForgotPasswordContainer.vue
+│  │     │  └─ ForgotPasswordForm.vue
+│  │     ├─ login
+│  │     │  ├─ LoginContainer.vue
+│  │     │  └─ LoginForm.vue
+│  │     ├─ register
+│  │     │  ├─ RegisterContainer.vue
+│  │     │  ├─ RegisterFillForm.vue
+│  │     │  └─ RegisterRequestForm.vue
+│  │     └─ reset-password
+│  │        ├─ ResetPasswordContainer.vue
+│  │        └─ ResetPasswordForm.vue
+│  └─ shared
+│     ├─ input
+│     │  ├─ CommonField.vue
+│     │  ├─ OTPField.vue
+│     │  └─ PasswordField.vue
+│     ├─ toast
+│     │  ├─ ErrorToastNotification.vue
+│     │  ├─ InfoToastNotification.vue
+│     │  └─ SuccessToastNotification.vue
+│     └─ utils
+│        └─ AuthResponse.utils.vue
+├─ composables
+│  └─ useVerifyLink.ts
+├─ content
+├─ layouts
+│  └─ Auth.layout.vue
+├─ middleware
+│  ├─ verifyRegisterLink.ts
+│  └─ verifyResetPassLink.ts
+├─ nuxt.config.ts
+├─ package-lock.json
+├─ package.json
+├─ pages
+│  ├─ forgot_password.vue
+│  ├─ index.vue
+│  ├─ login.vue
+│  ├─ register.vue
+│  ├─ reset_password.vue
+│  └─ test.vue
+├─ plugins
+│  ├─ Vue3-toastify.client.ts
+│  └─ Vue3Lottie.client.ts
+├─ public
+│  ├─ animations
+│  │  ├─ InternalError.json
+│  │  ├─ fail.json
+│  │  ├─ successed.json
+│  │  └─ waiting.json
+│  ├─ favicon.ico
+│  ├─ icons
+│  │  ├─ copy.svg
+│  │  ├─ error.svg
+│  │  ├─ eye-slash.svg
+│  │  ├─ eye.svg
+│  │  ├─ facebook.svg
+│  │  ├─ google.svg
+│  │  ├─ info.svg
+│  │  ├─ loading.svg
+│  │  ├─ logo-dark.webp
+│  │  └─ success.svg
+│  ├─ images
+│  │  ├─ forgot-password.png
+│  │  ├─ image.png
+│  │  ├─ login-image.jpg
+│  │  ├─ register-image.png
+│  │  └─ reset-password.png
+│  ├─ robots.txt
+│  └─ static
+│     └─ fonts
+│        ├─ Satoshi-Black.woff2
+│        ├─ Satoshi-Bold.woff2
+│        ├─ Satoshi-Light.woff2
+│        ├─ Satoshi-Medium.woff2
+│        ├─ Satoshi-Regular.woff2
+│        └─ Satoshi-Variable.woff2
+├─ server
+│  ├─ api
+│  │  └─ auth
+│  │     ├─ forgotPassword.ts
+│  │     ├─ forgotSubmit.ts
+│  │     ├─ login.ts
+│  │     ├─ register.ts
+│  │     └─ registerRequest.ts
+│  └─ tsconfig.json
+├─ store
+│  └─ authLoading.ts
+├─ tailwind.config.js
+├─ tsconfig.json
+└─ utils
+   ├─ string.ts
+   └─ toastNotification.ts
+
+```
+```
+movie-dashboard
+├─ README.md
+├─ actions
+│  └─ auth.action.ts
+├─ app.vue
+├─ assets
+│  └─ css
+│     ├─ app.css
+│     └─ fonts.css
+├─ components
+│  ├─ core
+│  │  └─ auth
+│  │     ├─ 2fa
+│  │     │  └─ OTPFill.vue
+│  │     ├─ forgot-password
+│  │     │  ├─ ForgotPasswordContainer.vue
+│  │     │  └─ ForgotPasswordForm.vue
+│  │     ├─ login
+│  │     │  ├─ LoginContainer.vue
+│  │     │  └─ LoginForm.vue
+│  │     ├─ register
+│  │     │  ├─ RegisterContainer.vue
+│  │     │  ├─ RegisterFillForm.vue
+│  │     │  └─ RegisterRequestForm.vue
+│  │     └─ reset-password
+│  │        ├─ ResetPasswordContainer.vue
+│  │        └─ ResetPasswordForm.vue
+│  └─ shared
+│     ├─ input
+│     │  ├─ CommonField.vue
+│     │  ├─ OTPField.vue
+│     │  └─ PasswordField.vue
+│     ├─ toast
+│     │  ├─ ErrorToastNotification.vue
+│     │  ├─ InfoToastNotification.vue
+│     │  └─ SuccessToastNotification.vue
+│     └─ utils
+│        └─ AuthResponse.utils.vue
+├─ composables
+│  └─ useVerifyLink.ts
+├─ content
+├─ layouts
+│  └─ Auth.layout.vue
+├─ middleware
+│  ├─ verifyRegisterLink.ts
+│  └─ verifyResetPassLink.ts
+├─ nuxt.config.ts
+├─ package-lock.json
+├─ package.json
+├─ pages
+│  ├─ forgot_password.vue
+│  ├─ index.vue
+│  ├─ login.vue
+│  ├─ register.vue
+│  ├─ reset_password.vue
+│  └─ test.vue
+├─ plugins
+│  ├─ Vue3-toastify.client.ts
+│  └─ Vue3Lottie.client.ts
+├─ public
+│  ├─ animations
+│  │  ├─ InternalError.json
+│  │  ├─ fail.json
+│  │  ├─ successed.json
+│  │  └─ waiting.json
+│  ├─ favicon.ico
+│  ├─ icons
+│  │  ├─ copy.svg
+│  │  ├─ error.svg
+│  │  ├─ eye-slash.svg
+│  │  ├─ eye.svg
+│  │  ├─ facebook.svg
+│  │  ├─ google.svg
+│  │  ├─ info.svg
+│  │  ├─ loading.svg
+│  │  ├─ logo-dark.webp
+│  │  └─ success.svg
+│  ├─ images
+│  │  ├─ forgot-password.png
+│  │  ├─ image.png
+│  │  ├─ login-image.jpg
+│  │  ├─ register-image.png
+│  │  └─ reset-password.png
+│  ├─ robots.txt
+│  └─ static
+│     └─ fonts
+│        ├─ Satoshi-Black.woff2
+│        ├─ Satoshi-Bold.woff2
+│        ├─ Satoshi-Light.woff2
+│        ├─ Satoshi-Medium.woff2
+│        ├─ Satoshi-Regular.woff2
+│        └─ Satoshi-Variable.woff2
+├─ server
+│  ├─ api
+│  │  └─ auth
+│  │     ├─ forgotPassword.ts
+│  │     ├─ forgotSubmit.ts
+│  │     ├─ login.ts
+│  │     ├─ register.ts
+│  │     └─ registerRequest.ts
+│  └─ tsconfig.json
+├─ store
+│  └─ authLoading.ts
+├─ tailwind.config.js
+├─ tsconfig.json
+└─ utils
+   ├─ string.ts
+   └─ toastNotification.ts
+
+```
+```
+movie-dashboard
+├─ README.md
+├─ actions
+│  └─ auth.action.ts
+├─ app.vue
+├─ assets
+│  └─ css
+│     ├─ app.css
+│     └─ fonts.css
+├─ components
+│  ├─ core
+│  │  └─ auth
+│  │     ├─ 2fa
+│  │     │  └─ OTPFill.vue
+│  │     ├─ forgot-password
+│  │     │  ├─ ForgotPasswordContainer.vue
+│  │     │  └─ ForgotPasswordForm.vue
+│  │     ├─ login
+│  │     │  ├─ LoginContainer.vue
+│  │     │  └─ LoginForm.vue
+│  │     ├─ register
+│  │     │  ├─ RegisterContainer.vue
+│  │     │  ├─ RegisterFillForm.vue
+│  │     │  └─ RegisterRequestForm.vue
+│  │     └─ reset-password
+│  │        ├─ ResetPasswordContainer.vue
+│  │        └─ ResetPasswordForm.vue
+│  └─ shared
+│     ├─ input
+│     │  ├─ CommonField.vue
+│     │  ├─ OTPField.vue
+│     │  └─ PasswordField.vue
+│     ├─ toast
+│     │  ├─ ErrorToastNotification.vue
+│     │  ├─ InfoToastNotification.vue
+│     │  └─ SuccessToastNotification.vue
+│     └─ utils
+│        └─ AuthResponse.utils.vue
+├─ composables
+│  └─ useVerifyLink.ts
+├─ content
+├─ layouts
+│  └─ Auth.layout.vue
+├─ middleware
+│  ├─ verifyRegisterLink.ts
+│  └─ verifyResetPassLink.ts
+├─ nuxt.config.ts
+├─ package-lock.json
+├─ package.json
+├─ pages
+│  ├─ forgot_password.vue
+│  ├─ index.vue
+│  ├─ login.vue
+│  ├─ register.vue
+│  ├─ reset_password.vue
+│  └─ test.vue
+├─ plugins
+│  ├─ Vue3-toastify.client.ts
+│  └─ Vue3Lottie.client.ts
+├─ public
+│  ├─ animations
+│  │  ├─ InternalError.json
+│  │  ├─ fail.json
+│  │  ├─ successed.json
+│  │  └─ waiting.json
+│  ├─ favicon.ico
+│  ├─ icons
+│  │  ├─ copy.svg
+│  │  ├─ error.svg
+│  │  ├─ eye-slash.svg
+│  │  ├─ eye.svg
+│  │  ├─ facebook.svg
+│  │  ├─ google.svg
+│  │  ├─ info.svg
+│  │  ├─ loading.svg
+│  │  ├─ logo-dark.webp
+│  │  └─ success.svg
+│  ├─ images
+│  │  ├─ forgot-password.png
+│  │  ├─ image.png
+│  │  ├─ login-image.jpg
+│  │  ├─ register-image.png
+│  │  └─ reset-password.png
+│  ├─ robots.txt
+│  └─ static
+│     └─ fonts
+│        ├─ Satoshi-Black.woff2
+│        ├─ Satoshi-Bold.woff2
+│        ├─ Satoshi-Light.woff2
+│        ├─ Satoshi-Medium.woff2
+│        ├─ Satoshi-Regular.woff2
+│        └─ Satoshi-Variable.woff2
+├─ server
+│  ├─ api
+│  │  └─ auth
+│  │     ├─ forgotPassword.ts
+│  │     ├─ forgotSubmit.ts
+│  │     ├─ login.ts
+│  │     ├─ register.ts
+│  │     └─ registerRequest.ts
+│  └─ tsconfig.json
+├─ store
+│  └─ authLoading.ts
+├─ tailwind.config.js
+├─ tsconfig.json
+└─ utils
+   ├─ string.ts
+   └─ toastNotification.ts
+
+```
+```
+movie-dashboard
+├─ README.md
+├─ actions
+│  └─ auth.action.ts
+├─ app.vue
+├─ assets
+│  └─ css
+│     ├─ app.css
+│     └─ fonts.css
+├─ components
+│  ├─ core
+│  │  └─ auth
+│  │     ├─ 2fa
+│  │     │  └─ OTPFill.vue
+│  │     ├─ forgot-password
+│  │     │  ├─ ForgotPasswordContainer.vue
+│  │     │  └─ ForgotPasswordForm.vue
+│  │     ├─ login
+│  │     │  ├─ LoginContainer.vue
+│  │     │  └─ LoginForm.vue
+│  │     ├─ register
+│  │     │  ├─ RegisterContainer.vue
+│  │     │  ├─ RegisterFillForm.vue
+│  │     │  └─ RegisterRequestForm.vue
+│  │     └─ reset-password
+│  │        ├─ ResetPasswordContainer.vue
+│  │        └─ ResetPasswordForm.vue
+│  └─ shared
+│     ├─ input
+│     │  ├─ CommonField.vue
+│     │  ├─ OTPField.vue
+│     │  └─ PasswordField.vue
+│     ├─ toast
+│     │  ├─ ErrorToastNotification.vue
+│     │  ├─ InfoToastNotification.vue
+│     │  └─ SuccessToastNotification.vue
+│     └─ utils
+│        └─ AuthResponse.utils.vue
+├─ composables
+│  └─ useVerifyLink.ts
+├─ content
+├─ layouts
+│  └─ Auth.layout.vue
+├─ middleware
+│  ├─ verifyRegisterLink.ts
+│  └─ verifyResetPassLink.ts
+├─ nuxt.config.ts
+├─ package-lock.json
+├─ package.json
+├─ pages
+│  ├─ forgot_password.vue
+│  ├─ index.vue
+│  ├─ login.vue
+│  ├─ register.vue
+│  ├─ reset_password.vue
+│  └─ test.vue
+├─ plugins
+│  ├─ Vue3-toastify.client.ts
+│  └─ Vue3Lottie.client.ts
+├─ public
+│  ├─ animations
+│  │  ├─ InternalError.json
+│  │  ├─ fail.json
+│  │  ├─ successed.json
+│  │  └─ waiting.json
+│  ├─ favicon.ico
+│  ├─ icons
+│  │  ├─ copy.svg
+│  │  ├─ error.svg
+│  │  ├─ eye-slash.svg
+│  │  ├─ eye.svg
+│  │  ├─ facebook.svg
+│  │  ├─ google.svg
+│  │  ├─ info.svg
+│  │  ├─ loading.svg
+│  │  ├─ logo-dark.webp
+│  │  └─ success.svg
+│  ├─ images
+│  │  ├─ forgot-password.png
+│  │  ├─ image.png
+│  │  ├─ login-image.jpg
+│  │  ├─ register-image.png
+│  │  └─ reset-password.png
+│  ├─ robots.txt
+│  └─ static
+│     └─ fonts
+│        ├─ Satoshi-Black.woff2
+│        ├─ Satoshi-Bold.woff2
+│        ├─ Satoshi-Light.woff2
+│        ├─ Satoshi-Medium.woff2
+│        ├─ Satoshi-Regular.woff2
+│        └─ Satoshi-Variable.woff2
+├─ server
+│  ├─ api
+│  │  └─ auth
+│  │     ├─ forgotPassword.ts
+│  │     ├─ forgotSubmit.ts
+│  │     ├─ login.ts
+│  │     ├─ register.ts
+│  │     └─ registerRequest.ts
+│  └─ tsconfig.json
+├─ store
+│  └─ authLoading.ts
+├─ tailwind.config.js
+├─ tsconfig.json
+└─ utils
+   ├─ string.ts
+   └─ toastNotification.ts
+
+```
+```
+movie-dashboard
+├─ README.md
+├─ actions
+│  └─ auth.action.ts
+├─ app.vue
+├─ assets
+│  └─ css
+│     ├─ app.css
+│     └─ fonts.css
+├─ components
+│  ├─ core
+│  │  └─ auth
+│  │     ├─ 2fa
+│  │     │  └─ OTPFill.vue
+│  │     ├─ forgot-password
+│  │     │  ├─ ForgotPasswordContainer.vue
+│  │     │  └─ ForgotPasswordForm.vue
+│  │     ├─ login
+│  │     │  ├─ LoginContainer.vue
+│  │     │  └─ LoginForm.vue
+│  │     ├─ register
+│  │     │  ├─ RegisterContainer.vue
+│  │     │  ├─ RegisterFillForm.vue
+│  │     │  └─ RegisterRequestForm.vue
+│  │     └─ reset-password
+│  │        ├─ ResetPasswordContainer.vue
+│  │        └─ ResetPasswordForm.vue
+│  └─ shared
+│     ├─ input
+│     │  ├─ CommonField.vue
+│     │  ├─ OTPField.vue
+│     │  └─ PasswordField.vue
+│     ├─ toast
+│     │  ├─ ErrorToastNotification.vue
+│     │  ├─ InfoToastNotification.vue
+│     │  └─ SuccessToastNotification.vue
+│     └─ utils
+│        └─ AuthResponse.utils.vue
+├─ composables
+│  └─ useVerifyLink.ts
+├─ content
+├─ layouts
+│  └─ Auth.layout.vue
+├─ middleware
+│  ├─ verifyRegisterLink.ts
+│  └─ verifyResetPassLink.ts
+├─ nuxt.config.ts
+├─ package-lock.json
+├─ package.json
+├─ pages
+│  ├─ forgot_password.vue
+│  ├─ index.vue
+│  ├─ login.vue
+│  ├─ register.vue
+│  ├─ reset_password.vue
+│  └─ test.vue
+├─ plugins
+│  ├─ Vue3-toastify.client.ts
+│  └─ Vue3Lottie.client.ts
+├─ public
+│  ├─ animations
+│  │  ├─ InternalError.json
+│  │  ├─ fail.json
+│  │  ├─ successed.json
+│  │  └─ waiting.json
+│  ├─ favicon.ico
+│  ├─ icons
+│  │  ├─ copy.svg
+│  │  ├─ error.svg
+│  │  ├─ eye-slash.svg
+│  │  ├─ eye.svg
+│  │  ├─ facebook.svg
+│  │  ├─ google.svg
+│  │  ├─ info.svg
+│  │  ├─ loading.svg
+│  │  ├─ logo-dark.webp
+│  │  └─ success.svg
+│  ├─ images
+│  │  ├─ forgot-password.png
+│  │  ├─ image.png
+│  │  ├─ login-image.jpg
+│  │  ├─ register-image.png
+│  │  └─ reset-password.png
+│  ├─ robots.txt
+│  └─ static
+│     └─ fonts
+│        ├─ Satoshi-Black.woff2
+│        ├─ Satoshi-Bold.woff2
+│        ├─ Satoshi-Light.woff2
+│        ├─ Satoshi-Medium.woff2
+│        ├─ Satoshi-Regular.woff2
+│        └─ Satoshi-Variable.woff2
+├─ server
+│  ├─ api
+│  │  └─ auth
+│  │     ├─ forgotPassword.ts
+│  │     ├─ forgotSubmit.ts
+│  │     ├─ login.ts
+│  │     ├─ register.ts
+│  │     └─ registerRequest.ts
+│  └─ tsconfig.json
+├─ store
+│  └─ authLoading.ts
+├─ tailwind.config.js
+├─ tsconfig.json
+└─ utils
+   ├─ string.ts
+   └─ toastNotification.ts
+
+```
+```
+movie-dashboard
+├─ README.md
+├─ actions
+│  └─ auth.action.ts
+├─ app.vue
+├─ assets
+│  └─ css
+│     ├─ app.css
+│     └─ fonts.css
+├─ components
+│  ├─ core
+│  │  └─ auth
+│  │     ├─ 2fa
+│  │     │  └─ OTPFill.vue
+│  │     ├─ forgot-password
+│  │     │  ├─ ForgotPasswordContainer.vue
+│  │     │  └─ ForgotPasswordForm.vue
+│  │     ├─ login
+│  │     │  ├─ LoginContainer.vue
+│  │     │  └─ LoginForm.vue
+│  │     ├─ register
+│  │     │  ├─ RegisterContainer.vue
+│  │     │  ├─ RegisterFillForm.vue
+│  │     │  └─ RegisterRequestForm.vue
+│  │     └─ reset-password
+│  │        ├─ ResetPasswordContainer.vue
+│  │        └─ ResetPasswordForm.vue
+│  └─ shared
+│     ├─ input
+│     │  ├─ CommonField.vue
+│     │  ├─ OTPField.vue
+│     │  └─ PasswordField.vue
+│     ├─ toast
+│     │  ├─ ErrorToastNotification.vue
+│     │  ├─ InfoToastNotification.vue
+│     │  └─ SuccessToastNotification.vue
+│     └─ utils
+│        └─ AuthResponse.utils.vue
+├─ composables
+│  └─ useVerifyLink.ts
+├─ content
+├─ layouts
+│  └─ Auth.layout.vue
+├─ middleware
+│  ├─ verifyRegisterLink.ts
+│  └─ verifyResetPassLink.ts
+├─ nuxt.config.ts
+├─ package-lock.json
+├─ package.json
+├─ pages
+│  ├─ forgot_password.vue
+│  ├─ index.vue
+│  ├─ login.vue
+│  ├─ register.vue
+│  ├─ reset_password.vue
+│  └─ test.vue
+├─ plugins
+│  ├─ Vue3-toastify.client.ts
+│  └─ Vue3Lottie.client.ts
+├─ public
+│  ├─ animations
+│  │  ├─ InternalError.json
+│  │  ├─ fail.json
+│  │  ├─ successed.json
+│  │  └─ waiting.json
+│  ├─ favicon.ico
+│  ├─ icons
+│  │  ├─ copy.svg
+│  │  ├─ error.svg
+│  │  ├─ eye-slash.svg
+│  │  ├─ eye.svg
+│  │  ├─ facebook.svg
+│  │  ├─ google.svg
+│  │  ├─ info.svg
+│  │  ├─ loading.svg
+│  │  ├─ logo-dark.webp
+│  │  └─ success.svg
+│  ├─ images
+│  │  ├─ forgot-password.png
+│  │  ├─ image.png
+│  │  ├─ login-image.jpg
+│  │  ├─ register-image.png
+│  │  └─ reset-password.png
+│  ├─ robots.txt
+│  └─ static
+│     └─ fonts
+│        ├─ Satoshi-Black.woff2
+│        ├─ Satoshi-Bold.woff2
+│        ├─ Satoshi-Light.woff2
+│        ├─ Satoshi-Medium.woff2
+│        ├─ Satoshi-Regular.woff2
+│        └─ Satoshi-Variable.woff2
+├─ server
+│  ├─ api
+│  │  └─ auth
+│  │     ├─ forgotPassword.ts
+│  │     ├─ forgotSubmit.ts
+│  │     ├─ login.ts
+│  │     ├─ register.ts
+│  │     └─ registerRequest.ts
+│  └─ tsconfig.json
+├─ store
+│  └─ authLoading.ts
+├─ tailwind.config.js
+├─ tsconfig.json
+└─ utils
+   ├─ string.ts
+   └─ toastNotification.ts
+
+```
+```
+movie-dashboard
+├─ README.md
+├─ actions
+│  └─ auth.action.ts
+├─ app.vue
+├─ assets
+│  └─ css
+│     ├─ app.css
+│     └─ fonts.css
+├─ components
+│  ├─ core
+│  │  └─ auth
+│  │     ├─ 2fa
+│  │     │  └─ OTPFill.vue
+│  │     ├─ forgot-password
+│  │     │  ├─ ForgotPasswordContainer.vue
+│  │     │  └─ ForgotPasswordForm.vue
+│  │     ├─ login
+│  │     │  ├─ LoginContainer.vue
+│  │     │  └─ LoginForm.vue
+│  │     ├─ register
+│  │     │  ├─ RegisterContainer.vue
+│  │     │  ├─ RegisterFillForm.vue
+│  │     │  └─ RegisterRequestForm.vue
+│  │     └─ reset-password
+│  │        ├─ ResetPasswordContainer.vue
+│  │        └─ ResetPasswordForm.vue
+│  └─ shared
+│     ├─ input
+│     │  ├─ CommonField.vue
+│     │  ├─ OTPField.vue
+│     │  └─ PasswordField.vue
+│     ├─ toast
+│     │  ├─ ErrorToastNotification.vue
+│     │  ├─ InfoToastNotification.vue
+│     │  └─ SuccessToastNotification.vue
+│     └─ utils
+│        └─ AuthResponse.utils.vue
+├─ composables
+│  └─ useVerifyLink.ts
+├─ content
+├─ layouts
+│  └─ Auth.layout.vue
+├─ middleware
+│  ├─ verifyRegisterLink.ts
+│  └─ verifyResetPassLink.ts
+├─ nuxt.config.ts
+├─ package-lock.json
+├─ package.json
+├─ pages
+│  ├─ forgot_password.vue
+│  ├─ index.vue
+│  ├─ login.vue
+│  ├─ register.vue
+│  ├─ reset_password.vue
+│  └─ test.vue
+├─ plugins
+│  ├─ Vue3-toastify.client.ts
+│  └─ Vue3Lottie.client.ts
+├─ public
+│  ├─ animations
+│  │  ├─ InternalError.json
+│  │  ├─ fail.json
+│  │  ├─ successed.json
+│  │  └─ waiting.json
+│  ├─ favicon.ico
+│  ├─ icons
+│  │  ├─ copy.svg
+│  │  ├─ error.svg
+│  │  ├─ eye-slash.svg
+│  │  ├─ eye.svg
+│  │  ├─ facebook.svg
+│  │  ├─ google.svg
+│  │  ├─ info.svg
+│  │  ├─ loading.svg
+│  │  ├─ logo-dark.webp
+│  │  └─ success.svg
+│  ├─ images
+│  │  ├─ forgot-password.png
+│  │  ├─ image.png
+│  │  ├─ login-image.jpg
+│  │  ├─ register-image.png
+│  │  └─ reset-password.png
+│  ├─ robots.txt
+│  └─ static
+│     └─ fonts
+│        ├─ Satoshi-Black.woff2
+│        ├─ Satoshi-Bold.woff2
+│        ├─ Satoshi-Light.woff2
+│        ├─ Satoshi-Medium.woff2
+│        ├─ Satoshi-Regular.woff2
+│        └─ Satoshi-Variable.woff2
+├─ server
+│  ├─ api
+│  │  └─ auth
+│  │     ├─ forgotPassword.ts
+│  │     ├─ forgotSubmit.ts
+│  │     ├─ login.ts
+│  │     ├─ register.ts
+│  │     └─ registerRequest.ts
+│  └─ tsconfig.json
+├─ store
+│  └─ authLoading.ts
+├─ tailwind.config.js
+├─ tsconfig.json
+└─ utils
+   ├─ string.ts
+   └─ toastNotification.ts
+
+```
+```
+movie-dashboard
+├─ README.md
+├─ actions
+│  └─ auth.action.ts
+├─ app.vue
+├─ assets
+│  └─ css
+│     ├─ app.css
+│     └─ fonts.css
+├─ components
+│  ├─ core
+│  │  └─ auth
+│  │     ├─ 2fa
+│  │     │  └─ OTPFill.vue
+│  │     ├─ forgot-password
+│  │     │  ├─ ForgotPasswordContainer.vue
+│  │     │  └─ ForgotPasswordForm.vue
+│  │     ├─ login
+│  │     │  ├─ LoginContainer.vue
+│  │     │  └─ LoginForm.vue
+│  │     ├─ register
+│  │     │  ├─ RegisterContainer.vue
+│  │     │  ├─ RegisterFillForm.vue
+│  │     │  └─ RegisterRequestForm.vue
+│  │     └─ reset-password
+│  │        ├─ ResetPasswordContainer.vue
+│  │        └─ ResetPasswordForm.vue
+│  └─ shared
+│     ├─ input
+│     │  ├─ CommonField.vue
+│     │  ├─ OTPField.vue
+│     │  └─ PasswordField.vue
+│     ├─ toast
+│     │  ├─ ErrorToastNotification.vue
+│     │  ├─ InfoToastNotification.vue
+│     │  └─ SuccessToastNotification.vue
+│     └─ utils
+│        └─ AuthResponse.utils.vue
+├─ composables
+│  └─ useVerifyLink.ts
+├─ content
+├─ layouts
+│  └─ Auth.layout.vue
+├─ middleware
+│  ├─ verifyRegisterLink.ts
+│  └─ verifyResetPassLink.ts
+├─ nuxt.config.ts
+├─ package-lock.json
+├─ package.json
+├─ pages
+│  ├─ forgot_password.vue
+│  ├─ index.vue
+│  ├─ login.vue
+│  ├─ register.vue
+│  ├─ reset_password.vue
+│  └─ test.vue
+├─ plugins
+│  ├─ Vue3-toastify.client.ts
+│  └─ Vue3Lottie.client.ts
+├─ public
+│  ├─ animations
+│  │  ├─ InternalError.json
+│  │  ├─ fail.json
+│  │  ├─ successed.json
+│  │  └─ waiting.json
+│  ├─ favicon.ico
+│  ├─ icons
+│  │  ├─ copy.svg
+│  │  ├─ error.svg
+│  │  ├─ eye-slash.svg
+│  │  ├─ eye.svg
+│  │  ├─ facebook.svg
+│  │  ├─ google.svg
+│  │  ├─ info.svg
+│  │  ├─ loading.svg
+│  │  ├─ logo-dark.webp
+│  │  └─ success.svg
+│  ├─ images
+│  │  ├─ forgot-password.png
+│  │  ├─ image.png
+│  │  ├─ login-image.jpg
+│  │  ├─ register-image.png
+│  │  └─ reset-password.png
+│  ├─ robots.txt
+│  └─ static
+│     └─ fonts
+│        ├─ Satoshi-Black.woff2
+│        ├─ Satoshi-Bold.woff2
+│        ├─ Satoshi-Light.woff2
+│        ├─ Satoshi-Medium.woff2
+│        ├─ Satoshi-Regular.woff2
+│        └─ Satoshi-Variable.woff2
+├─ server
+│  ├─ api
+│  │  └─ auth
+│  │     ├─ forgotPassword.ts
+│  │     ├─ forgotSubmit.ts
+│  │     ├─ login.ts
+│  │     ├─ register.ts
+│  │     └─ registerRequest.ts
+│  └─ tsconfig.json
+├─ store
+│  └─ authLoading.ts
+├─ tailwind.config.js
+├─ tsconfig.json
+└─ utils
+   ├─ string.ts
+   └─ toastNotification.ts
+
+```
+```
+movie-dashboard
+├─ README.md
+├─ actions
+│  └─ auth.action.ts
+├─ app.vue
+├─ assets
+│  └─ css
+│     ├─ app.css
+│     └─ fonts.css
+├─ components
+│  ├─ core
+│  │  └─ auth
+│  │     ├─ 2fa
+│  │     │  └─ OTPFill.vue
+│  │     ├─ forgot-password
+│  │     │  ├─ ForgotPasswordContainer.vue
+│  │     │  └─ ForgotPasswordForm.vue
+│  │     ├─ login
+│  │     │  ├─ LoginContainer.vue
+│  │     │  └─ LoginForm.vue
+│  │     ├─ register
+│  │     │  ├─ RegisterContainer.vue
+│  │     │  ├─ RegisterFillForm.vue
+│  │     │  └─ RegisterRequestForm.vue
+│  │     └─ reset-password
+│  │        ├─ ResetPasswordContainer.vue
+│  │        └─ ResetPasswordForm.vue
+│  └─ shared
+│     ├─ input
+│     │  ├─ CommonField.vue
+│     │  ├─ OTPField.vue
+│     │  └─ PasswordField.vue
+│     ├─ toast
+│     │  ├─ ErrorToastNotification.vue
+│     │  ├─ InfoToastNotification.vue
+│     │  └─ SuccessToastNotification.vue
+│     └─ utils
+│        └─ AuthResponse.utils.vue
+├─ composables
+│  └─ useVerifyLink.ts
+├─ content
+├─ layouts
+│  └─ Auth.layout.vue
+├─ middleware
+│  ├─ verifyRegisterLink.ts
+│  └─ verifyResetPassLink.ts
+├─ nuxt.config.ts
+├─ package-lock.json
+├─ package.json
+├─ pages
+│  ├─ forgot_password.vue
+│  ├─ index.vue
+│  ├─ login.vue
+│  ├─ register.vue
+│  ├─ reset_password.vue
+│  └─ test.vue
+├─ plugins
+│  ├─ Vue3-toastify.client.ts
+│  └─ Vue3Lottie.client.ts
+├─ public
+│  ├─ animations
+│  │  ├─ InternalError.json
+│  │  ├─ fail.json
+│  │  ├─ successed.json
+│  │  └─ waiting.json
+│  ├─ favicon.ico
+│  ├─ icons
+│  │  ├─ copy.svg
+│  │  ├─ error.svg
+│  │  ├─ eye-slash.svg
+│  │  ├─ eye.svg
+│  │  ├─ facebook.svg
+│  │  ├─ google.svg
+│  │  ├─ info.svg
+│  │  ├─ loading.svg
+│  │  ├─ logo-dark.webp
+│  │  └─ success.svg
+│  ├─ images
+│  │  ├─ forgot-password.png
+│  │  ├─ image.png
+│  │  ├─ login-image.jpg
+│  │  ├─ register-image.png
+│  │  └─ reset-password.png
+│  ├─ robots.txt
+│  └─ static
+│     └─ fonts
+│        ├─ Satoshi-Black.woff2
+│        ├─ Satoshi-Bold.woff2
+│        ├─ Satoshi-Light.woff2
+│        ├─ Satoshi-Medium.woff2
+│        ├─ Satoshi-Regular.woff2
+│        └─ Satoshi-Variable.woff2
+├─ server
+│  ├─ api
+│  │  └─ auth
+│  │     ├─ forgotPassword.ts
+│  │     ├─ forgotSubmit.ts
+│  │     ├─ login.ts
+│  │     ├─ register.ts
+│  │     └─ registerRequest.ts
+│  └─ tsconfig.json
+├─ store
+│  └─ authLoading.ts
+├─ tailwind.config.js
+├─ tsconfig.json
+└─ utils
+   ├─ string.ts
+   └─ toastNotification.ts
+
+```
+```
+movie-dashboard
+├─ README.md
+├─ actions
+│  └─ auth.action.ts
+├─ app.vue
+├─ assets
+│  └─ css
+│     ├─ app.css
+│     └─ fonts.css
+├─ components
+│  ├─ core
+│  │  └─ auth
+│  │     ├─ 2fa
+│  │     │  └─ OTPFill.vue
+│  │     ├─ forgot-password
+│  │     │  ├─ ForgotPasswordContainer.vue
+│  │     │  └─ ForgotPasswordForm.vue
+│  │     ├─ login
+│  │     │  ├─ LoginContainer.vue
+│  │     │  └─ LoginForm.vue
+│  │     ├─ register
+│  │     │  ├─ RegisterContainer.vue
+│  │     │  ├─ RegisterFillForm.vue
+│  │     │  └─ RegisterRequestForm.vue
+│  │     └─ reset-password
+│  │        ├─ ResetPasswordContainer.vue
+│  │        └─ ResetPasswordForm.vue
+│  └─ shared
+│     ├─ input
+│     │  ├─ CommonField.vue
+│     │  ├─ OTPField.vue
+│     │  └─ PasswordField.vue
+│     ├─ toast
+│     │  ├─ ErrorToastNotification.vue
+│     │  ├─ InfoToastNotification.vue
+│     │  └─ SuccessToastNotification.vue
+│     └─ utils
+│        └─ AuthResponse.utils.vue
+├─ composables
+│  └─ useVerifyLink.ts
+├─ content
+├─ layouts
+│  └─ Auth.layout.vue
+├─ middleware
+│  ├─ verifyRegisterLink.ts
+│  └─ verifyResetPassLink.ts
+├─ nuxt.config.ts
+├─ package-lock.json
+├─ package.json
+├─ pages
+│  ├─ forgot_password.vue
+│  ├─ index.vue
+│  ├─ login.vue
+│  ├─ register.vue
+│  ├─ reset_password.vue
+│  └─ test.vue
+├─ plugins
+│  ├─ Vue3-toastify.client.ts
+│  └─ Vue3Lottie.client.ts
+├─ public
+│  ├─ animations
+│  │  ├─ InternalError.json
+│  │  ├─ fail.json
+│  │  ├─ successed.json
+│  │  └─ waiting.json
+│  ├─ favicon.ico
+│  ├─ icons
+│  │  ├─ copy.svg
+│  │  ├─ error.svg
+│  │  ├─ eye-slash.svg
+│  │  ├─ eye.svg
+│  │  ├─ facebook.svg
+│  │  ├─ google.svg
+│  │  ├─ info.svg
+│  │  ├─ loading.svg
+│  │  ├─ logo-dark.webp
+│  │  └─ success.svg
+│  ├─ images
+│  │  ├─ forgot-password.png
+│  │  ├─ image.png
+│  │  ├─ login-image.jpg
+│  │  ├─ register-image.png
+│  │  └─ reset-password.png
+│  ├─ robots.txt
+│  └─ static
+│     └─ fonts
+│        ├─ Satoshi-Black.woff2
+│        ├─ Satoshi-Bold.woff2
+│        ├─ Satoshi-Light.woff2
+│        ├─ Satoshi-Medium.woff2
+│        ├─ Satoshi-Regular.woff2
+│        └─ Satoshi-Variable.woff2
+├─ server
+│  ├─ api
+│  │  └─ auth
+│  │     ├─ forgotPassword.ts
+│  │     ├─ forgotSubmit.ts
+│  │     ├─ login.ts
+│  │     ├─ register.ts
+│  │     └─ registerRequest.ts
+│  └─ tsconfig.json
+├─ store
+│  └─ authLoading.ts
+├─ tailwind.config.js
+├─ tsconfig.json
+└─ utils
+   ├─ string.ts
+   └─ toastNotification.ts
+
+```
+```
+movie-dashboard
+├─ README.md
+├─ actions
+│  └─ auth.action.ts
+├─ app.vue
+├─ assets
+│  └─ css
+│     ├─ app.css
+│     └─ fonts.css
+├─ components
+│  ├─ core
+│  │  └─ auth
+│  │     ├─ 2fa
+│  │     │  └─ OTPFill.vue
+│  │     ├─ forgot-password
+│  │     │  ├─ ForgotPasswordContainer.vue
+│  │     │  └─ ForgotPasswordForm.vue
+│  │     ├─ login
+│  │     │  ├─ LoginContainer.vue
+│  │     │  └─ LoginForm.vue
+│  │     ├─ register
+│  │     │  ├─ RegisterContainer.vue
+│  │     │  ├─ RegisterFillForm.vue
+│  │     │  └─ RegisterRequestForm.vue
+│  │     └─ reset-password
+│  │        ├─ ResetPasswordContainer.vue
+│  │        └─ ResetPasswordForm.vue
+│  └─ shared
+│     ├─ input
+│     │  ├─ CommonField.vue
+│     │  ├─ OTPField.vue
+│     │  └─ PasswordField.vue
+│     ├─ toast
+│     │  ├─ ErrorToastNotification.vue
+│     │  ├─ InfoToastNotification.vue
+│     │  └─ SuccessToastNotification.vue
+│     └─ utils
+│        └─ AuthResponse.utils.vue
+├─ composables
+│  └─ useVerifyLink.ts
+├─ content
+├─ layouts
+│  └─ Auth.layout.vue
+├─ middleware
+│  ├─ verifyRegisterLink.ts
+│  └─ verifyResetPassLink.ts
+├─ nuxt.config.ts
+├─ package-lock.json
+├─ package.json
+├─ pages
+│  ├─ forgot_password.vue
+│  ├─ index.vue
+│  ├─ login.vue
+│  ├─ register.vue
+│  ├─ reset_password.vue
+│  └─ test.vue
+├─ plugins
+│  ├─ Vue3-toastify.client.ts
+│  └─ Vue3Lottie.client.ts
+├─ public
+│  ├─ animations
+│  │  ├─ InternalError.json
+│  │  ├─ fail.json
+│  │  ├─ successed.json
+│  │  └─ waiting.json
+│  ├─ favicon.ico
+│  ├─ icons
+│  │  ├─ copy.svg
+│  │  ├─ error.svg
+│  │  ├─ eye-slash.svg
+│  │  ├─ eye.svg
+│  │  ├─ facebook.svg
+│  │  ├─ google.svg
+│  │  ├─ info.svg
+│  │  ├─ loading.svg
+│  │  ├─ logo-dark.webp
+│  │  └─ success.svg
+│  ├─ images
+│  │  ├─ forgot-password.png
+│  │  ├─ image.png
+│  │  ├─ login-image.jpg
+│  │  ├─ register-image.png
+│  │  └─ reset-password.png
+│  ├─ robots.txt
+│  └─ static
+│     └─ fonts
+│        ├─ Satoshi-Black.woff2
+│        ├─ Satoshi-Bold.woff2
+│        ├─ Satoshi-Light.woff2
+│        ├─ Satoshi-Medium.woff2
+│        ├─ Satoshi-Regular.woff2
+│        └─ Satoshi-Variable.woff2
+├─ server
+│  ├─ api
+│  │  └─ auth
+│  │     ├─ forgotPassword.ts
+│  │     ├─ forgotSubmit.ts
+│  │     ├─ login.ts
+│  │     ├─ register.ts
+│  │     └─ registerRequest.ts
+│  └─ tsconfig.json
+├─ store
+│  └─ authLoading.ts
+├─ tailwind.config.js
+├─ tsconfig.json
+└─ utils
+   ├─ string.ts
+   └─ toastNotification.ts
+
+```
+```
+movie-dashboard
+├─ README.md
+├─ actions
+│  └─ auth.action.ts
+├─ app.vue
+├─ assets
+│  └─ css
+│     ├─ app.css
+│     └─ fonts.css
+├─ components
+│  ├─ core
+│  │  └─ auth
+│  │     ├─ 2fa
+│  │     │  └─ OTPFill.vue
+│  │     ├─ forgot-password
+│  │     │  ├─ ForgotPasswordContainer.vue
+│  │     │  └─ ForgotPasswordForm.vue
+│  │     ├─ login
+│  │     │  ├─ LoginContainer.vue
+│  │     │  └─ LoginForm.vue
+│  │     ├─ register
+│  │     │  ├─ RegisterContainer.vue
+│  │     │  ├─ RegisterFillForm.vue
+│  │     │  └─ RegisterRequestForm.vue
+│  │     └─ reset-password
+│  │        ├─ ResetPasswordContainer.vue
+│  │        └─ ResetPasswordForm.vue
+│  └─ shared
+│     ├─ input
+│     │  ├─ CommonField.vue
+│     │  ├─ OTPField.vue
+│     │  └─ PasswordField.vue
+│     ├─ toast
+│     │  ├─ ErrorToastNotification.vue
+│     │  ├─ InfoToastNotification.vue
+│     │  └─ SuccessToastNotification.vue
+│     └─ utils
+│        └─ AuthResponse.utils.vue
+├─ composables
+│  └─ useVerifyLink.ts
+├─ content
+├─ layouts
+│  └─ Auth.layout.vue
+├─ middleware
+│  ├─ verifyRegisterLink.ts
+│  └─ verifyResetPassLink.ts
+├─ nuxt.config.ts
+├─ package-lock.json
+├─ package.json
+├─ pages
+│  ├─ forgot_password.vue
+│  ├─ index.vue
+│  ├─ login.vue
+│  ├─ register.vue
+│  ├─ reset_password.vue
+│  └─ test.vue
+├─ plugins
+│  ├─ Vue3-toastify.client.ts
+│  └─ Vue3Lottie.client.ts
+├─ public
+│  ├─ animations
+│  │  ├─ InternalError.json
+│  │  ├─ fail.json
+│  │  ├─ successed.json
+│  │  └─ waiting.json
+│  ├─ favicon.ico
+│  ├─ icons
+│  │  ├─ copy.svg
+│  │  ├─ error.svg
+│  │  ├─ eye-slash.svg
+│  │  ├─ eye.svg
+│  │  ├─ facebook.svg
+│  │  ├─ google.svg
+│  │  ├─ info.svg
+│  │  ├─ loading.svg
+│  │  ├─ logo-dark.webp
+│  │  └─ success.svg
+│  ├─ images
+│  │  ├─ forgot-password.png
+│  │  ├─ image.png
+│  │  ├─ login-image.jpg
+│  │  ├─ register-image.png
+│  │  └─ reset-password.png
+│  ├─ robots.txt
+│  └─ static
+│     └─ fonts
+│        ├─ Satoshi-Black.woff2
+│        ├─ Satoshi-Bold.woff2
+│        ├─ Satoshi-Light.woff2
+│        ├─ Satoshi-Medium.woff2
+│        ├─ Satoshi-Regular.woff2
+│        └─ Satoshi-Variable.woff2
+├─ server
+│  ├─ api
+│  │  └─ auth
+│  │     ├─ forgotPassword.ts
+│  │     ├─ forgotSubmit.ts
+│  │     ├─ login.ts
+│  │     ├─ register.ts
+│  │     └─ registerRequest.ts
+│  └─ tsconfig.json
+├─ store
+│  └─ authLoading.ts
+├─ tailwind.config.js
+├─ tsconfig.json
+└─ utils
+   ├─ string.ts
+   └─ toastNotification.ts
+
+```
+```
+movie-dashboard
+├─ README.md
+├─ actions
+│  └─ auth.action.ts
+├─ app.vue
+├─ assets
+│  └─ css
+│     ├─ app.css
+│     └─ fonts.css
+├─ components
+│  ├─ core
+│  │  └─ auth
+│  │     ├─ 2fa
+│  │     │  └─ OTPFill.vue
+│  │     ├─ forgot-password
+│  │     │  ├─ ForgotPasswordContainer.vue
+│  │     │  └─ ForgotPasswordForm.vue
+│  │     ├─ login
+│  │     │  ├─ LoginContainer.vue
+│  │     │  └─ LoginForm.vue
+│  │     ├─ register
+│  │     │  ├─ RegisterContainer.vue
+│  │     │  ├─ RegisterFillForm.vue
+│  │     │  └─ RegisterRequestForm.vue
+│  │     └─ reset-password
+│  │        ├─ ResetPasswordContainer.vue
+│  │        └─ ResetPasswordForm.vue
+│  └─ shared
+│     ├─ input
+│     │  ├─ CommonField.vue
+│     │  ├─ OTPField.vue
+│     │  └─ PasswordField.vue
+│     ├─ toast
+│     │  ├─ ErrorToastNotification.vue
+│     │  ├─ InfoToastNotification.vue
+│     │  └─ SuccessToastNotification.vue
+│     └─ utils
+│        └─ AuthResponse.utils.vue
+├─ composables
+│  └─ useVerifyLink.ts
+├─ content
+├─ layouts
+│  └─ Auth.layout.vue
+├─ middleware
+│  ├─ verifyRegisterLink.ts
+│  └─ verifyResetPassLink.ts
+├─ nuxt.config.ts
+├─ package-lock.json
+├─ package.json
+├─ pages
+│  ├─ forgot_password.vue
+│  ├─ index.vue
+│  ├─ login.vue
+│  ├─ register.vue
+│  ├─ reset_password.vue
+│  └─ test.vue
+├─ plugins
+│  ├─ Vue3-toastify.client.ts
+│  └─ Vue3Lottie.client.ts
+├─ public
+│  ├─ animations
+│  │  ├─ InternalError.json
+│  │  ├─ fail.json
+│  │  ├─ successed.json
+│  │  └─ waiting.json
+│  ├─ favicon.ico
+│  ├─ icons
+│  │  ├─ copy.svg
+│  │  ├─ error.svg
+│  │  ├─ eye-slash.svg
+│  │  ├─ eye.svg
+│  │  ├─ facebook.svg
+│  │  ├─ google.svg
+│  │  ├─ info.svg
+│  │  ├─ loading.svg
+│  │  ├─ logo-dark.webp
+│  │  └─ success.svg
+│  ├─ images
+│  │  ├─ forgot-password.png
+│  │  ├─ image.png
+│  │  ├─ login-image.jpg
+│  │  ├─ register-image.png
+│  │  └─ reset-password.png
+│  ├─ robots.txt
+│  └─ static
+│     └─ fonts
+│        ├─ Satoshi-Black.woff2
+│        ├─ Satoshi-Bold.woff2
+│        ├─ Satoshi-Light.woff2
+│        ├─ Satoshi-Medium.woff2
+│        ├─ Satoshi-Regular.woff2
+│        └─ Satoshi-Variable.woff2
+├─ server
+│  ├─ api
+│  │  └─ auth
+│  │     ├─ forgotPassword.ts
+│  │     ├─ forgotSubmit.ts
+│  │     ├─ login.ts
+│  │     ├─ register.ts
+│  │     └─ registerRequest.ts
+│  └─ tsconfig.json
+├─ store
+│  └─ authLoading.ts
+├─ tailwind.config.js
+├─ tsconfig.json
+└─ utils
+   ├─ string.ts
+   └─ toastNotification.ts
+
+```
+```
+movie-dashboard
+├─ README.md
+├─ actions
+│  └─ auth.action.ts
+├─ app.vue
+├─ assets
+│  └─ css
+│     ├─ app.css
+│     └─ fonts.css
+├─ components
+│  ├─ core
+│  │  └─ auth
+│  │     ├─ 2fa
+│  │     │  └─ OTPFill.vue
+│  │     ├─ forgot-password
+│  │     │  ├─ ForgotPasswordContainer.vue
+│  │     │  └─ ForgotPasswordForm.vue
+│  │     ├─ login
+│  │     │  ├─ LoginContainer.vue
+│  │     │  └─ LoginForm.vue
+│  │     ├─ register
+│  │     │  ├─ RegisterContainer.vue
+│  │     │  ├─ RegisterFillForm.vue
+│  │     │  └─ RegisterRequestForm.vue
+│  │     └─ reset-password
+│  │        ├─ ResetPasswordContainer.vue
+│  │        └─ ResetPasswordForm.vue
+│  └─ shared
+│     ├─ input
+│     │  ├─ CommonField.vue
+│     │  ├─ OTPField.vue
+│     │  └─ PasswordField.vue
+│     ├─ toast
+│     │  ├─ ErrorToastNotification.vue
+│     │  ├─ InfoToastNotification.vue
+│     │  └─ SuccessToastNotification.vue
+│     └─ utils
+│        └─ AuthResponse.utils.vue
+├─ composables
+│  └─ useVerifyLink.ts
+├─ content
+├─ layouts
+│  └─ Auth.layout.vue
+├─ middleware
+│  ├─ verifyRegisterLink.ts
+│  └─ verifyResetPassLink.ts
+├─ nuxt.config.ts
+├─ package-lock.json
+├─ package.json
+├─ pages
+│  ├─ forgot_password.vue
+│  ├─ index.vue
+│  ├─ login.vue
+│  ├─ register.vue
+│  ├─ reset_password.vue
+│  └─ test.vue
+├─ plugins
+│  ├─ Vue3-toastify.client.ts
+│  └─ Vue3Lottie.client.ts
+├─ public
+│  ├─ animations
+│  │  ├─ InternalError.json
+│  │  ├─ fail.json
+│  │  ├─ successed.json
+│  │  └─ waiting.json
+│  ├─ favicon.ico
+│  ├─ icons
+│  │  ├─ copy.svg
+│  │  ├─ error.svg
+│  │  ├─ eye-slash.svg
+│  │  ├─ eye.svg
+│  │  ├─ facebook.svg
+│  │  ├─ google.svg
+│  │  ├─ info.svg
+│  │  ├─ loading.svg
+│  │  ├─ logo-dark.webp
+│  │  └─ success.svg
+│  ├─ images
+│  │  ├─ forgot-password.png
+│  │  ├─ image.png
+│  │  ├─ login-image.jpg
+│  │  ├─ register-image.png
+│  │  └─ reset-password.png
+│  ├─ robots.txt
+│  └─ static
+│     └─ fonts
+│        ├─ Satoshi-Black.woff2
+│        ├─ Satoshi-Bold.woff2
+│        ├─ Satoshi-Light.woff2
+│        ├─ Satoshi-Medium.woff2
+│        ├─ Satoshi-Regular.woff2
+│        └─ Satoshi-Variable.woff2
+├─ server
+│  ├─ api
+│  │  └─ auth
+│  │     ├─ forgotPassword.ts
+│  │     ├─ forgotSubmit.ts
+│  │     ├─ login.ts
+│  │     ├─ register.ts
+│  │     └─ registerRequest.ts
+│  └─ tsconfig.json
+├─ store
+│  └─ authLoading.ts
+├─ tailwind.config.js
+├─ tsconfig.json
+└─ utils
+   ├─ string.ts
+   └─ toastNotification.ts
+
+```
+```
+movie-dashboard
+├─ README.md
+├─ actions
+│  └─ auth.action.ts
+├─ app.vue
+├─ assets
+│  └─ css
+│     ├─ app.css
+│     └─ fonts.css
+├─ components
+│  ├─ core
+│  │  └─ auth
+│  │     ├─ 2fa
+│  │     │  └─ OTPFill.vue
+│  │     ├─ forgot-password
+│  │     │  ├─ ForgotPasswordContainer.vue
+│  │     │  └─ ForgotPasswordForm.vue
+│  │     ├─ login
+│  │     │  ├─ LoginContainer.vue
+│  │     │  └─ LoginForm.vue
+│  │     ├─ register
+│  │     │  ├─ RegisterContainer.vue
+│  │     │  ├─ RegisterFillForm.vue
+│  │     │  └─ RegisterRequestForm.vue
+│  │     └─ reset-password
+│  │        ├─ ResetPasswordContainer.vue
+│  │        └─ ResetPasswordForm.vue
+│  └─ shared
+│     ├─ input
+│     │  ├─ CommonField.vue
+│     │  ├─ OTPField.vue
+│     │  └─ PasswordField.vue
+│     ├─ toast
+│     │  ├─ ErrorToastNotification.vue
+│     │  ├─ InfoToastNotification.vue
+│     │  └─ SuccessToastNotification.vue
+│     └─ utils
+│        └─ AuthResponse.utils.vue
+├─ composables
+│  └─ useVerifyLink.ts
+├─ content
+├─ layouts
+│  └─ Auth.layout.vue
+├─ middleware
+│  ├─ verifyRegisterLink.ts
+│  └─ verifyResetPassLink.ts
+├─ nuxt.config.ts
+├─ package-lock.json
+├─ package.json
+├─ pages
+│  ├─ forgot_password.vue
+│  ├─ index.vue
+│  ├─ login.vue
+│  ├─ register.vue
+│  ├─ reset_password.vue
+│  └─ test.vue
+├─ plugins
+│  ├─ Vue3-toastify.client.ts
+│  └─ Vue3Lottie.client.ts
+├─ public
+│  ├─ animations
+│  │  ├─ InternalError.json
+│  │  ├─ fail.json
+│  │  ├─ successed.json
+│  │  └─ waiting.json
+│  ├─ favicon.ico
+│  ├─ icons
+│  │  ├─ copy.svg
+│  │  ├─ error.svg
+│  │  ├─ eye-slash.svg
+│  │  ├─ eye.svg
+│  │  ├─ facebook.svg
+│  │  ├─ google.svg
+│  │  ├─ info.svg
+│  │  ├─ loading.svg
+│  │  ├─ logo-dark.webp
+│  │  └─ success.svg
+│  ├─ images
+│  │  ├─ forgot-password.png
+│  │  ├─ image.png
+│  │  ├─ login-image.jpg
+│  │  ├─ register-image.png
+│  │  └─ reset-password.png
+│  ├─ robots.txt
+│  └─ static
+│     └─ fonts
+│        ├─ Satoshi-Black.woff2
+│        ├─ Satoshi-Bold.woff2
+│        ├─ Satoshi-Light.woff2
+│        ├─ Satoshi-Medium.woff2
+│        ├─ Satoshi-Regular.woff2
+│        └─ Satoshi-Variable.woff2
+├─ server
+│  ├─ api
+│  │  └─ auth
+│  │     ├─ forgotPassword.ts
+│  │     ├─ forgotSubmit.ts
+│  │     ├─ login.ts
+│  │     ├─ register.ts
+│  │     └─ registerRequest.ts
+│  └─ tsconfig.json
+├─ store
+│  └─ authLoading.ts
+├─ tailwind.config.js
+├─ tsconfig.json
+└─ utils
+   ├─ string.ts
+   └─ toastNotification.ts
+
+```
+```
+movie-dashboard
+├─ README.md
+├─ actions
+│  └─ auth.action.ts
+├─ app.vue
+├─ assets
+│  └─ css
+│     ├─ app.css
+│     └─ fonts.css
+├─ components
+│  ├─ core
+│  │  └─ auth
+│  │     ├─ 2fa
+│  │     │  └─ OTPFill.vue
+│  │     ├─ forgot-password
+│  │     │  ├─ ForgotPasswordContainer.vue
+│  │     │  └─ ForgotPasswordForm.vue
+│  │     ├─ login
+│  │     │  ├─ LoginContainer.vue
+│  │     │  └─ LoginForm.vue
+│  │     ├─ register
+│  │     │  ├─ RegisterContainer.vue
+│  │     │  ├─ RegisterFillForm.vue
+│  │     │  └─ RegisterRequestForm.vue
+│  │     └─ reset-password
+│  │        ├─ ResetPasswordContainer.vue
+│  │        └─ ResetPasswordForm.vue
+│  └─ shared
+│     ├─ input
+│     │  ├─ CommonField.vue
+│     │  ├─ OTPField.vue
+│     │  └─ PasswordField.vue
+│     ├─ toast
+│     │  ├─ ErrorToastNotification.vue
+│     │  ├─ InfoToastNotification.vue
+│     │  └─ SuccessToastNotification.vue
+│     └─ utils
+│        └─ AuthResponse.utils.vue
+├─ composables
+│  └─ useVerifyLink.ts
+├─ content
+├─ layouts
+│  └─ Auth.layout.vue
+├─ middleware
+│  ├─ verifyRegisterLink.ts
+│  └─ verifyResetPassLink.ts
+├─ nuxt.config.ts
+├─ package-lock.json
+├─ package.json
+├─ pages
+│  ├─ forgot_password.vue
+│  ├─ index.vue
+│  ├─ login.vue
+│  ├─ register.vue
+│  ├─ reset_password.vue
+│  └─ test.vue
+├─ plugins
+│  ├─ Vue3-toastify.client.ts
+│  └─ Vue3Lottie.client.ts
+├─ public
+│  ├─ animations
+│  │  ├─ InternalError.json
+│  │  ├─ fail.json
+│  │  ├─ successed.json
+│  │  └─ waiting.json
+│  ├─ favicon.ico
+│  ├─ icons
+│  │  ├─ copy.svg
+│  │  ├─ error.svg
+│  │  ├─ eye-slash.svg
+│  │  ├─ eye.svg
+│  │  ├─ facebook.svg
+│  │  ├─ google.svg
+│  │  ├─ info.svg
+│  │  ├─ loading.svg
+│  │  ├─ logo-dark.webp
+│  │  └─ success.svg
+│  ├─ images
+│  │  ├─ forgot-password.png
+│  │  ├─ image.png
+│  │  ├─ login-image.jpg
+│  │  ├─ register-image.png
+│  │  └─ reset-password.png
+│  ├─ robots.txt
+│  └─ static
+│     └─ fonts
+│        ├─ Satoshi-Black.woff2
+│        ├─ Satoshi-Bold.woff2
+│        ├─ Satoshi-Light.woff2
+│        ├─ Satoshi-Medium.woff2
+│        ├─ Satoshi-Regular.woff2
+│        └─ Satoshi-Variable.woff2
+├─ server
+│  ├─ api
+│  │  └─ auth
+│  │     ├─ forgotPassword.ts
+│  │     ├─ forgotSubmit.ts
+│  │     ├─ login.ts
+│  │     ├─ register.ts
+│  │     └─ registerRequest.ts
+│  └─ tsconfig.json
+├─ store
+│  └─ authLoading.ts
+├─ tailwind.config.js
+├─ tsconfig.json
+└─ utils
+   ├─ string.ts
+   └─ toastNotification.ts
+
+```
+```
+movie-dashboard
+├─ README.md
+├─ actions
+│  └─ auth.action.ts
+├─ app.vue
+├─ assets
+│  └─ css
+│     ├─ app.css
+│     └─ fonts.css
+├─ components
+│  ├─ core
+│  │  └─ auth
+│  │     ├─ 2fa
+│  │     │  └─ OTPFill.vue
+│  │     ├─ forgot-password
+│  │     │  ├─ ForgotPasswordContainer.vue
+│  │     │  └─ ForgotPasswordForm.vue
+│  │     ├─ login
+│  │     │  ├─ LoginContainer.vue
+│  │     │  └─ LoginForm.vue
+│  │     ├─ register
+│  │     │  ├─ RegisterContainer.vue
+│  │     │  ├─ RegisterFillForm.vue
+│  │     │  └─ RegisterRequestForm.vue
+│  │     └─ reset-password
+│  │        ├─ ResetPasswordContainer.vue
+│  │        └─ ResetPasswordForm.vue
+│  └─ shared
+│     ├─ input
+│     │  ├─ CommonField.vue
+│     │  ├─ OTPField.vue
+│     │  └─ PasswordField.vue
+│     ├─ toast
+│     │  ├─ ErrorToastNotification.vue
+│     │  ├─ InfoToastNotification.vue
+│     │  └─ SuccessToastNotification.vue
+│     └─ utils
+│        └─ AuthResponse.utils.vue
+├─ composables
+│  └─ useVerifyLink.ts
+├─ content
+├─ layouts
+│  └─ Auth.layout.vue
+├─ middleware
+│  ├─ verifyRegisterLink.ts
+│  └─ verifyResetPassLink.ts
+├─ nuxt.config.ts
+├─ package-lock.json
+├─ package.json
+├─ pages
+│  ├─ forgot_password.vue
+│  ├─ index.vue
+│  ├─ login.vue
+│  ├─ register.vue
+│  ├─ reset_password.vue
+│  └─ test.vue
+├─ plugins
+│  ├─ Vue3-toastify.client.ts
+│  └─ Vue3Lottie.client.ts
+├─ public
+│  ├─ animations
+│  │  ├─ InternalError.json
+│  │  ├─ fail.json
+│  │  ├─ successed.json
+│  │  └─ waiting.json
+│  ├─ favicon.ico
+│  ├─ icons
+│  │  ├─ copy.svg
+│  │  ├─ error.svg
+│  │  ├─ eye-slash.svg
+│  │  ├─ eye.svg
+│  │  ├─ facebook.svg
+│  │  ├─ google.svg
+│  │  ├─ info.svg
+│  │  ├─ loading.svg
+│  │  ├─ logo-dark.webp
+│  │  └─ success.svg
+│  ├─ images
+│  │  ├─ forgot-password.png
+│  │  ├─ image.png
+│  │  ├─ login-image.jpg
+│  │  ├─ register-image.png
+│  │  └─ reset-password.png
+│  ├─ robots.txt
+│  └─ static
+│     └─ fonts
+│        ├─ Satoshi-Black.woff2
+│        ├─ Satoshi-Bold.woff2
+│        ├─ Satoshi-Light.woff2
+│        ├─ Satoshi-Medium.woff2
+│        ├─ Satoshi-Regular.woff2
+│        └─ Satoshi-Variable.woff2
+├─ server
+│  ├─ api
+│  │  └─ auth
+│  │     ├─ forgotPassword.ts
+│  │     ├─ forgotSubmit.ts
+│  │     ├─ login.ts
+│  │     ├─ register.ts
+│  │     └─ registerRequest.ts
+│  └─ tsconfig.json
+├─ store
+│  └─ authLoading.ts
+├─ tailwind.config.js
+├─ tsconfig.json
+└─ utils
+   ├─ string.ts
+   └─ toastNotification.ts
 
 ```

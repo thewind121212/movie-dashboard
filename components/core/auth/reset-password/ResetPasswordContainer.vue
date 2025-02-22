@@ -2,8 +2,8 @@
 
 import ResetPasswordForm from './ResetPasswordForm.vue';
 
-import AuthResponse from '~/components/shared/utils/authResponse.utils.vue';
-import { useVerifyLinkState } from '#imports';
+import AuthResponse from '~/components/shared/utils/AuthResponse.utils.vue';
+import { useVerifyLinkState } from '~/composables/useVerifyLink';
 
 const router = useRouter()
 const route = useRoute()
@@ -28,7 +28,6 @@ onMounted(() => {
 
 onUnmounted(() => {
     resetPasswordPhase.value = 'INIT'
-    resetDefault()
 })
 
 
