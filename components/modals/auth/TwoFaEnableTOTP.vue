@@ -1,12 +1,15 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { useModalAnimation } from '#imports';
-import OTPField from '~/components/shared/input/OTPField.vue';
+import OTPField from '~/components/shared/input/OTPInput.vue';
 import { LoadingTwoFaEnableTOTPLoading } from '#components';
+import { useModalStore } from '~/store/modal';
 
 
 const { mountedRef, zoomOutRef, displayDone, animateModal } = useModalAnimation();
 const modalRef = ref<HTMLElement | null>(null);
+
+const modalStore = useModalStore();
 
 const fetchLinh = async () => {
     await new Promise(resolve => setTimeout(resolve, 200));
@@ -26,7 +29,7 @@ onMounted(() => {
 
 <template>
     <LoadingTwoFaEnableTOTPLoading
-        v-bind:class="[{ '!opacity-100': mountedRef }, { 'w-[40%]': zoomOutRef }, { 'opacity-0': displayDone }, 'z-20 duration-300']"
+        v-bind:class="[{ '!opacity-100': mountedRef }, { 'w-[40%] rounded-xl': zoomOutRef }, { 'opacity-0': displayDone }, 'z-20 duration-300']"
         v-bind:style="{ aspectRatio: zoomOutRef ? modalRef?.getBoundingClientRect().width! / modalRef?.getBoundingClientRect().height! : '1/1' }" />
 
     <div class="w-[40%] h-auto bg-white border shadow-md rounded-xl p-6 flex flex-col gap-6 pb-4 absolute opacity-0 duration-500"
@@ -83,7 +86,8 @@ onMounted(() => {
 
         <div class="w-full h-auto border-t border-[#DDDDDD] flex justify-end items-center gap-4 pt-4">
             <button
-                class="font-medium text-[14px] text-black font-shatoshi px-4 py-2 bg-white border rounded-lg border-[#DDDDDD]">Cancel</button>
+                class="font-medium text-[14px] text-black font-shatoshi px-4 py-2 bg-white border rounded-lg border-[#DDDDDD]"
+                @click="modalStore.hideModal()">Cancel</button>
             <button
                 class="font-medium text-[14px] text-white font-shatoshi px-4 py-2 bg-[#5445F4] border rounded-lg border-[#5445f4]">Confirm</button>
         </div>

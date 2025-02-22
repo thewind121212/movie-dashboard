@@ -3,8 +3,8 @@ import { Form, Field, ErrorMessage } from 'vee-validate';
 import { toTypedSchema } from '@vee-validate/zod';
 import { useAuthLoading } from '~/store/authLoading';
 import { login } from '~/actions/auth.action';
-import CommonInput from '~/components/shared/input/CommonField.vue';
-import PasswordField from '~/components/shared/input/PasswordField.vue';
+import CommonInput from '~/components/shared/input/CommonInput.vue';
+import PasswordField from '~/components/shared/input/PasswordInput.vue';
 import * as zod from 'zod';
 
 

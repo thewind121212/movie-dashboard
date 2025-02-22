@@ -4,8 +4,8 @@ import { toTypedSchema } from '@vee-validate/zod';
 import * as zod from 'zod';
 import { register } from '~/actions/auth.action'
 import { useAuthLoading } from '~/store/authLoading';
-import CommonField from '~/components/shared/input/CommonField.vue';
-import PasswordField from '~/components/shared/input/PasswordField.vue';
+import CommonField from '~/components/shared/input/CommonInput.vue';
+import PasswordField from '~/components/shared/input/PasswordInput.vue';
 
 
 defineProps({

@@ -6,7 +6,7 @@
 
 <template>
 
-    <div class="w-[20%] h-auto aspect-square shadow-md flex justify-end items-center flex-col gap-4 relative p-6 rounded-xl bg-[#aaa9a9]">
+    <div class="w-[20%] h-auto aspect-square shadow-md flex justify-end items-center flex-col gap-4 relative p-6 rounded-full bg-white">
         <client-only>
             <Vue3Lottie animationLink="/animations/security.json" :loop="true" class="!w-[60%] h-auto absolute" />
         </client-only>
