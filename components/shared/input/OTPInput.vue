@@ -1,13 +1,12 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { set } from 'zod';
 
 const otps = ref<string[]>(['', '', '', '', '', '']);
 const isSelectAll = ref<boolean>(false);
 const previousKey = ref<string>('');
 
 const allowedKeyNumbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
-const validKeys = ['Backspace', 'ArrowLeft', 'ArrowRight', 'Tab', 'Delete', 'Meta', 'v'];
+const validKeys = ['Backspace', 'ArrowLeft', 'ArrowRight', 'Tab', 'Delete', 'Meta'];
 
 // Helper function to focus the next or previous input
 const focusInput = (index: number, direction: 'next' | 'prev') => {
@@ -25,6 +24,7 @@ const onType = (e: KeyboardEvent, index: number) => {
         previousKey.value = '';
         return;
     }
+
 
     if ((key === 'Backspace' || key === 'Delete') && previousKey.value === 'Meta') {
         clearAllInput();
@@ -112,10 +112,16 @@ const handlerPast = (e: ClipboardEvent) => {
     }
 };
 
+//Prevent v and a key
+const preventVAndA = (e: any, index: number) => {
+    if (!e.target) return;
+    if (!allowedKeyNumbers.includes(e.target.value)) {
+        e.target.value = '';
+        otps.value[index] = '';
+    }
+};
 
-onUnmounted(() => {
-    clearAllInput();
-});
+
 
 </script>
 
@@ -124,10 +130,11 @@ onUnmounted(() => {
         <input v-for="(index) in Array.from({ length: 6 }, (_, index) => index)" :key="'otp-' + index" type="text"
             inputmode="numeric" role="textbox" aria-label="OTP Digit"
             class="w-[50px] h-[50px] rounded-lg border-[#DDDDDD] border text-center outline-none focus:border-[#5445f4]"
-            maxlength="1" :class="[
+            :value="otps[index]" maxlength="1" :class="[
                 otps[index] === '' ? '' : 'border-green-400',
                 isSelectAll ? '!border-[#5445f4]' : ''
-            ]" @paste="handlerPast" @blur="isSelectAll = false" @keydown="(e) => {
+            ]" v-on:input="(e: Event) => preventVAndA(e, index)" @paste="handlerPast" @blur="isSelectAll = false"
+            @keydown="(e) => {
                 if (
                     e.key !== 'Backspace' &&
                     e.key !== 'Delete' &&
@@ -137,7 +144,6 @@ onUnmounted(() => {
                 ) {
                     e.preventDefault();
                 }
-                if (['Meta', 'v', 'a'].includes(e.key)) e.preventDefault();
                 onType(e, index);
             }" :id="'otp' + index" />
     </div>

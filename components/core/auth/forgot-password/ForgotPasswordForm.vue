@@ -4,7 +4,7 @@ import { toTypedSchema } from '@vee-validate/zod';
 import { useAuthLoading } from '~/store/authLoading';
 import { forgotPassword } from '~/actions/auth.action';
 import * as zod from 'zod';
-import CommonField from '~/components/shared/input/CommonField.vue';
+import CommonField from '~/components/shared/input/CommonInput.vue';
 
 
 const authLoading = useAuthLoading()
