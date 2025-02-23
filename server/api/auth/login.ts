@@ -34,8 +34,14 @@ export default defineEventHandler(async (event) => {
       event.node.res.statusCode = 200
       if (remember) {
         setCookie(event, 'access_token', data.token, { httpOnly: true, secure: true, maxAge: 1000 * 60 * 60 * 24 * 3, sameSite: 'strict' });
+      } else {
+        return {
+          message,
+          token: data.token
+        }
       }
       return {
+
         message
       }
     }

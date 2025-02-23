@@ -8,7 +8,6 @@ import CommonField from '~/components/shared/input/CommonInput.vue';
 import * as zod from 'zod';
 
 
-const showPassword = ref(fale);
 const authLoading = useAuthLoading()
 const route = useRoute()
 const { validState } = useVerifyLinkState()
