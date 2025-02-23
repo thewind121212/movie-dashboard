@@ -1,6 +1,9 @@
 
+
 import { getErrorMessage } from "#imports"
 import { pushSuccessToast } from "../utils/toastNotification"
+
+
 
 export const sendRegisterRequest = async (email: string): Promise<boolean> => {
     try {
@@ -49,7 +52,7 @@ export const register = async (email: string, token: string, name: string, passw
 
 export const login = async (email: string, password: string, remember: Boolean): Promise<boolean> => {
     try {
-        await $fetch('/api/auth/login',
+        const res: { token?: string } = await $fetch('/api/auth/login',
             {
                 method: 'POST',
                 body: {
@@ -59,6 +62,11 @@ export const login = async (email: string, password: string, remember: Boolean):
                 }
             }
         )
+
+        if (res && !remember && res.token) {
+            sessionStorage.setItem('token', res.token)
+        }
+
 
         return false
     } catch (error: any) {

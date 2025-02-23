@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import LoginForm from './LoginForm.vue';
-import OTPFill from '../2fa/OTPFill.vue';
+import TwoFaSelector from '../2fa/TwoFaSelector.vue';
 const router = useRouter()
 
 </script>
@@ -15,7 +15,7 @@ const router = useRouter()
             <h2 class="font-[400] font-shatoshi text-[1.375rem] leading-[1.5rem] text-[#121212]">Wliafdew</h2>
         </div>
         <LoginForm />
-        <!-- <OTPFill /> -->
+        <!-- <TwoFaSelector /> -->
         <div class="footer-auth">
             <p class="text-[#3D3D3D] text-[1rem] leading-[1.5rem] font-shatoshi cursor-default">Don’t have an account?
                 <span class="font-medium cursor-pointer" v-on:click="() => router.push('/register')">Sign Up</span>

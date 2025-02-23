@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { LoadingTwoFaEnableTOTPLoading } from '#components';
-import { is } from 'drizzle-orm';
 import { useModalStore } from '~/store/modal';
 import ModalContainer from '~/components/shared/utils/ModalContainer.utils.vue';
+import TwoFaRequest from './auth/TwoFaRequest.vue';
 
 
 const modalStore = useModalStore();
@@ -44,6 +44,12 @@ onUnmounted(() => {
                         <ModalsAuthTwoFaEnableTOTP />
                     </template>
                 </Suspense>
+            </ModalContainer>
+        </Teleport>
+        <!-- modal request auth two factor -->
+        <Teleport to="#modal-render-entrypoint" v-if="isShowRetrieved && modalType === 'REGISTER_TOTP'">
+            <ModalContainer>
+                <ModalsAuthTwoFaRequest />
             </ModalContainer>
         </Teleport>
     </ClientOnly>

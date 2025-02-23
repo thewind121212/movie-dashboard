@@ -1,5 +1,5 @@
 <script setup>
-import { Form, Field, ErrorMessage } from 'vee-validate';
+import { Form, Field } from 'vee-validate';
 import { toTypedSchema } from '@vee-validate/zod';
 import { useAuthLoading } from '~/store/authLoading';
 import { login } from '~/actions/auth.action';

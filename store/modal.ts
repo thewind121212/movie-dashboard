@@ -1,10 +1,10 @@
 import { defineStore } from 'pinia'
-import { set } from 'zod'
 
 
+export type ModalType  = 'ENABLE_TOTP' | 'NONE' | 'REGISTER_TOTP'
 interface State {
     isShow: boolean
-    type: 'ENABLE_TOTP' | 'NONE'
+    type: ModalType
 }
 
 export const useModalStore = defineStore('modalDisplay', {
@@ -19,7 +19,7 @@ export const useModalStore = defineStore('modalDisplay', {
             this.isShow = false
             this.type = 'NONE'
         },
-        setModalType(type: 'ENABLE_TOTP' | 'NONE') {
+        setModalType(type: ModalType) {
             this.type = type
             this.isShow = true
         }

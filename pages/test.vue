@@ -10,6 +10,6 @@ const { setModalType } = useModalStore()
 
 <template>
     <div class="w-screen h-screen flex justify-center items-center">
-        <div class="w-20 h-20 bg-green-200" @click="setModalType('ENABLE_TOTP')"></div>
+        <div class="w-20 h-20 bg-green-200" @click="setModalType('REGISTER_TOTP')"></div>
     </div>
 </template>

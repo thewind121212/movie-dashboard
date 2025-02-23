@@ -8,7 +8,7 @@ import { useVerifyLinkState } from '~/composables/useVerifyLink';
 const router = useRouter()
 const route = useRoute()
 const resetPasswordPhase = ref<'INIT' | 'RESET_FORM' | 'RESET_RESULT'>('INIT')
-const { validState, resetDefault } = useVerifyLinkState()
+const { validState } = useVerifyLinkState()
 
 
 onMounted(() => {
