@@ -63,7 +63,7 @@ async function onSubmit(values) {
                                 Me</label>
                         </Field>
                     </div>
-                    <h3 @click="router.push('/forgot_password')"
+                    <h3 @click="router.push('/forgot-password')"
                         class="text-[0.875rem] leading-[1.25rem] text-[#3D3D3D] text-nowrap cursor-pointer">Forgot
                         Password
                     </h3>
