@@ -8,6 +8,9 @@ const previousKey = ref<string>('');
 const allowedKeyNumbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
 const validKeys = ['Backspace', 'ArrowLeft', 'ArrowRight', 'Tab', 'Delete', 'Meta'];
 
+
+const emit = defineEmits(['getOTP']);
+
 // Helper function to focus the next or previous input
 const focusInput = (index: number, direction: 'next' | 'prev') => {
     const targetIndex = direction === 'next' ? index + 1 : index - 1;
@@ -18,6 +21,11 @@ const focusInput = (index: number, direction: 'next' | 'prev') => {
 // Main typing handler
 const onType = (e: KeyboardEvent, index: number) => {
     const key = e.key;
+    if (otps.value.join('').length === 6 && key === 'Enter') {
+        handerSubmit();
+        return;
+
+    };
 
     if (key === 'a' && previousKey.value === 'Meta') {
         isSelectAll.value = true;
@@ -88,6 +96,18 @@ const onType = (e: KeyboardEvent, index: number) => {
     }
 };
 
+
+// handler fille and callback to parent 
+
+const handerSubmit = () => {
+    const otp = otps.value.join('');
+    if (otp.length !== 6) {
+        return;
+    }
+    // callback to parent
+    emit('getOTP', otp);
+};
+
 // Clear all input fields
 const clearAllInput = () => {
     otps.value = ['', '', '', '', '', ''];
@@ -113,7 +133,7 @@ const handlerPast = (e: ClipboardEvent) => {
 };
 
 //Prevent v and a key
-const preventVAndA = (e: any, index: number) => {
+const preventAndKey = (e: any, index: number) => {
     if (!e.target) return;
     if (!allowedKeyNumbers.includes(e.target.value)) {
         e.target.value = '';
@@ -126,14 +146,14 @@ const preventVAndA = (e: any, index: number) => {
 </script>
 
 <template>
-    <div class="w-full h-auto flex justify-start items-center gap-2">
+    <div class="w-auto h-auto flex items-center gap-2">
         <input v-for="(index) in Array.from({ length: 6 }, (_, index) => index)" :key="'otp-' + index" type="text"
             inputmode="numeric" role="textbox" aria-label="OTP Digit"
             class="w-[50px] h-[50px] rounded-lg border-[#DDDDDD] border text-center outline-none focus:border-[#5445f4]"
             :value="otps[index]" maxlength="1" :class="[
                 otps[index] === '' ? '' : 'border-green-400',
                 isSelectAll ? '!border-[#5445f4]' : ''
-            ]" v-on:input="(e: Event) => preventVAndA(e, index)" @paste="handlerPast" @blur="isSelectAll = false"
+            ]" v-on:input="(e: Event) => preventAndKey(e, index)" @paste="handlerPast" @blur="isSelectAll = false"
             @keydown="(e) => {
                 if (
                     e.key !== 'Backspace' &&

@@ -26,26 +26,40 @@ export default defineEventHandler(async (event) => {
     })
     const { message, data } = await response.json()
 
-    if (response.status !== 200) {
-      event.node.res.statusCode = response.status
-      event.node.res.statusMessage = message
-      return
-    } else {
-      event.node.res.statusCode = 200
-      if (remember) {
-        setCookie(event, 'access_token', data.token, { secure: true, maxAge: 60 * 60, sameSite: 'strict' });
-        setCookie(event, 'refresh_token', data.refreshToken, { httpOnly: true, secure: true, maxAge: 60 * 60 * 24 * 7, sameSite: 'strict' });
-      } else {
+
+    switch (response.status) {
+      // if the login is with no two factor auth
+      case 200:
+        event.node.res.statusCode = 200
+        if (remember) {
+          setCookie(event, 'access_token', data.token, { secure: true, maxAge: 60 * 60, sameSite: 'strict' });
+          setCookie(event, 'refresh_token', data.refreshToken, { httpOnly: true, secure: true, maxAge: 60 * 60 * 24 * 7, sameSite: 'strict' });
+        } else {
+          return {
+            message,
+            token: data.token
+          }
+        }
+        return {
+          message
+        }
+      // if the is have two factor auth
+      case 201:
+        event.node.res.statusCode = 201
         return {
           message,
-          token: data.token
+          isTwoFaEnabled: data.isTwoFaEnabled,
+          nonce: data.nonce
         }
-      }
-      return {
+      // if the rest of the status code
+      default:
+        event.node.res.statusCode = response.status
+        event.node.res.statusMessage = message
+        return
 
-        message
-      }
     }
+
+
 
   } catch (error: any) {
     console.error('Internal BE Server Error:', error)
