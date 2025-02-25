@@ -27,3 +27,18 @@ export const pushErrorToast = (message: string) => {
             },
         })
     }
+
+
+export const pushInfoToast = (message: string) => {
+        useNuxtApp().$toast.error(message, {
+            dangerouslyHTMLString: true,
+            autoClose: 2000,
+            progressStyle: {
+                background: '#F67280',
+            },
+            toastStyle: {
+                background: 'linear-gradient(90deg, hsla(356, 100%, 97%, 1) 0%, hsla(0, 0%, 100%, 1) 100%, hsla(0, 0%, 100%, 1) 100%)',
+                FontFace: 'Shatoshi',
+            },
+        })
+    }

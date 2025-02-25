@@ -50,9 +50,13 @@ export const register = async (email: string, token: string, name: string, passw
 }
 
 
-export const login = async (email: string, password: string, remember: Boolean): Promise<boolean> => {
+export const login = async (email: string, password: string, remember: Boolean): Promise<{
+    valid: boolean,
+    isTwoFaEnabled?: boolean
+    nonce?: string
+}> => {
     try {
-        const res: { token?: string } = await $fetch('/api/auth/login',
+        const res: { token?: string, isTwoFaEnabled: boolean, nonce: string } = await $fetch('/api/auth/login',
             {
                 method: 'POST',
                 body: {
@@ -63,15 +67,35 @@ export const login = async (email: string, password: string, remember: Boolean):
             }
         )
 
+
+        if (res && res.isTwoFaEnabled) {
+            if (!res.nonce) {
+                throw new Error('Nonce not found')
+            }
+
+            return {
+                valid: true,
+                isTwoFaEnabled: true,
+                nonce: res.nonce
+            }
+        }
+
+
         if (res && !remember && res.token) {
             sessionStorage.setItem('token', res.token)
         }
 
 
-        return false
+        return {
+            valid: true,
+            isTwoFaEnabled: false
+        }
+
     } catch (error: any) {
         pushErrorToast(getErrorMessage(error))
-        return false
+        return {
+            valid: false,
+        }
     }
 
 }
@@ -108,6 +132,36 @@ export const forgotSubmit = async (token: string, password: string): Promise<boo
             }
         )
         return true
+    } catch (error: any) {
+        pushErrorToast(getErrorMessage(error))
+        return false
+    }
+}
+
+
+export const loginWith2FaTOTP = async (token: string, email: string, nonce: string, remember: boolean): Promise<boolean> => {
+    try {
+        const res : {token : string} = await $fetch('/api/auth/loginWith2FaTOTP',
+            {
+                method: 'POST',
+                body: {
+                    token,
+                    email,
+                    nonce,
+                    remember
+                }
+            }
+        )
+
+
+        if (res && !remember && res.token) {
+            sessionStorage.setItem('token', res.token)
+        }
+
+
+        return true
+
+
     } catch (error: any) {
         pushErrorToast(getErrorMessage(error))
         return false

@@ -13,6 +13,8 @@ const rememberMe = ref(false);
 const router = useRouter()
 
 
+const emit = defineEmits(['setPhase', 'setPayloadTOTP'])
+
 const toogleRememberMe = () => {
     rememberMe.value = !rememberMe.value
 }
@@ -25,11 +27,22 @@ const validationSchema = toTypedSchema(
         remember: zod.boolean().default(false),
     })
 );
+
+
 async function onSubmit(values) {
     authLoading.setLoading(true);
     const isLoginSuccess = await login(values.email, values.password, rememberMe.value);
+    if (isLoginSuccess.isTwoFaEnabled && isLoginSuccess.valid) {
+        emit('setPhase', '2FA')
+        emit('setPayloadTOTP', {
+            email: values.email,
+            nonce: isLoginSuccess.nonce,
+            remember: rememberMe.value
+        })
+    }
+
     authLoading.setLoading(false);
-    if (isLoginSuccess) {
+    if (isLoginSuccess.valid && !isLoginSuccess.isTwoFaEnabled) {
         //redirect to dashboard
         await navigateTo('/')
     }
