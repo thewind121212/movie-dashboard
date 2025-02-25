@@ -1,7 +1,8 @@
 
 
-import { getErrorMessage } from "#imports"
+import { HttpStatusCode } from "axios"
 import { pushSuccessToast } from "../utils/toastNotification"
+import { type EventHandlerRequest, H3Event } from 'h3'
 
 
 
@@ -80,12 +81,6 @@ export const login = async (email: string, password: string, remember: Boolean):
             }
         }
 
-
-        if (res && !remember && res.token) {
-            sessionStorage.setItem('token', res.token)
-        }
-
-
         return {
             valid: true,
             isTwoFaEnabled: false
@@ -141,7 +136,7 @@ export const forgotSubmit = async (token: string, password: string): Promise<boo
 
 export const loginWith2FaTOTP = async (token: string, email: string, nonce: string, remember: boolean): Promise<boolean> => {
     try {
-        const res : {token : string} = await $fetch('/api/auth/loginWith2FaTOTP',
+        const res: { token: string } = await $fetch('/api/auth/loginWith2FaTOTP',
             {
                 method: 'POST',
                 body: {
@@ -154,16 +149,95 @@ export const loginWith2FaTOTP = async (token: string, email: string, nonce: stri
         )
 
 
-        if (res && !remember && res.token) {
-            sessionStorage.setItem('token', res.token)
-        }
-
-
         return true
 
 
     } catch (error: any) {
         pushErrorToast(getErrorMessage(error))
         return false
+    }
+}
+
+
+export const verifyAccessToken = async (accessToken: string, url: string) => {
+    const response = await fetch(`${url}/user/auth/token/verifyAccessToken`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `${accessToken}`,
+        },
+        body: JSON.stringify({})
+    })
+    return response
+}
+
+export const refreshAccessToken = async (refreshToken: string, url: string) => {
+    const response = await fetch(`${url}/user/auth/token/refreshAccessToken`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `${refreshToken}`,
+        },
+        body: JSON.stringify({})
+    })
+    return response
+}
+
+export const clearCookies = () => {
+    useCookie('access_token').value = null
+    useCookie('refresh_token').value = null
+}
+
+
+export const handerAuthorizeDetect = (error: { statusCode: HttpStatusCode }) => {
+    if (error.statusCode === HttpStatusCode.Unauthorized) {
+        navigateTo('/login')
+        setTimeout(() => {
+            pushErrorToast('Unauthorized Access')
+        }, 300)
+    }
+}
+
+
+
+export const fetchWithProtect = async (event: H3Event<EventHandlerRequest>, refeshToken: string, cb: () => Promise<Response>): Promise<{
+    res: Response
+    isAuthorized: boolean
+}> => {
+    try {
+        let response = await cb()
+
+        if (response.status === HttpStatusCode.Unauthorized) {
+            //try to refresh token
+            const refeshTokenResponse = await refreshAccessToken(refeshToken, useRuntimeConfig().apiUrl)
+            if (refeshTokenResponse.status !== HttpStatusCode.Created) {
+                throw new Error('Unauthorized')
+            }
+
+            const { data }: { data: { newAccessToken: string } } = await refeshTokenResponse.json()
+            //set new access token
+            setCookie(event, 'access_token', data.newAccessToken, { secure: true, sameSite: 'strict', maxAge: 60 * 60 });
+            //fetch again
+            response = await cb()
+
+        }
+
+        return {
+            isAuthorized: true,
+            res: response,
+        }
+    } catch (error: any) {
+        if (error.message === 'Unauthorized') {
+            deleteCookie(event, 'access_token')
+            deleteCookie(event, 'refresh_token')
+            return {
+                isAuthorized: false,
+                res: Response.error(),
+            }
+        }
+        return {
+            isAuthorized: true,
+            res: error,
+        }
     }
 }

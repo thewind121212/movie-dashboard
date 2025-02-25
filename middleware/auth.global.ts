@@ -1,33 +1,9 @@
 import { HttpStatusCode } from "axios"
+import { verifyAccessToken, refreshAccessToken, clearCookies } from "~/actions/auth.action"
 
-const clearCookies = () => {
-    useCookie('access_token').value = null
-    useCookie('refresh_token').value = null
-}
 
-const verifyAccessToken = async (accessToken: string, tokenParam: string) => {
-    const response = await fetch(`${useRuntimeConfig().apiUrl}/user/auth/token/verifyAccessToken`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `${accessToken}`,
-        },
-        body: JSON.stringify({ token: tokenParam })
-    })
-    return response
-}
 
-const refreshAccessToken = async (refreshToken: string, tokenParam: string) => {
-    const response = await fetch(`${useRuntimeConfig().apiUrl}/user/auth/token/refreshAccessToken`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `${refreshToken}`,
-        },
-        body: JSON.stringify({ token: tokenParam })
-    })
-    return response
-}
+
 
 
 const excludeAuth = ['/login', '/register', '/forgot-password', '/reset-password']
@@ -46,8 +22,9 @@ export default defineNuxtRouteMiddleware(async (to) => {
                 throw new Error('Unauthorized Access Token Not Found')
             }
 
+
             // do validate access token 
-            const response = await verifyAccessToken(access_token.value, to.query.p as string)
+            const response = await verifyAccessToken(access_token.value, useRuntimeConfig().apiUrl)
             const validateToken = await response.json()
 
             if (response.status === HttpStatusCode.Accepted) {
@@ -61,11 +38,10 @@ export default defineNuxtRouteMiddleware(async (to) => {
                     throw new Error('Unauthorized Refresh Token Not Found')
                 }
                 //do request refresh token
-                const refreshTokenResponse = await refreshAccessToken(refresh_token.value, to.query.p as string)
+                const refreshTokenResponse = await refreshAccessToken(refresh_token.value, useRuntimeConfig().apiUrl)
                 if (refreshTokenResponse.status !== HttpStatusCode.Created) {
                     throw new Error('Unauthorized Refresh Token Invalid')
                 }
-
 
                 const { data }: { data: { newAccessToken: string } } = await refreshTokenResponse.json()
 
@@ -91,6 +67,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
 
     }
     if (import.meta.client) return
+
     const nuxtApp = useNuxtApp()
     if (import.meta.client && nuxtApp.isHydrating && nuxtApp.payload.serverRendered) return
 })
