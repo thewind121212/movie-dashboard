@@ -33,8 +33,8 @@ export default defineEventHandler(async (event) => {
     } else {
       event.node.res.statusCode = 200
       if (remember) {
-        setCookie(event, 'access_token', data.token, {  secure: true, maxAge: 1000 * 60 * 60, sameSite: 'strict' });
-        setCookie(event, 'refresh_token', data.refreshToken, { httpOnly: true, secure: true, maxAge: 1000 * 60 * 60 * 24 * 7, sameSite: 'strict' });
+        setCookie(event, 'access_token', data.token, { secure: true, maxAge: 60 * 60, sameSite: 'strict' });
+        setCookie(event, 'refresh_token', data.refreshToken, { httpOnly: true, secure: true, maxAge: 60 * 60 * 24 * 7, sameSite: 'strict' });
       } else {
         return {
           message,
