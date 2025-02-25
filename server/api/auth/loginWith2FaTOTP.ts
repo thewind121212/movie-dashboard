@@ -10,7 +10,7 @@ export default defineEventHandler(async (event) => {
         nonce: boolean,
         remember: boolean,
     } = await readBody(event)
-    
+
 
     // Send the login to the API
     try {
@@ -37,9 +37,9 @@ export default defineEventHandler(async (event) => {
                     setCookie(event, 'access_token', data.token, { secure: true, maxAge: 60 * 60, sameSite: 'strict' });
                     setCookie(event, 'refresh_token', data.refreshToken, { httpOnly: true, secure: true, maxAge: 60 * 60 * 24 * 7, sameSite: 'strict' });
                 } else {
+                    setCookie(event, 'access_token', data.token, { secure: true, sameSite: 'strict' });
                     return {
                         message,
-                        token: data.token
                     }
                 }
                 return {
