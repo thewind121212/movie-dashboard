@@ -1,4 +1,5 @@
 import { useVerifyLinkState } from '~/composables/useVerifyLink'
+import { tokenName } from '~/config/api.config'
 
 export default defineNuxtRouteMiddleware(async (to) => {
     if (import.meta.server) {
@@ -9,14 +10,12 @@ export default defineNuxtRouteMiddleware(async (to) => {
             return
         }
         try {
-            const response = await fetch(`${runtimeConfig.apiUrl}/user/auth/registerRequest/vaildate`, {
+            const response = await fetch(`${runtimeConfig.apiUrl}/user/auth/registerRequest/validate`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    [tokenName.REGISTER_REQUEST]: to.query.p as string,
                 },
-                body: JSON.stringify({
-                    token: to.query.p
-                })
             })
 
             const validateToken = await response.json()

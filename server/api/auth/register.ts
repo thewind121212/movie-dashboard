@@ -1,3 +1,4 @@
+import { tokenName } from "~/config/api.config"
 
 export default defineEventHandler(async (event) => {
   const runtimeConfig = useRuntimeConfig()
@@ -16,11 +17,11 @@ export default defineEventHandler(async (event) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        [tokenName.REGISTER_REQUEST]: token,
       },
       body: JSON.stringify({
         email,
         name,
-        token,
         password
       }),
     })
