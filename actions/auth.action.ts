@@ -209,6 +209,9 @@ export const fetchWithProtect = async (event: H3Event<EventHandlerRequest>, refe
 
         if (response.status === HttpStatusCode.Unauthorized) {
             //try to refresh token
+            if (!refeshToken) {
+                throw new Error('Unauthorized')
+            }
             const refeshTokenResponse = await refreshAccessToken(refeshToken, useRuntimeConfig().apiUrl)
             if (refeshTokenResponse.status !== HttpStatusCode.Created) {
                 throw new Error('Unauthorized')

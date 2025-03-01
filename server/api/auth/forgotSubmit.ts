@@ -1,3 +1,4 @@
+import { tokenName } from "~/config/api.config"
 
 
 
@@ -6,7 +7,7 @@ export default defineEventHandler(async (event) => {
 
     const { password, token }: {
         password: string,
-        token: boolean,
+        token: string,
     } = await readBody(event)
 
     // Send the forgot submit to the API
@@ -15,13 +16,13 @@ export default defineEventHandler(async (event) => {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                [tokenName.FORGOT_PASSWORD]: token,
             },
             body: JSON.stringify({
                 password,
-                token,
             }),
         })
-        const { message} = await response.json()
+        const { message } = await response.json()
 
         if (response.status !== 200) {
             event.node.res.statusCode = response.status

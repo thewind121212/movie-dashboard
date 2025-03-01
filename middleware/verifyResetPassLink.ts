@@ -1,5 +1,6 @@
 
 import { useVerifyLinkState } from '~/composables/useVerifyLink'
+import { tokenName } from '~/config/api.config'
 
 export default defineNuxtRouteMiddleware(async (to) => {
     if (import.meta.server) {
@@ -15,6 +16,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    [tokenName.FORGOT_PASSWORD]: to.query.p as string,
                 },
                 body: JSON.stringify({
                     token: to.query.p

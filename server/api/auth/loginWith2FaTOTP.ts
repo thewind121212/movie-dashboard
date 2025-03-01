@@ -1,3 +1,4 @@
+import { tokenName } from "~/config/api.config"
 
 
 
@@ -7,9 +8,15 @@ export default defineEventHandler(async (event) => {
     const { token, email, nonce, remember }: {
         token: string
         email: string,
-        nonce: boolean,
+        nonce: string,
         remember: boolean,
     } = await readBody(event)
+
+    if (!token || !email || !nonce) {
+        event.node.res.statusCode = 400
+        event.node.res.statusMessage = 'Bad Request'
+        return
+    }
 
 
     // Send the login to the API
@@ -19,11 +26,11 @@ export default defineEventHandler(async (event) => {
             credentials: 'include',
             headers: {
                 'Content-Type': 'application/json',
+                [tokenName.NONCE_2FA]: nonce
             },
             body: JSON.stringify({
                 email,
                 token,
-                nonce,
             }),
         })
         const { message, data } = await response.json()
