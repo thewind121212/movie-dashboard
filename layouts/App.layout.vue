@@ -165,8 +165,8 @@ const movieDashboard: {
                         v-on:click="handerToogleExpanedSidebar">Home</h2>
                 </div>
                 <div class="w-auto h-full bg-[#060b26] flex justify-center items-center px-4 rounded-lg gap-6">
-                    <div class="w-6 h-6">
-                        <NuxtImg src="/icons/userSettings.svg"
+                    <div class="w-6 h-6" v-on:click="setModalType('SETTINGS', 'Settings')">
+                        <NuxtImg src="/icons/settings.svg"
                             class="w-6 h-6 rounded-full object-cover object-top overflow-hidden" />
                     </div>
                     <div class="w-6 h-6">
