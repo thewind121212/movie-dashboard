@@ -2,8 +2,11 @@
 import { LoadingTwoFaEnableTOTPLoading } from '#components';
 import { useModalStore } from '~/store/modal';
 import ModalContainer from '~/components/shared/utils/ModalContainer.utils.vue';
-import BinaryModal from './utils/BinaryModal.vue';
+import BinaryModal from '../shared/utils/BinaryModal.vue';
+import Drawer from '../shared/utils/Drawer.vue';
 import Logout from './auth/Logout.vue';
+import AppSetting from './Settings/AppSetting.vue';
+
 
 
 const modalStore = useModalStore();
@@ -16,6 +19,9 @@ const eventESCref = ref<null | ((e: KeyboardEvent) => void)>(null);
 onMounted(() => {
     eventESCref.value = (e: KeyboardEvent) => {
         if (e.key === 'Escape') {
+            if (modalType.value === 'SETTINGS') {
+                return
+            }
             modalStore.hideModal();
         }
     }
@@ -53,11 +59,20 @@ onUnmounted(() => {
                 <ModalsAuthTwoFaRequest />
             </ModalContainer>
         </Teleport>
+        <!-- log out -->
         <Teleport to="#modal-render-entrypoint" v-if="isShow && modalType === 'LOGOUT'">
             <ModalContainer>
                 <BinaryModal>
                     <Logout />
                 </BinaryModal>
+            </ModalContainer>
+        </Teleport>
+        <!-- drawer setting -->
+        <Teleport to="#modal-render-entrypoint" v-if="isShow && modalType === 'SETTINGS'">
+            <ModalContainer>
+                <Drawer>
+                    <AppSetting />
+                </Drawer>
             </ModalContainer>
         </Teleport>
     </ClientOnly>
