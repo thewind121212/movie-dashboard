@@ -44,7 +44,7 @@ async function onSubmit(values) {
     authLoading.setLoading(false);
     if (isLoginSuccess.valid && !isLoginSuccess.isTwoFaEnabled) {
         //redirect to dashboard
-        await navigateTo('/')
+        await navigateTo('/', {replace: true})
     }
 }
 </script>

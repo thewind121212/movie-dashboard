@@ -89,7 +89,7 @@ onMounted(() => {
                 class="font-medium text-[14px] text-black font-shatoshi px-4 py-2 bg-white border rounded-lg border-[#DDDDDD]"
                 @click="modalStore.hideModal()">Cancel</button>
             <button
-                class="font-medium text-[14px] text-white font-shatoshi px-4 py-2 bg-[#5445F4] border rounded-lg border-[#5445f4]">Confirm</button>
+                class="font-medium text-[14px] text-white font-shatoshi px-4 py-2 bg-[#060b26] border rounded-lg border-[#060b26]">Confirm</button>
         </div>
     </div>
 </template>

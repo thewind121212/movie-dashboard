@@ -2,12 +2,13 @@
 import { LoadingTwoFaEnableTOTPLoading } from '#components';
 import { useModalStore } from '~/store/modal';
 import ModalContainer from '~/components/shared/utils/ModalContainer.utils.vue';
-import TwoFaRequest from './auth/TwoFaRequest.vue';
+import BinaryModal from './utils/BinaryModal.vue';
+import Logout from './auth/Logout.vue';
 
 
 const modalStore = useModalStore();
 
-const isShowRetrieved = computed(() => modalStore.isShow);
+const isShow = computed(() => modalStore.isShow);
 const modalType = computed(() => modalStore.type);
 const eventESCref = ref<null | ((e: KeyboardEvent) => void)>(null);
 
@@ -34,7 +35,7 @@ onUnmounted(() => {
 <template>
     <ClientOnly>
         <!-- modal enable totp teleport -->
-        <Teleport to="#modal-render-entrypoint" v-if="isShowRetrieved && modalType === 'ENABLE_TOTP'">
+        <Teleport to="#modal-render-entrypoint" v-if="isShow && modalType === 'ENABLE_TOTP'">
             <ModalContainer>
                 <Suspense>
                     <template #fallback>
@@ -47,9 +48,16 @@ onUnmounted(() => {
             </ModalContainer>
         </Teleport>
         <!-- modal request auth two factor -->
-        <Teleport to="#modal-render-entrypoint" v-if="isShowRetrieved && modalType === 'REGISTER_TOTP'">
+        <Teleport to="#modal-render-entrypoint" v-if="isShow && modalType === 'REGISTER_TOTP'">
             <ModalContainer>
                 <ModalsAuthTwoFaRequest />
+            </ModalContainer>
+        </Teleport>
+        <Teleport to="#modal-render-entrypoint" v-if="isShow && modalType === 'LOGOUT'">
+            <ModalContainer>
+                <BinaryModal>
+                    <Logout />
+                </BinaryModal>
             </ModalContainer>
         </Teleport>
     </ClientOnly>
