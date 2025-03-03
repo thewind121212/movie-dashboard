@@ -1,6 +1,6 @@
 
 import { HttpStatusCode } from "axios"
-import { fetchWithProtect } from "~/actions/auth.action"
+import { protectionGuard } from "~/actions/auth.action"
 
 
 
@@ -16,32 +16,21 @@ export default defineEventHandler(async (event) => {
 
         const cookies = parseCookies(event)
 
-        const result = await fetchWithProtect(
+        const result = await protectionGuard(
             event,
+            cookies.access_token,
             cookies.refresh_token,
-            async () => {
-                return await fetch(`${runtimeConfig.apiUrl}`, {
-                    method: 'GET',
-                    credentials: 'include',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `${cookies.access_token}`
-                    },
-                })
-            },
         )
 
-        if (!result.isAuthorized) {
+        if (!result) {
             event.node.res.statusCode = HttpStatusCode.Unauthorized
             return {
                 message: 'Unauthorized'
             }
         }
 
-        const { message } = await result.res.json()
 
-
-        return message
+        return 'linh'
     } catch (error: any) {
         return 'error'
     }

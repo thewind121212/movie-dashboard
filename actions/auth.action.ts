@@ -51,6 +51,27 @@ export const register = async (email: string, token: string, name: string, passw
 }
 
 
+export const logout = async (): Promise<boolean> => {
+    try {
+        await $fetch('/api/auth/logout',
+            {
+                method: 'POST',
+                credentials: 'include',
+            }
+        )
+        navigateTo('/login')
+        setTimeout(() => {
+            pushSuccessToast('Log out successfully!')
+        }, 300)
+        return true
+    } catch (error: any) {
+        pushErrorToast(getErrorMessage(error))
+        return false
+    }
+
+}
+
+
 export const login = async (email: string, password: string, remember: Boolean): Promise<{
     valid: boolean,
     isTwoFaEnabled?: boolean
@@ -200,14 +221,16 @@ export const handerAuthorizeDetect = (error: { statusCode: HttpStatusCode }) => 
 
 
 
-export const fetchWithProtect = async (event: H3Event<EventHandlerRequest>, refeshToken: string, cb: () => Promise<Response>): Promise<{
-    res: Response
+export const protectionGuard = async (event: H3Event<EventHandlerRequest>, access_token: string, refeshToken: string): Promise<{
     isAuthorized: boolean
+    newAccessToken?: string
 }> => {
     try {
-        let response = await cb()
 
-        if (response.status === HttpStatusCode.Unauthorized) {
+        const verifyToken = (await verifyAccessToken(access_token, useRuntimeConfig().apiUrl))
+
+
+        if (verifyToken.status !== HttpStatusCode.Accepted) {
             //try to refresh token
             if (!refeshToken) {
                 throw new Error('Unauthorized')
@@ -221,26 +244,28 @@ export const fetchWithProtect = async (event: H3Event<EventHandlerRequest>, refe
             //set new access token
             setCookie(event, 'access_token', data.newAccessToken, { secure: true, sameSite: 'strict', maxAge: 60 * 60 });
             //fetch again
-            response = await cb()
+            return {
+                isAuthorized: true,
+                newAccessToken: data.newAccessToken
+            }
 
         }
+
 
         return {
-            isAuthorized: true,
-            res: response,
+            isAuthorized: true
         }
+
     } catch (error: any) {
         if (error.message === 'Unauthorized') {
             deleteCookie(event, 'access_token')
             deleteCookie(event, 'refresh_token')
             return {
-                isAuthorized: false,
-                res: Response.error(),
+                isAuthorized: false
             }
         }
         return {
-            isAuthorized: true,
-            res: error,
+            isAuthorized: false
         }
     }
 }
