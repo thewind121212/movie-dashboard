@@ -100,7 +100,7 @@ const handlerChooseGender = (gender: genderTypes) => {
             <div class="w-full h-auto flex gap-[2rem]">
                 <!-- birdate  filed -->
                 <div class="h-auto flex flex-col gap-2 flex-1">
-                    <label for="birthdate" class="text-white text-[1rem] leading-[1.5rem]">Birthdate</label>
+                    <label for="birthdate" class="text-white text-[1rem] leading-[1.5rem]">Birth Date</label>
                     <Field name="birthdate" type="date" v-slot="{ field }">
 
                         <div class="w-full h-auto relative flex justify-end items-center min-w-[17rem]">
