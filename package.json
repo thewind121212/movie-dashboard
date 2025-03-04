@@ -18,6 +18,7 @@
     "axios": "^1.8.1",
     "nuxt": "^3.15.4",
     "pinia": "^3.0.1",
+    "vanilla-calendar-pro": "^3.0.3",
     "vee-validate": "^4.15.0",
     "vue": "latest",
     "vue-router": "latest",

@@ -20,7 +20,7 @@ const userCurrentPath = computed(() => {
         </div>
         <div class="w-full h-auto flex-1  relative z-20 rounded-lg flex justify-start items-center gap-4">
             <div
-                class="w-[20%] h-full bg-gradient-to-r from-[#060b28f1] to-[#0a0e2393] rounded-lg p-4 text-white flex flex-col min-w-[16.5rem] py-6">
+                class="w-[16.5rem] h-full bg-gradient-to-r from-[#060b28f1] to-[#0a0e2393] rounded-lg p-4 text-white flex flex-col min-w-[16.5rem] py-6">
 
                 <div
                     class="rounded-full bg-white flex justify-center items-center overflow-hidden w-20 h-20 aspect-square mx-auto mb-6">
