@@ -3,7 +3,11 @@
 import { Field, ErrorMessage } from 'vee-validate';
 import { Calendar } from 'vanilla-calendar-pro';
 
-import { ref } from 'vue';
+import { ref, useAttrs } from 'vue';
+
+const calendarRef = ref(null);
+const attributes = useAttrs();
+
 
 
 const props = defineProps<{
@@ -19,17 +23,6 @@ const props = defineProps<{
 
 const dropDown = ref<boolean>(false);
 
-onMounted(() => {
-    const calendar = new Calendar('#calendar', {
-        onClickDate: (date) => {
-            if (!dropDown.value) return;
-            const pickDate = date.context.selectedDates[0];
-            props.setFieldValue('birthdate', pickDate);
-        },
-    });
-    calendar.init();
-});
-
 
 
 const handerClickOutside = (e: MouseEvent) => {
@@ -42,7 +35,22 @@ const handerClickOutside = (e: MouseEvent) => {
     }
 }
 
+
+
 onMounted(() => {
+    if (!calendarRef.value) return;
+
+    const calendar = new Calendar(calendarRef.value, { onClickDate: (date) => {
+            if (!dropDown.value) return;
+            const pickDate = date.context.selectedDates[0];
+            props.setFieldValue('birthdate', pickDate);
+        },
+    });
+
+    calendar.init()
+
+
+
     document.addEventListener('click', handerClickOutside);
 })
 
@@ -73,7 +81,7 @@ onUnmounted(() => {
 
                 <div class="absolute w-full h-auto top-0 left-0 z-10 opacity-0 duration-200"
                     :class="[dropDown ? 'top-[100%] !opacity-100' : 'opacity-0 pointer-events-none invisible']">
-                    <div id="calendar"></div>
+                    <div v-bind="attributes" ref="calendarRef"></div>
                 </div>
             </div>
         </Field>

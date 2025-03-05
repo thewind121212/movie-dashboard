@@ -4,7 +4,7 @@ import { toTypedSchema } from '@vee-validate/zod';
 import * as zod from 'zod';
 import { useAuthState } from "~/composables/useAuthStore"
 import OptionSelectorInput from '~/components/shared/input/OptionSelectorInput.vue';
-import DateInput from '~/components/shared/input/DateInput.vue';
+import DateInput from '~/components/shared/input/DateInput.client.vue';
 import 'vanilla-calendar-pro/styles/index.css';
 
 
@@ -15,6 +15,8 @@ const props = defineProps<{
     timezones: any[] | null;
 }>()
 
+
+const {email, isAuthenticated} = useAuthState().userAuthState.value
 
 
 
@@ -46,7 +48,9 @@ const onSubmitFillRegister = async () => {
 }
 
 onMounted(() => {
-    console.log(useAuthState().userAuthState.value)
+    if (isAuthenticated) {
+        setFieldValue('email', email)
+    }
 })
 
 
@@ -63,7 +67,7 @@ onMounted(() => {
                 <div class="h-auto flex flex-col gap-2 flex-1">
                     <label for="email" class="text-white text-[1rem] leading-[1.5rem]">Email</label>
                     <Field name="email" type="email" v-slot="{ field }">
-                        <input type="email" v-bind="field"
+                        <input type="email" v-bind="field" readonly disabled
                             class="bg-[#d1d1d1] dark:bg-[#2f2f2f] aspect-[430/48] rounded-[0.75rem] px-[1rem] py-[0.875rem] text-[#6B6B6B] min-w-[17rem] text-[0.875rem] leading-[1.25rem]" />
                     </Field>
                     <div class="w-full h-2 relative flex justify-start items-center">
