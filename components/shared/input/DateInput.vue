@@ -1,131 +1,85 @@
-<template>
-    <div class="w-80 flex flex-col bg-white border border-gray-200 shadow-lg rounded-xl overflow-hidden">
-        <!-- Calendar -->
-        <div class="p-3 space-y-0.5">
-            <!-- Months -->
-            <div class="grid grid-cols-5 items-center gap-x-3 mx-1.5 pb-3">
-                <!-- Prev Button -->
-                <div class="col-span-1">
-                    <button @click="changeMonth(-1)"
-                        class="size-8 flex justify-center items-center text-gray-800 hover:bg-gray-100 rounded-full">
-                        <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                            stroke-linecap="round" stroke-linejoin="round">
-                            <path d="m15 18-6-6 6-6" />
-                        </svg>
-                    </button>
-                </div>
-                <!-- End Prev Button -->
-
-                <!-- Month / Year -->
-                <div class="col-span-3 flex justify-center items-center gap-x-1 font-shatoshi">
-                    <p>
-                        {{ months[currentMonth] }}
-                    </p>
-                    <span class="text-gray-800">-</span>
-                    <p>{{ currentYear }}</p>
-                </div>
-                <!-- End Month / Year -->
-
-                <!-- Next Button -->
-                <div class="col-span-1 flex justify-end">
-                    <button @click="changeMonth(1)"
-                        class="size-8 flex justify-center items-center text-gray-800 hover:bg-gray-100 rounded-full">
-                        <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                            stroke-linecap="round" stroke-linejoin="round">
-                            <path d="m9 18 6-6-6-6" />
-                        </svg>
-                    </button>
-                </div>
-                <!-- End Next Button -->
-            </div>
-            <!-- Months -->
-
-            <!-- Weeks -->
-            <div class="flex pb-1.5">
-                <span class="m-px w-10 block text-center text-sm text-gray-500">Mo</span>
-                <span class="m-px w-10 block text-center text-sm text-gray-500">Tu</span>
-                <span class="m-px w-10 block text-center text-sm text-gray-500">We</span>
-                <span class="m-px w-10 block text-center text-sm text-gray-500">Th</span>
-                <span class="m-px w-10 block text-center text-sm text-gray-500">Fr</span>
-                <span class="m-px w-10 block text-center text-sm text-gray-500">Sa</span>
-                <span class="m-px w-10 block text-center text-sm text-gray-500">Su</span>
-            </div>
-            <!-- Weeks -->
-
-            <!-- Days -->
-            <div class="flex flex-wrap">
-                <div v-for="(day, index) in days" :key="index" class="m-px size-10 flex justify-center items-center">
-                    <button
-                        class="border border-transparent text-sm text-gray-800 rounded-full hover:border-blue-600 hover:text-blue-600 w-full h-full"
-                        :class="{ 'bg-blue-600 text-white': day === currentDay }">
-                        {{ day }}
-                    </button>
-                </div>
-            </div>
-            <!-- End Days -->
-        </div>
-    </div>
-</template>
-
 <script setup lang="ts">
-import { ref, watch, onMounted } from 'vue';
 
-const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-const years = [2023, 2024, 2025, 2026, 2027];
+import { Field, ErrorMessage } from 'vee-validate';
+import { Calendar } from 'vanilla-calendar-pro';
 
-const currentMonth = ref(new Date().getMonth());
-const currentYear = ref(new Date().getFullYear());
+import { ref } from 'vue';
 
-const days = ref<any>([]);
-const currentDay = ref(new Date().getDate()); // Current day to highlight
 
-function renderCalendar() {
-    const firstDay = new Date(currentYear.value, currentMonth.value, 1);
-    const lastDay = new Date(currentYear.value, currentMonth.value + 1, 0);
-    const firstDayOfWeek = firstDay.getDay(); // Starting day of the week (0 = Sunday)
-    const lastDate = lastDay.getDate();
+const props = defineProps<{
+    htmlFor: string;
+    fieldName: string;
+    type: string;
+    label: string;
+    placeholder: string
+    fieldType: 'text' | 'password' | 'email' | 'number' | 'tel' | 'url' | 'date'
+    setFieldValue: Function,
+    value: string | undefined,
+}>()
 
-    days.value = [];
-    // Fill in empty days for the first week of the month
-    for (let i = 0; i < firstDayOfWeek; i++) {
-        days.value.push(null);
-    }
-
-    // Add actual days of the month
-    for (let i = 1; i <= lastDate; i++) {
-        days.value.push(i);
-    }
-}
-
-function changeMonth(direction: any) {
-    currentMonth.value += direction;
-    if (currentMonth.value < 0) {
-        currentMonth.value = 11;
-        currentYear.value--;
-    } else if (currentMonth.value > 11) {
-        currentMonth.value = 0;
-        currentYear.value++;
-    }
-    renderCalendar();
-}
-
-watch([currentMonth, currentYear], renderCalendar);
+const dropDown = ref<boolean>(false);
 
 onMounted(() => {
-    renderCalendar();
+    const calendar = new Calendar('#calendar', {
+        onClickDate: (date) => {
+            if (!dropDown.value) return;
+            const pickDate = date.context.selectedDates[0];
+            props.setFieldValue('birthdate', pickDate);
+        },
+    });
+    calendar.init();
 });
+
+
+
+const handerClickOutside = (e: MouseEvent) => {
+    const container = document.getElementById('date-input-user');
+    if (dropDown.value) {
+        const target = e.target as HTMLElement;
+        if (!container?.contains(target)) {
+            dropDown.value = false;
+        }
+    }
+}
+
+onMounted(() => {
+    document.addEventListener('click', handerClickOutside);
+})
+
+onUnmounted(() => {
+    document.removeEventListener('click', handerClickOutside);
+})
+
+
+
+
 </script>
 
-<style scoped>
-.no-arrow {
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    background: transparent;
-    border: 1px solid #ccc;
-    /* Optional, add border for styling */
-    padding-right: 0;
-}
-</style>
+
+
+
+
+<template>
+    <div class="h-auto flex flex-col gap-2 flex-1" id="date-input-user">
+        <label :for="htmlFor" class="text-white text-[1rem] leading-[1.5rem]">{{ label }}</label>
+        <Field :name="fieldName!" :type="fieldType" v-slot="{ field }">
+
+            <div class="w-full h-auto relative flex justify-end items-center min-w-[17rem]">
+                <input type="date" v-bind="field" ref="birthDateField"
+                    class="w-full bg-white aspect-[430/48] rounded-[0.75rem] px-[1rem] py-[0.875rem] text-[#6B6B6B] text-[0.875rem] leading-[1.25rem] dark:text-white dark:bg-[#2f2f2f] relative z-20" />
+
+                <NuxtImg src="/icons/calendar.svg" width="24" height="24" class="absolute mr-4 z-30"
+                    @click="dropDown = !dropDown" />
+
+                <div class="absolute w-full h-auto top-0 left-0 z-10 opacity-0 duration-200"
+                    :class="[dropDown ? 'top-[100%] !opacity-100' : 'opacity-0 pointer-events-none invisible']">
+                    <div id="calendar"></div>
+                </div>
+            </div>
+        </Field>
+        <div class="w-full h-2 relative flex justify-start items-center">
+            <ErrorMessage :name="fieldName" class="text-red-400 text-[0.75rem] leading-[0.75rem] absolute left-0" />
+        </div>
+    </div>
+
+</template>
