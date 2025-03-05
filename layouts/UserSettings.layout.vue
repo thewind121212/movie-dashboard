@@ -33,6 +33,11 @@ const userCurrentPath = computed(() => {
 
                 <NavItem icon-path="/icons/security.svg" :name="'Security'" :url="'/settings/security'"
                     :is-expanded="true" :active="userCurrentPath === 'security'" />
+
+                <NavItem icon-path="/icons/deleteAccount.svg" :name="'Delete Account'" :url="'/settings/delete-account'"
+                    :is-expanded="true" :active="userCurrentPath === 'delete-account'" 
+                    :caution="true" 
+                    />
             </div>
             <div class="flex-1 h-full bg-gradient-to-r from-[#060b28f1] to-[#0a0e2393] rounded-lg">
                 <slot />

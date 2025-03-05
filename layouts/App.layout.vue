@@ -18,10 +18,18 @@ const handerToogleExpanedSidebar = () => {
 
 
 onMounted(() => {
-    const expanedSidebarLocal = localStorage.getItem('expanedSidebar')
-    if (expanedSidebarLocal) {
-        expanedSidebar.value = JSON.parse(expanedSidebarLocal)
-    }
+    // const expanedSidebarLocal = localStorage.getItem('expanedSidebar')
+
+    // if (expanedSidebarLocal) {
+    //     const linh = JSON.parse(expanedSidebarLocal)
+    //     if (linh === expanedSidebar.value) {
+    //         return
+    //     } else {
+    //         setTimeout(() => {
+    //             expanedSidebar.value = JSON.parse(expanedSidebarLocal)
+    //         }, 400);
+    //     }
+    // }
 })
 
 

@@ -1,5 +1,6 @@
 import { HttpStatusCode } from "axios"
 import { verifyAccessToken, refreshAccessToken, clearCookies } from "~/actions/auth.action"
+import { useAuthState } from "~/composables/useAuthStore"
 
 
 
@@ -17,6 +18,10 @@ export default defineNuxtRouteMiddleware(async (to) => {
         const access_token = useCookie('access_token', { secure: true, sameSite: 'strict', maxAge: 60 * 60 })
         const refresh_token = useCookie('refresh_token', { secure: true, sameSite: 'strict', maxAge: 60 * 60 * 24 * 7, httpOnly: true })
 
+        const { setUserAuth, userAuthState } = useAuthState()
+        const { isAuthenticated, accessToken } = userAuthState.value
+
+
         try {
             if (!access_token.value) {
                 throw new Error('Unauthorized Access Token Not Found')
@@ -25,9 +30,21 @@ export default defineNuxtRouteMiddleware(async (to) => {
 
             // do validate access token 
             const response = await verifyAccessToken(access_token.value, useRuntimeConfig().apiUrl)
-            const validateToken = await response.json()
+            const validateToken: {
+                message: string,
+                data: {
+                    userId: string,
+                    email: string
+                }
+            } = await response.json()
+
+
+
 
             if (response.status === HttpStatusCode.Accepted) {
+                if (!isAuthenticated) {
+                    setUserAuth(true, access_token.value, validateToken.data.email, validateToken.data.userId)
+                }
                 if (excludeAuth.includes(to.path)) {
                     return navigateTo('/')
                 }
@@ -43,11 +60,12 @@ export default defineNuxtRouteMiddleware(async (to) => {
                     throw new Error('Unauthorized Refresh Token Invalid')
                 }
 
-                const { data }: { data: { newAccessToken: string } } = await refreshTokenResponse.json()
+                const { data }: { data: { newAccessToken: string, email: string, userId: string } } = await refreshTokenResponse.json()
+
 
                 //set new access token
                 access_token.value = data.newAccessToken
-
+                setUserAuth(true, data.newAccessToken, data.email, data.userId)
                 //do validate access token
                 if (excludeAuth.includes(to.path)) {
                     navigateTo('/')
