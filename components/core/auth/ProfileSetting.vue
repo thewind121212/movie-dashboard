@@ -13,10 +13,23 @@ const allowGender = ["Female", "Male", "Other", "Prefer Not To Say"];
 const props = defineProps<{
     countries: any[] | null;
     timezones: any[] | null;
+    userData: {
+        id: string,
+        name: string,
+        email: string,
+        birthdate: string | null,
+        country: string | null,
+        timezone: string | null,
+        bio: string | null,
+        gender: string | null,
+        createdAt: string,
+        updatedAt: string,
+    } | null;
 }>()
 
 
-const {email, isAuthenticated} = useAuthState().userAuthState.value
+const { email, isAuthenticated } = useAuthState().userAuthState.value
+
 
 
 
@@ -31,7 +44,7 @@ const validationSchema = toTypedSchema(
         }, { message: 'Invalid date' }),
         country: zod.string({ message: '*Country is required' }).min(1, { message: 'This is required' }),
         timezone: zod.string({ message: '*Timezone is required' }).min(1, { message: 'This is required' }),
-        // bio: zod.string({ message: '*Bio is required' }),
+        bio: zod.string({ message: '*Bio is required' }),
         gender: zod.enum(["Male", "Female", "Other", "Prefer Not To Say"]),
     })
 );
@@ -51,6 +64,12 @@ onMounted(() => {
     if (isAuthenticated) {
         setFieldValue('email', email)
     }
+    if (props.userData) {
+        props.userData.name && setFieldValue('fullname', props.userData.name)
+        props.userData.birthdate && setFieldValue('birthdate', props.userData.birthdate)
+        props.userData.timezone && setFieldValue('timezone', props.userData.timezone)
+        props.userData.country && setFieldValue('country', props.userData.country)
+    }
 })
 
 
@@ -68,7 +87,7 @@ onMounted(() => {
                     <label for="email" class="text-white text-[1rem] leading-[1.5rem]">Email</label>
                     <Field name="email" type="email" v-slot="{ field }">
                         <input type="email" v-bind="field" readonly disabled
-                            class="bg-[#d1d1d1] dark:bg-[#2f2f2f] aspect-[430/48] rounded-[0.75rem] px-[1rem] py-[0.875rem] text-[#6B6B6B] min-w-[17rem] text-[0.875rem] leading-[1.25rem]" />
+                            class="bg-[#d1d1d1] dark:bg-[#2f2f2f] aspect-[430/48] rounded-[0.75rem] px-[1rem] py-[0.875rem] text-[#6B6B6B] min-w-[17rem] text-[0.875rem] leading-[1.25rem] select-none" />
                     </Field>
                     <div class="w-full h-2 relative flex justify-start items-center">
                         <ErrorMessage name="email"
@@ -121,18 +140,28 @@ onMounted(() => {
                         drop-down-icon="/icons/timezone.svg" :retrive-path="['zoneName']" />
                 </div>
             </div>
-
-            <!-- country  filed -->
-
-            <!-- timezone  filed -->
-
-            <!-- bio  filed -->
+            <!-- row 4 -->
+            <div class="w-3/4 h-auto flex gap-[2rem] z-5">
+                <div class="h-auto flex flex-col gap-2 flex-1">
+                    <label for="bio" class="text-white text-[1rem] leading-[1.5rem]">Your Bio</label>
+                    <Field name="bio" type="text" v-slot="{ field }">
+                        <textarea v-bind="field" rows="4"
+                            class="bg-[#d1d1d1] dark:bg-[#2f2f2f] rounded-[0.75rem] px-[1rem] py-[0.875rem] text-white min-w-[17rem] text-[0.875rem] leading-[1.25rem] resize-none"
+                            placeholder="Write something about yourself" />
+                    </Field>
+                    <div class="w-full h-2 relative flex justify-start items-center">
+                        <ErrorMessage name="bio"
+                            class="text-red-400 text-[0.75rem] leading-[0.75rem] absolute left-0" />
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="submit-action w-[10rem] flex flex-col gap-[0.75rem]">
             <button
                 class="bg-[#0075ff] aspect-[430/48] rounded-[0.75rem] px-[1rem] py-[0.875rem] text-[#fff] text-[0.875rem] leading-[1.25rem]">Change
                 Profile Info</button>
         </div>
+
     </form>
 
 </template>

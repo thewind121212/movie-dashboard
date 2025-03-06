@@ -3,6 +3,7 @@
 import AppLayout from '~/layouts/App.layout.vue';
 import UserSettingsLayout from '~/layouts/UserSettings.layout.vue';
 import ProfileSetting from '~/components/core/auth/ProfileSetting.vue';
+import { useAuthState } from '#imports';
 
 const nuxtApp = useNuxtApp();
 
@@ -13,29 +14,52 @@ const { error, data, status } = await useAsyncData<any>('profile-settings', asyn
         timezones: any,
     } = await $fetch('/api/vendor/geo')
 
+
+    const getUserData = await fetch('/api/user/profile', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            userId: useAuthState().userAuthState.value.userId
+        }) 
+    })
+
+    if (getUserData.status === 401) {
+        navigateTo('/login')
+        return
+    }
+    if (!getUserData.ok) {
+        throw new Error('Failed to fetch user data')
+    }
+    const userData: {
+        message: string,
+        data: {
+            id: string,
+            name: string,
+            email: string,
+            birthdate: string | null,
+            country: string | null,
+            timezone: string | null,
+            bio: string | null,
+            gender: string | null,
+            createdAt: string,
+            updatedAt: string,
+        }
+    } = await getUserData.json()
+
     return {
         countries: data.countries,
         tz: data.timezones.zones,
+        userData: userData,
         fetchedAt: Date.now()
     }
 }, {
     lazy: true,
     server: false,
-    getCachedData: (key) => {
-        const data = nuxtApp.payload.data[key] || nuxtApp.static.data[key];
-        if (!data) {
-            return
-        }
-
-        const fetchedDate = new Date(data.fetchedAt);
-
-        const expiryDate = fetchedDate.setTime(fetchedDate.getTime() + 1000 * 60 * 10);
-        if (Date.now() > expiryDate) {
-            return
-        }
-        return data
-    }
 });
+
+
 
 
 
@@ -59,7 +83,8 @@ const { error, data, status } = await useAsyncData<any>('profile-settings', asyn
                         <NuxtImg src="/icons/loading.svg" alt="logo" class="w-[3rem] h-auto" />
                     </div>
                 </div>
-                <ProfileSetting :countries="data.countries" :timezones="data.tz" v-if="status === 'success'" />
+                <ProfileSetting :countries="data.countries" :timezones="data.tz" v-if="status === 'success'"
+                    :user-data="data.userData.data" />
             </ClientOnly>
         </UserSettingsLayout>
 
