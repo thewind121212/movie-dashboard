@@ -45,13 +45,15 @@ export default defineEventHandler(async (event) => {
                     setCookie(event, 'refresh_token', data.refreshToken, { httpOnly: true, secure: true, maxAge: 60 * 60 * 24 * 7, sameSite: 'strict' });
                 } else {
                     setCookie(event, 'access_token', data.token, { secure: true, sameSite: 'strict' });
-                    return {
-                        message,
-                    }
                 }
                 return {
-                    message
+                    message,
+                    token,
+                    data: {
+                        userId: data.userId,
+                    }
                 }
+
             // if the rest of the status code
             default:
                 event.node.res.statusCode = response.status

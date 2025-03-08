@@ -5,21 +5,27 @@ import * as zod from 'zod';
 import { useAuthState } from "~/composables/useAuthStore"
 import OptionSelectorInput from '~/components/shared/input/OptionSelectorInput.vue';
 import DateInput from '~/components/shared/input/DateInput.client.vue';
+import { editUser } from '~/actions/auth.action';
 import 'vanilla-calendar-pro/styles/index.css';
+import ModalContainer from '~/components/shared/utils/ModalContainer.utils.vue';
+import BinaryModal from '~/components/shared/utils/BinaryModal.vue';
+import { useToogleBinaryModal } from '#imports';
 
+const { isShow, modalType, showModalChange } = useToogleBinaryModal('BINARY', 'Change Profile Info', 'Are you sure you want to change your profile info?')
 
 const allowGender = ["Female", "Male", "Other", "Prefer Not To Say"];
 
 const props = defineProps<{
     countries: any[] | null;
+    refresh: () => void;
     timezones: any[] | null;
     userData: {
         id: string,
         name: string,
         email: string,
-        birthdate: string | null,
+        birthDate: string | null,
         country: string | null,
-        timezone: string | null,
+        timeZone: string | null,
         bio: string | null,
         gender: string | null,
         createdAt: string,
@@ -28,7 +34,28 @@ const props = defineProps<{
 }>()
 
 
-const { email, isAuthenticated } = useAuthState().userAuthState.value
+const { email, isAuthenticated, userId } = useAuthState().userAuthState.value
+
+
+const userProfileRef = ref<
+    {
+        fullname: string,
+        birthdate: string | null,
+        country: string | null,
+        timezone: string | null,
+        gender: string | null,
+        bio: string
+    }
+>({
+    fullname: props.userData?.name || '',
+    birthdate: props.userData?.birthDate ? new Date(props.userData?.birthDate).toISOString().split('T')[0] : '',
+    country: props.userData?.country || '',
+    gender: props.userData?.gender || '',
+    timezone: props.userData?.timeZone || '',
+    bio: props.userData?.bio || ''
+});
+
+
 
 
 
@@ -40,24 +67,56 @@ const validationSchema = toTypedSchema(
         fullname: zod.string({ message: '*Full names is required' }).min(3, { message: 'This is required' }),
         birthdate: zod.string({ message: '*Birthdate is required' }).refine((value) => {
             const date = new Date(value);
-            return date instanceof Date && !isNaN(date.getTime());
-        }, { message: 'Invalid date' }),
-        country: zod.string({ message: '*Country is required' }).min(1, { message: 'This is required' }),
-        timezone: zod.string({ message: '*Timezone is required' }).min(1, { message: 'This is required' }),
-        bio: zod.string({ message: '*Bio is required' }),
-        gender: zod.enum(["Male", "Female", "Other", "Prefer Not To Say"]),
+            return date instanceof Date && !isNaN(date.getTime())
+        }, { message: 'Invalid date' }).optional(),
+        country: zod.string({ message: '*Country is required' }).optional(),
+        timezone: zod.string({ message: '*Timezone is required' }).optional(),
+        bio: zod.string({ message: '*Bio is required' }).optional(),
+        gender: zod.enum(["Male", "Female", "Other", "Prefer Not To Say"]).optional()
     })
 );
 
 
-const { handleSubmit, setFieldValue, errors, values, isFieldTouched } = useForm({
+const { setFieldValue, setFieldError, values, isFieldDirty } = useForm({
     validationSchema: validationSchema,
 });
 
+const isDataDirty = computed(() => {
+    let isDirty = false
+    Object.keys(userProfileRef.value).forEach((key) => {
+        if (userProfileRef.value[key as keyof typeof userProfileRef.value] !== values[key as keyof typeof values]) {
+            isDirty = true
+        }
+    })
+    return isDirty
+})
+
+
 
 const onSubmitFillRegister = async () => {
-    // const { email, fullname, password } = values
-    console.log(values.email)
+    // data need be dirty and valid
+    if (!isDataDirty.value) {
+        return
+    }
+
+    if (values.bio && values.bio?.length < 10) {
+        setFieldError('bio', 'Bio must be at least 10 characters')
+        return
+    }
+
+
+    await editUser({
+        userId,
+        name: values.fullname || '',
+        birthDate: values.birthdate || '',
+        country: values.country || '',
+        gender: values.gender || '',
+        timeZone: values.timezone || '',
+        bio: values.bio || '',
+    })
+
+    props.refresh()
+
 }
 
 onMounted(() => {
@@ -66,20 +125,20 @@ onMounted(() => {
     }
     if (props.userData) {
         props.userData.name && setFieldValue('fullname', props.userData.name)
-        props.userData.birthdate && setFieldValue('birthdate', props.userData.birthdate)
-        props.userData.timezone && setFieldValue('timezone', props.userData.timezone)
+        props.userData.birthDate && setFieldValue('birthdate', new Date(props.userData.birthDate).toISOString().split('T')[0])
+        props.userData.timeZone && setFieldValue('timezone', props.userData.timeZone)
         props.userData.country && setFieldValue('country', props.userData.country)
+        props.userData.gender && setFieldValue('gender', props.userData.gender as any)
+        props.userData.bio && setFieldValue('bio', props.userData.bio as any)
     }
 })
-
 
 
 </script>
 
 
 <template>
-    <form @submit.prevent="onSubmitFillRegister"
-        class="w-[70%] h-full flex flex-col gap-[2.5rem] font-shatoshi p-6 dark">
+    <form @submit.prevent="showModalChange" class="w-[70%] h-full flex flex-col gap-[2.5rem] font-shatoshi p-6 dark">
         <div class="w-full h-full flex flex-col gap-[1rem] flex-wrap">
             <div class="w-full h-auto flex gap-[2rem]">
                 <!-- email field -->
@@ -158,12 +217,20 @@ onMounted(() => {
         </div>
         <div class="submit-action w-[10rem] flex flex-col gap-[0.75rem]">
             <button
-                class="bg-[#0075ff] aspect-[430/48] rounded-[0.75rem] px-[1rem] py-[0.875rem] text-[#fff] text-[0.875rem] leading-[1.25rem]">Change
+                :disabled="!isDataDirty"
+                class="bg-[#0075ff] aspect-[430/48] rounded-[0.75rem] px-[1rem] py-[0.875rem] text-[#fff] text-[0.875rem] leading-[1.25rem] disabled:bg-[#d1d1d1] disabled:text-[#6B6B6B] 
+                ">Change
                 Profile Info</button>
         </div>
+        <!-- render modal header -->
+        <Teleport to="#modal-render-entrypoint" v-if="isShow && modalType === 'BINARY'">
+            <ModalContainer>
+                <BinaryModal cancel-content="Cancel" approve-content="Confirm"
+                    :hander-function="() => onSubmitFillRegister()" />
+            </ModalContainer>
+        </Teleport>
 
     </form>
-
 </template>
 
 <style lang="css" scoped>

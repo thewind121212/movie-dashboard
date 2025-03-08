@@ -2,9 +2,7 @@
 import { LoadingTwoFaEnableTOTPLoading } from '#components';
 import { useModalStore } from '~/store/modal';
 import ModalContainer from '~/components/shared/utils/ModalContainer.utils.vue';
-import BinaryModal from '../shared/utils/BinaryModal.vue';
 import Drawer from '../shared/utils/Drawer.vue';
-import Logout from './auth/Logout.vue';
 import AppSetting from './Settings/AppSetting.vue';
 
 
@@ -57,14 +55,6 @@ onUnmounted(() => {
         <Teleport to="#modal-render-entrypoint" v-if="isShow && modalType === 'REGISTER_TOTP'">
             <ModalContainer>
                 <ModalsAuthTwoFaRequest />
-            </ModalContainer>
-        </Teleport>
-        <!-- log out -->
-        <Teleport to="#modal-render-entrypoint" v-if="isShow && modalType === 'LOGOUT'">
-            <ModalContainer>
-                <BinaryModal>
-                    <Logout />
-                </BinaryModal>
             </ModalContainer>
         </Teleport>
         <!-- drawer setting -->

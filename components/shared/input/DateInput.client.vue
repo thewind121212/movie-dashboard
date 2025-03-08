@@ -26,10 +26,12 @@ const dropDown = ref<boolean>(false);
 
 
 const handerClickOutside = (e: MouseEvent) => {
+    const allowClasses = ['vc-year', 'vc-month','vc-months__month', 'vc-years__year', 'vc-arrow vc-arrow_next', 'vc-arrow vc-arrow_prev']
     const container = document.getElementById('date-input-user');
     if (dropDown.value) {
         const target = e.target as HTMLElement;
-        if (!container?.contains(target)) {
+
+        if (!container?.contains(target) && !allowClasses.includes(target.className)) {
             dropDown.value = false;
         }
     }
@@ -39,10 +41,11 @@ const handerClickOutside = (e: MouseEvent) => {
 
 onMounted(() => {
     if (!calendarRef.value) return;
-
-    const calendar = new Calendar(calendarRef.value, { onClickDate: (date) => {
+    const calendar = new Calendar(calendarRef.value, {
+        onClickDate: (date) => {
             if (!dropDown.value) return;
             const pickDate = date.context.selectedDates[0];
+            console.log(pickDate)
             props.setFieldValue('birthdate', pickDate);
         },
     });

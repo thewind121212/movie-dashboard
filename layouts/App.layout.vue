@@ -1,10 +1,16 @@
 <script setup lang="tsx">
 import NavItem from '~/components/shared/nav/NavItem.vue'
-import { useModalStore } from '~/store/modal'
+
+import ModalContainer from '~/components/shared/utils/ModalContainer.utils.vue';
+import BinaryModal from '~/components/shared/utils/BinaryModal.vue';
+import { logout } from '~/actions/auth.action';
+import { useToogleBinaryModal } from '#imports';
+import { useModalStore } from '~/store/modal';
+
+const { isShow, modalType, showModalChange  } = useToogleBinaryModal('BINARY', 'Are you sure you want to log out?', '')
 
 
-const { setModalType } = useModalStore();
-
+const { setModalType} = useModalStore()
 
 
 const expanedSidebar = ref(false)
@@ -161,7 +167,7 @@ const movieDashboard: {
                         class="w-9 h-9 rounded-full object-cover object-top overflow-hidden" />
                 </div>
                 <NuxtImg src="/icons/logout.svg" class="w-6 h-6"
-                    v-on:click="setModalType('LOGOUT', 'Are you sure you want to log out?')" />
+                    v-on:click="showModalChange" />
             </div>
 
         </div>
@@ -188,7 +194,12 @@ const movieDashboard: {
                 <slot />
             </div>
         </div>
+        <!-- log out -->
+        <Teleport to="#modal-render-entrypoint" v-if="isShow && modalType === 'BINARY'">
+            <ModalContainer>
+                <BinaryModal :cancelContent="'Cancel'" :approveContent="'Log Out'" :handerFunction="() => logout()" />
+            </ModalContainer>
+        </Teleport>
     </div>
-
 
 </template>
