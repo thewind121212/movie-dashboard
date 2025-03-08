@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 
 
-export type ModalType = 'ENABLE_TOTP' | 'NONE' | 'REGISTER_TOTP' | 'BINARY' | 'SETTINGS'
+export type ModalType = 'ENABLE_TOTP' | 'NONE' | 'REGISTER_TOTP' | 'BINARY' | 'SETTINGS' | 'CROP'
 interface State {
     isShow: boolean
     type: ModalType

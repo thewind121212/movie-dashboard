@@ -1,14 +1,23 @@
 <script setup lang="ts">
 import NavItem from '~/components/shared/nav/NavItem.vue';
 import { useRoute } from 'vue-router';
-import imageCrop from '~/components/modals/avatarUpload/imageCrop.client.vue';
+import ImageCrop from '~/components/modals/avatarUpload/ImageCrop.vue';
 import ModalContainer from '~/components/shared/utils/ModalContainer.utils.vue';
+import { useModalStore } from '~/store/modal';
+
+
+const modalStore = useModalStore();
+
+
+const isModalShow = computed(() => modalStore.isShow);
+const modalType = computed(() => modalStore.type);
 
 const path = useRoute().path;
 
 const userCurrentPath = computed(() => {
     return path.split('/')[2];
 });
+
 
 
 </script>
@@ -29,7 +38,9 @@ const userCurrentPath = computed(() => {
                     <NuxtImg src="/images/avatar.webp" width="200" height="200"
                         class="w-[4.5rem] h-[4.5rem] rounded-full object-covert object-top overflow-hidden aspect-square" />
                     <div
-                        class="size-6 bg-white absolute bottom-0 right-0 rounded-md cursor-pointer flex justify-center items-center">
+                        class="size-6 bg-white absolute bottom-0 right-0 rounded-md cursor-pointer flex justify-center items-center"
+                        v-on:click="modalStore.setModalType('CROP', 'Crop Image')"
+                        >
                         <NuxtImg src="/icons/edit.svg" width="200" height="200" class="size-5 rounded-full" />
                     </div>
                 </div>
@@ -48,10 +59,11 @@ const userCurrentPath = computed(() => {
             </div>
         </div>
 
-        <!-- log out -->
-        <Teleport to="#modal-render-entrypoint" v-if="true">
+        <!-- upload avatar-->
+
+        <Teleport to="#modal-render-entrypoint" v-if="isModalShow && modalType === 'CROP'">
             <ModalContainer>
-                <imageCrop />
+                <ImageCrop />
             </ModalContainer>
         </Teleport>
     </div>

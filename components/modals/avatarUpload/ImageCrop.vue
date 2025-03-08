@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
+import { useModalStore } from '~/store/modal';
 
 const canvas = ref<HTMLCanvasElement | null>(null);
 let img = new Image();
@@ -14,13 +15,15 @@ let boundaryRightX = ref<number>(0);
 let boundaryTopY = ref<number>(0);
 let boundaryBottomY = ref<number>(0);
 
+const isImageLoaded = ref<boolean>(false);
+
 const canvasWidth = ref<number>(0);
 const canvasHeight = ref<number>(0);
 
-const canvasAspectRatio = (810 / 452.41);
-const isResize = ref<ReturnType<typeof setTimeout> | null>(null);
-
 const stage = ref<'upload' | 'crop'>('upload');
+
+const canvasAspectRatio = (810 / 452.41);
+
 
 
 
@@ -35,8 +38,31 @@ const handleImageUpload = (e: Event) => {
             img.src = event.target?.result as string;
         };
         reader.readAsDataURL(file);
+        isImageLoaded.value = true;
+        stage.value = 'crop';
+        setTimeout(() => {
+            setupMouseListeners();
+            handerResize();
+        }, 100);
     }
 };
+
+const handerDropUpload = (e: DragEvent) => {
+    const file = e.dataTransfer?.files?.[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            img.src = event.target?.result as string;
+        };
+        reader.readAsDataURL(file);
+        isImageLoaded.value = true;
+        stage.value = 'crop';
+        setTimeout(() => {
+            setupMouseListeners();
+            handerResize();
+        }, 100);
+    }
+}
 
 img.onload = () => {
     render(true);
@@ -51,15 +77,15 @@ const render = (isInit?: boolean, isResize?: boolean) => {
 
     if (canvas.value) {
         const ctx = canvas.value.getContext('2d');
-        canvasWidth.value = window.innerWidth > 810 ? 810 : window.innerWidth;
-        canvasHeight.value = canvasWidth.value / canvasAspectRatio;
+        canvas.value.width = canvasWidth.value;
+        canvas.value.height = canvasHeight.value;
         if (ctx) {
-            ctx.clearRect(0, 0, 1920, 1080);
+            ctx.clearRect(0, 0, canvas.value.width, canvas.value.height);
             const imgWidth = img.width
             const imgHeight = img.height;
-            let imgW = imgWidth > canvasWidth.value ? canvasWidth.value : imgWidth;
-            let imgH = imgW / (imgWidth / imgHeight) > canvasHeight.value
-                ? canvasHeight.value
+            let imgW = imgWidth > canvas.value.width ? canvas.value.width : imgWidth;
+            let imgH = imgW / (imgWidth / imgHeight) > canvas.value.height
+                ? canvas.value.height
                 : imgW / (imgWidth / imgHeight);
 
             imgW = imgH / (imgHeight / imgWidth);
@@ -67,12 +93,13 @@ const render = (isInit?: boolean, isResize?: boolean) => {
             let x = imgX.value;
             let y = imgY.value;
 
+
             const radius = Math.min(imgW, imgH) / 2;
             if (isInit) {
-                x = imgX.value = (canvasWidth.value - imgW) / 2;
-                y = imgY.value = (canvasHeight.value - imgH) / 2;
-                boundaryLeftX.value = (canvasWidth.value - (radius * 2)) / 2;
-                boundaryTopY.value = (canvasHeight.value - (radius * 2)) / 2;
+                x = imgX.value = (canvas.value.width - imgW) / 2;
+                y = imgY.value = (canvas.value.height - imgH) / 2;
+                boundaryLeftX.value = (canvas.value.width - (radius * 2)) / 2;
+                boundaryTopY.value = (canvas.value.height - (radius * 2)) / 2;
             }
 
             if (isResize) {
@@ -114,24 +141,20 @@ const render = (isInit?: boolean, isResize?: boolean) => {
 
 
             // Clear the canvas and draw the white background
-            ctx.clearRect(0, 0, canvasWidth.value, canvasHeight.value);
+            ctx.clearRect(0, 0, canvas.value.width, canvas.value.height);
             ctx.fillStyle = 'white';
-            ctx.fillRect(0, 0, canvasWidth.value, canvasHeight.value);
+            ctx.fillRect(0, 0, canvas.value.width, canvas.value.height);
 
             // Draw the image
             ctx.drawImage(img, x, y, imgW, imgH);
 
 
 
-            // Set stroke properties for both shapes
-            ctx.strokeStyle = 'white';
-            ctx.lineWidth = 1;
-
             // Draw the semi-transparent overlay over the entire canvas
             ctx.beginPath();
-            ctx.rect(0, 0, canvasWidth.value, canvasHeight.value);
+            ctx.rect(0, 0, canvas.value.width, canvas.value.height);
 
-            ctx.arc(canvasWidth.value / 2, canvasHeight.value / 2, radius, 0, Math.PI * 2, true);
+            ctx.arc(canvas.value.width / 2, canvas.value.height / 2, radius, 0, Math.PI * 2, true);
 
             ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
             ctx.fill('evenodd');
@@ -167,6 +190,11 @@ const scaleImage = (e: WheelEvent) => {
     let scaleAmount = e.deltaY < 0 ? 0.1 : -0.1;
     //slow the scale amount
     scaleAmount = scaleAmount * 0.05;
+    //if the scale < 1 then set the scale to 1
+    if (imgScale.value < 1 && scaleAmount < 0) {
+        imgScale.value = 1;
+        return;
+    }
     imgScale.value = (Math.max(0.1, imgScale.value + scaleAmount))
     render();
 };
@@ -186,25 +214,28 @@ const setupMouseListeners = () => {
 
 const handerResize = () => {
 
-    isResize.value = setTimeout(() => {
-        window.innerWidth > 810 ? canvasWidth.value = 810 : canvasWidth.value = window.innerWidth;
-        canvasHeight.value = canvasWidth.value / canvasAspectRatio;
-        render(false, true);
-    }, 100);
-};
-
-onMounted(() => {
     window.innerWidth > 810 ? canvasWidth.value = 810 : canvasWidth.value = window.innerWidth;
     canvasHeight.value = canvasWidth.value / canvasAspectRatio;
+    setTimeout(() => {
+        render(false, true);
+    }, 100);
 
+};
+
+
+
+onMounted(() => {
+    handerResize();
+    window.innerWidth > 810 ? canvasWidth.value = 810 : canvasWidth.value = window.innerWidth;
+    canvasHeight.value = canvasWidth.value / canvasAspectRatio;
     window.addEventListener('resize', handerResize);
 
-    setupMouseListeners();
-    handerResize();
+
 });
 
 onUnmounted(() => {
     const canvasElement = canvas.value;
+    isImageLoaded.value = false;
 
     if (canvasElement) {
         canvasElement.removeEventListener('mousedown', startDrag);
@@ -213,7 +244,6 @@ onUnmounted(() => {
         canvasElement.removeEventListener('mouseleave', stopDrag);
         canvasElement.addEventListener('wheel', scaleImage);
     }
-
     window.removeEventListener('resize', handerResize);
 });
 
@@ -229,16 +259,14 @@ const previewAndSave = (isSave: boolean) => {
 
     if (canvas.value) {
         const ctx = canvas.value.getContext('2d');
-        canvasWidth.value = 810
-        canvasHeight.value = 452.41;
         if (ctx) {
-            ctx.clearRect(0, 0, canvasWidth.value, canvasHeight.value);
+            ctx.clearRect(0, 0, canvas.value.width, canvas.value.height);
             const imgWidth = img.width
             const imgHeight = img.height;
 
-            let imgW = imgWidth > canvasWidth.value ? canvasWidth.value : imgWidth;
-            let imgH = imgW / (imgWidth / imgHeight) > canvasHeight.value
-                ? canvasHeight.value
+            let imgW = imgWidth > canvas.value.width ? canvas.value.width : imgWidth;
+            let imgH = imgW / (imgWidth / imgHeight) > canvas.value.height
+                ? canvas.value.height
                 : imgW / (imgWidth / imgHeight);
 
             imgW = imgH / (imgHeight / imgWidth);
@@ -250,10 +278,10 @@ const previewAndSave = (isSave: boolean) => {
             const scaleFactor = img.width / imgW > img.height / imgH ? img.width / imgW : img.height / imgH;
 
             if (isInit) {
-                x = imgX.value = (canvasWidth.value - imgW) / 2;
-                y = imgY.value = (canvasHeight.value - imgH) / 2;
-                boundaryLeftX.value = (810 - (radius * 2)) / 2;
-                boundaryTopY.value = (452.41 - (radius * 2)) / 2;
+                x = imgX.value = (canvas.value.width - imgW) / 2;
+                y = imgY.value = (canvas.value.height - imgH) / 2;
+                boundaryLeftX.value = (canvasWidth.value - (radius * 2)) / 2;
+                boundaryTopY.value = (canvasHeight.value - (radius * 2)) / 2;
             }
 
 
@@ -286,13 +314,15 @@ const previewAndSave = (isSave: boolean) => {
             }
 
 
-            // ctx.rect(, (canvasHeight.value - radius * 2) / 2, radius * 2, radius * 2);
 
-            const squareX = (canvasWidth.value - radius * 2) / 2
-            const squareY = (canvasHeight.value - radius * 2) / 2
+            const squareX = (canvas.value.width - radius * 2) / 2
+            const squareY = (canvas.value.height - radius * 2) / 2
 
             // Clear the canvas and draw the white background
-            ctx.clearRect(squareX, squareY, canvasWidth.value, canvasHeight.value);
+            ctx.clearRect(squareX, squareY, canvas.value.width, canvas.value.height);
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+            ctx.fillRect(0, 0, canvas.value.width, canvas.value.height);
+
 
             //draw the square
             ctx.beginPath();
@@ -301,7 +331,6 @@ const previewAndSave = (isSave: boolean) => {
 
             // Draw the image
             ctx.drawImage(img, x, y, imgW, imgH);
-            ctx.fillStyle = 'white';
 
             const squareSide = radius * 2;
 
@@ -331,6 +360,7 @@ const previewAndSave = (isSave: boolean) => {
 
                 if (isSave) {
 
+
                     const dataURL = captureCanvas.toDataURL('image/png');
                     const downloadLink = document.createElement('a');
                     downloadLink.href = dataURL;
@@ -349,22 +379,52 @@ const previewAndSave = (isSave: boolean) => {
 };
 
 
+const handerChangeStateToCrop = () => {
+    stage.value = 'crop';
+    setTimeout(() => {
+        setupMouseListeners();
+        handerResize();
+    }, 100);
+}
 
+const resetUpload = () => {
+    isImageLoaded.value = false;
+    stage.value = 'upload';
+    img.src = '';
+    imgX.value = 0;
+    imgY.value = 0;
+    imgScale.value = 1;
+}
 
 
 </script>
 
+
 <template>
     <div class="w-auto h-auto flex flex-col justify-start items-start gap-4 z-30">
-        <div class="relative bg-white flex flex-col justify-center items-center p-10 pt-4 gap-2 rounded-md"
+        <div class="relative bg-white flex flex-col justify-center items-center p-6 pt-4 gap-2 rounded-md"
             :style="`width: ${canvasWidth}px ;`">
-            <div class="w-full h-auto flex justify-between items-end font-[500] font-shatoshi">
-                <div class="w-auto h-auto flex justify-start items-center">
+            <div class="w-full h-auto flex justify-between items-end font-[500] font-shatoshi relative">
+                <div class="w-auto h-auto flex justify-start items-center gap-2 font-light">
+                    <div class="w-auto h-6 border-[#BDBDBD] border rounded-full px-3 flex justify-center items-center cursor-pointer"
+                        :class="stage === 'upload' ? 'bg-[#0075ff] text-white border-[#0075ff]' : 'bg-white'"
+                        @click="stage = 'upload'">Upload</div>
+                    <!-- if have image then crop display -->
+                    <div class="w-auto h-6 border-[#BDBDBD] border rounded-full px-3 flex justify-center items-center cursor-pointer"
+                        v-if="isImageLoaded"
+                        :class="stage === 'crop' ? 'bg-[#0075ff] text-white border-[#0075ff]' : 'bg-white'"
+                        @click="handerChangeStateToCrop">Crop</div>
                 </div>
-                <p>Upload Your Avatar</p>
+                <div class=" absolute left-1/2 -translate-x-1/2 w-auto h-auto flex justify-center items-center gap-2">
+                    <p>Upload Your Avatar</p>
+                </div>
+                <div class="w-auto h-6 border-[#BDBDBD] border rounded-full px-3 flex justify-center items-center cursor-pointer font-light"
+                    :class="isImageLoaded ? 'bg-red-400 text-white border-red-400' : 'bg-white'"
+                    @click="useModalStore().hideModal()">Close</div>
             </div>
             <!-- upload -->
-            <!-- <div class="flex items-center justify-center w-full" v-if="stage === 'crop'">
+            <div class="flex items-center justify-center w-full mt-2" v-if="stage === 'upload'" @dragover.prevent
+                @drop.prevent="handerDropUpload">
                 <label for="dropzone-file"
                     class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
                     <div class="flex flex-col items-center justify-center pt-5 pb-6">
@@ -380,12 +440,21 @@ const previewAndSave = (isSave: boolean) => {
                     </div>
                     <input id="dropzone-file" type="file" @change="handleImageUpload" class="hidden" />
                 </label>
-            </div> -->
-            <div class="z-40 w-auto h-auto" v-if="stage === 'upload'">
+            </div>
+            <div class="z-40 w-auto h-auto mt-2" v-if="stage === 'crop'">
                 <canvas ref="canvas" :width="canvasWidth" :height="canvasHeight"></canvas>
-                <input id="dropzone-file" type="file" @change="handleImageUpload" />
-                <div class="size-10 bg-white" @click="previewAndSave(false)">Preview</div>
-                <div class="size-10 bg-white" @click="previewAndSave(true)">Upload</div>
+                <div class="mt-4 w-full flex justify-end items-center gap-6 px-6">
+
+                    <div class="bg-[#DDDDDD] w-full rounded-[0.75rem] px-[1rem] py-[0.875rem] text-[#121212] text-[0.875rem] leading-[1.25rem] text-center cursor-pointer"
+                        @click="previewAndSave(false)">
+                        Preview Cut
+                    </div>
+                    <button
+                        class="bg-[#060b26] w-full  rounded-[0.75rem] px-[1rem] py-[0.875rem] text-[#fff] text-[0.875rem] leading-[1.25rem]"
+                        @click="previewAndSave(true)">
+                        Upload
+                    </button>
+                </div>
             </div>
 
         </div>
