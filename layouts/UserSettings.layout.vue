@@ -35,7 +35,7 @@ const userCurrentPath = computed(() => {
 
                 <div
                     class="rounded-full bg-white flex justify-center items-center w-20 h-20 aspect-square mx-auto mb-6 relative">
-                    <NuxtImg src="/images/avatar.webp" width="200" height="200"
+                    <NuxtImg src="http://localhost:9000/user/cm7colnpd0004czyhh4hzz13m%2Favatar%2Favatar.png" width="200" height="200"
                         class="w-[4.5rem] h-[4.5rem] rounded-full object-covert object-top overflow-hidden aspect-square" />
                     <div
                         class="size-6 bg-white absolute bottom-0 right-0 rounded-md cursor-pointer flex justify-center items-center"

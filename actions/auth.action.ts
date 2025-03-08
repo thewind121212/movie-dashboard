@@ -320,3 +320,38 @@ export const editUser = async (dto: { userId: string, name: string, birthDate: s
     }
 
 }
+
+
+export const uploadAvatar = async (formData: FormData) => {
+
+    try {
+    const response = await $fetch(`/api/user/uploadAvatar`, {
+        method: 'POST',
+        credentials: 'include',
+        body: formData
+    })
+
+
+    
+        pushSuccessToast('updated avatar successfully!')
+
+    return true
+        
+    } catch (error : any) {
+        if (error.statusCode === HttpStatusCode.Unauthorized) {
+            navigateTo('/login')
+            setTimeout(() => {
+                pushErrorToast('Unauthorized Access')
+            }
+                , 300)
+            return false
+        } else {
+            pushErrorToast(getErrorMessage(error))
+            return false
+        }
+
+    }
+
+}
+
+
