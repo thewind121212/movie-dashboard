@@ -19,7 +19,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
         const refresh_token = useCookie('refresh_token', { secure: true, sameSite: 'strict', maxAge: 60 * 60 * 24 * 7, httpOnly: true })
 
         const { setUserAuth, userAuthState } = useAuthState()
-        const { isAuthenticated, accessToken } = userAuthState.value
+        const { isAuthenticated } = userAuthState.value
 
 
         try {

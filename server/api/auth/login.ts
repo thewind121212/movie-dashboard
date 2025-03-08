@@ -1,9 +1,8 @@
-import { set } from "zod"
-
 
 
 export default defineEventHandler(async (event) => {
   const runtimeConfig = useRuntimeConfig()
+
 
   const { email, password, remember }: {
     email: string
@@ -37,11 +36,11 @@ export default defineEventHandler(async (event) => {
           setCookie(event, 'refresh_token', data.refreshToken, { httpOnly: true, secure: true, maxAge: 60 * 60 * 24 * 7, sameSite: 'strict' });
         } else {
           setCookie(event, 'access_token', data.token, { secure: true, sameSite: 'strict' });
-          return {
-            message,
-          }
         }
         return {
+          data: {
+            userId: data.userId,
+          },
           message
         }
       // if the is have two factor auth

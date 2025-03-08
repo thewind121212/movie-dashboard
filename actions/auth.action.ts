@@ -2,7 +2,7 @@
 
 import { HttpStatusCode } from "axios"
 import { pushSuccessToast } from "../utils/toastNotification"
-import { type EventHandlerRequest, H3Event } from 'h3'
+import { type EventHandlerRequest, H3Event, use } from 'h3'
 
 
 
@@ -78,7 +78,11 @@ export const login = async (email: string, password: string, remember: Boolean):
     nonce?: string
 }> => {
     try {
-        const res: { token?: string, isTwoFaEnabled: boolean, nonce: string } = await $fetch('/api/auth/login',
+        const res: {
+            token?: string, isTwoFaEnabled: boolean, nonce: string, data: {
+                userId: string
+            }
+        } = await $fetch('/api/auth/login',
             {
                 method: 'POST',
                 body: {
@@ -101,6 +105,8 @@ export const login = async (email: string, password: string, remember: Boolean):
                 nonce: res.nonce
             }
         }
+
+        useAuthState().setUserAuth(true, res.token!, email, res.data.userId)
 
         return {
             valid: true,
@@ -157,7 +163,11 @@ export const forgotSubmit = async (token: string, password: string): Promise<boo
 
 export const loginWith2FaTOTP = async (token: string, email: string, nonce: string, remember: boolean): Promise<boolean> => {
     try {
-        const res: { token: string } = await $fetch('/api/auth/loginWith2FaTOTP',
+        const res: {
+            token: string, data: {
+                userId: string
+            }
+        } = await $fetch('/api/auth/loginWith2FaTOTP',
             {
                 method: 'POST',
                 body: {
@@ -169,7 +179,7 @@ export const loginWith2FaTOTP = async (token: string, email: string, nonce: stri
             }
         )
 
-
+        useAuthState().setUserAuth(true, res.token, email, res.data.userId)
         return true
 
 
@@ -268,4 +278,45 @@ export const protectionGuard = async (event: H3Event<EventHandlerRequest>, acces
             isAuthorized: false
         }
     }
+}
+
+
+export const editUser = async (dto: { userId: string, name: string, birthDate: string, gender: string, country: string, timeZone: string, bio: string }): Promise<boolean> => {
+    const { userId, name, birthDate, country, gender, timeZone, bio } = dto
+
+    try {
+        await $fetch('/api/user/editProfile',
+            {
+                method: 'PUT',
+                credentials: 'include',
+                body: {
+                    userId,
+                    name,
+                    birthDate,
+                    country,
+                    gender,
+                    timeZone,
+                    bio
+                }
+            }
+        )
+
+        pushSuccessToast('Profile updated successfully!')
+
+        return true
+    } catch (error: any) {
+        if (error.statusCode === HttpStatusCode.Unauthorized) {
+            navigateTo('/login')
+            setTimeout(() => {
+                pushErrorToast('Unauthorized Access')
+            }
+                , 300)
+            return false
+        } else {
+            pushErrorToast(getErrorMessage(error))
+            return false
+        }
+
+    }
+
 }

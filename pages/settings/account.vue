@@ -8,7 +8,7 @@ import { useAuthState } from '#imports';
 const nuxtApp = useNuxtApp();
 
 
-const { error, data, status } = await useAsyncData<any>('profile-settings', async () => {
+const { error, data, status, refresh } = await useAsyncData<any>('profile-settings', async () => {
     const data: {
         countries: any[],
         timezones: any,
@@ -22,7 +22,7 @@ const { error, data, status } = await useAsyncData<any>('profile-settings', asyn
         },
         body: JSON.stringify({
             userId: useAuthState().userAuthState.value.userId
-        }) 
+        })
     })
 
     if (getUserData.status === 401) {
@@ -60,6 +60,9 @@ const { error, data, status } = await useAsyncData<any>('profile-settings', asyn
 });
 
 
+const refreshData = () => {
+    refresh()
+}
 
 
 
@@ -84,7 +87,7 @@ const { error, data, status } = await useAsyncData<any>('profile-settings', asyn
                     </div>
                 </div>
                 <ProfileSetting :countries="data.countries" :timezones="data.tz" v-if="status === 'success'"
-                    :user-data="data.userData.data" />
+                    :user-data="data.userData.data" :refresh="refreshData" />
             </ClientOnly>
         </UserSettingsLayout>
 
