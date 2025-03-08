@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useModalStore } from '~/store/modal';
+import { uploadAvatar } from '~/actions/auth.action';
+import { useAuthState } from '#imports';
 
 const canvas = ref<HTMLCanvasElement | null>(null);
 let img = new Image();
@@ -359,15 +361,18 @@ const previewAndSave = (isSave: boolean) => {
                 captureCtx.scale(1 / scaleFactor, 1 / scaleFactor);
 
                 if (isSave) {
-
-
-                    const dataURL = captureCanvas.toDataURL('image/png');
-                    const downloadLink = document.createElement('a');
-                    downloadLink.href = dataURL;
-                    downloadLink.download = 'square_cropped_image_only.png';
-                    document.body.appendChild(downloadLink);
-                    downloadLink.click();
-                    document.body.removeChild(downloadLink);
+                    captureCanvas.toBlob(async (blob) => {
+                        if (!blob) return pushErrorToast('Failed to save image');
+                        const file = new File([blob], 'avatar.png', { type: 'image/png' });
+                        const formData = new FormData();
+                        formData.append('file', file);
+                        formData.append('userId', useAuthState().userAuthState.value.userId);
+                        const result = await uploadAvatar(formData);
+                        if (true) {
+                            resetUpload();
+                            useModalStore().hideModal();
+                        }
+                    });
                 }
             }
 
