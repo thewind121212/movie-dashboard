@@ -12,7 +12,6 @@ const modalStore = useModalStore();
 
 const { userAuthState } = useAuthState();
 
-const isShowAvatar = ref(true);
 
 
 const isModalShow = computed(() => modalStore.isShow);
@@ -23,68 +22,9 @@ const path = useRoute().path;
 const userCurrentPath = computed(() => {
     return path.split('/')[2];
 });
- 
-
-const { error, data, status, refresh } = await useAsyncData<any>('user-profile', async () => {
-
-    const getUserData = await fetch('/api/user/profile', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            userId: useAuthState().userAuthState.value.userId
-        })
-    })
-
-    if (getUserData.status === 401) {
-        navigateTo('/login')
-        return
-    }
-    if (!getUserData.ok) {
-        throw new Error('Failed to fetch user data')
-    }
-    const userData: {
-        message: string,
-        data: {
-            id: string,
-            name: string,
-            email: string,
-            birthdate: string | null,
-            country: string | null,
-            timezone: string | null,
-            bio: string | null,
-            gender: string | null,
-            createdAt: string,
-            updatedAt: string,
-            avatarUrl: string | '',
-        }
-    } = await getUserData.json()
-
-    useAuthState().setUserInfo({
-        name: userData.data.name,
-        avatarUrl: userData.data.avatarUrl,
-        bio: userData.data.bio,
-        country: userData.data.country,
-        timezone: userData.data.timezone,
-        gender: userData.data.gender,
-        birthdate: userData.data.birthdate,
-        createdAt: userData.data.createdAt,
-    })
-
-    return {
-        userData: userData,
-        fetchedAt: Date.now()
-    }
-}, {
-    lazy: true,
-    server: false,
-});
 
 
-const refreshData = () => {
-    refresh()
-}
+
 
 
 
@@ -101,15 +41,14 @@ const refreshData = () => {
         <div class="w-full h-auto flex-1  relative z-20 rounded-lg flex justify-start items-center gap-4">
             <div
                 class="w-[16.5rem] h-full bg-gradient-to-r from-[#060b28f1] to-[#0a0e2393] rounded-lg p-4 text-white flex flex-col min-w-[16.5rem] py-6">
-
                 <div
                     class="rounded-full bg-white flex justify-center items-center w-20 h-20 aspect-square mx-auto mb-6 relative">
                     <div
                         class="absolute w-full h-full rounded-full z-10 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex justify-center items-center">
                         <LoadingSpinner />
                     </div>
-                    <NuxtImg :src="userAuthState.avatarUrl || '/images/no-avatar.png'" width="200" height="200"
-                        v-if="isShowAvatar"
+                    <NuxtImg :src="`${$config.public.beServerUrl}/s3/avatar/${userAuthState.userId}`" loading="lazy"
+                        width="200" height="200"
                         class="w-[4.5rem] h-[4.5rem] rounded-full object-covert object-top overflow-hidden aspect-square relative z-20" />
                     <div class="size-6 bg-white absolute bottom-0 right-0 rounded-md cursor-pointer flex justify-center items-center z-30"
                         v-on:click="modalStore.setModalType('CROP', 'Crop Image')">
@@ -130,9 +69,7 @@ const refreshData = () => {
                 <slot />
             </div>
         </div>
-
         <!-- upload avatar-->
-
         <Teleport to="#modal-render-entrypoint" v-if="isModalShow && modalType === 'CROP'">
             <ModalContainer>
                 <ImageCrop />

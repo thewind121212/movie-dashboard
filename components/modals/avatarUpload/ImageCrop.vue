@@ -374,6 +374,8 @@ const previewAndSave = (isSave: boolean) => {
                             resetUpload();
                             useModalStore().hideModal();
                         }
+                        //hard reload
+                        window.location.reload();
                     });
                 }
             }

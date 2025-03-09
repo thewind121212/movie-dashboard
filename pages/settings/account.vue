@@ -3,7 +3,7 @@
 import AppLayout from '~/layouts/App.layout.vue';
 import UserSettingsLayout from '~/layouts/UserSettings.layout.vue';
 import ProfileSetting from '~/components/core/auth/ProfileSetting.vue';
-
+import { useAuthState } from '#imports';
 
 
 
@@ -14,9 +14,48 @@ const { error, data, status, refresh } = await useAsyncData<any>('profile-settin
     } = await $fetch('/api/vendor/geo')
 
 
+    const getUserData = await fetch('/api/user/profile', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            userId: useAuthState().userAuthState.value.userId
+        })
+    })
+
+    if (getUserData.status === 401) {
+        navigateTo('/login')
+        return
+    }
+    if (!getUserData.ok) {
+        throw new Error('Failed to fetch user data')
+    }
+    const userData: {
+        message: string,
+        data: {
+            id: string,
+            name: string,
+            email: string,
+            birthdate: string | null,
+            country: string | null,
+            timezone: string | null,
+            bio: string | null,
+            gender: string | null,
+            createdAt: string,
+            avatarUrl: string,
+            updatedAt: string,
+        }
+    } = await getUserData.json()
+
+
+    
+
+    useAuthState().setAvatarUrl(userData.data.avatarUrl) 
     return {
         countries: data.countries,
         tz: data.timezones.zones,
+        userData: userData,
         fetchedAt: Date.now()
     }
 }, {
@@ -28,6 +67,7 @@ const { error, data, status, refresh } = await useAsyncData<any>('profile-settin
 const refreshData = () => {
     refresh()
 }
+
 
 
 
@@ -50,8 +90,8 @@ const refreshData = () => {
                         <NuxtImg src="/icons/loading.svg" alt="logo" class="w-[3rem] h-auto" />
                     </div>
                 </div>
-                <!-- <ProfileSetting :countries="data.countries" :timezones="data.tz" v-if="status === 'success'"
-                    :user-data="data.userData.data" :refresh="refreshData" /> -->
+                <ProfileSetting :countries="data.countries" :timezones="data.tz" v-if="status === 'success'"
+                    :user-data="data.userData.data" :refresh="refreshData" />
             </ClientOnly>
         </UserSettingsLayout>
 
