@@ -4,6 +4,8 @@ import { useModalStore } from '~/store/modal';
 import { uploadAvatar } from '~/actions/auth.action';
 import { useAuthState } from '#imports';
 
+
+
 const canvas = ref<HTMLCanvasElement | null>(null);
 let img = new Image();
 let imgX = ref<number>(0);
@@ -25,6 +27,8 @@ const canvasHeight = ref<number>(0);
 const stage = ref<'upload' | 'crop'>('upload');
 
 const canvasAspectRatio = (810 / 452.41);
+
+const config = useRuntimeConfig()
 
 
 
@@ -233,6 +237,7 @@ onMounted(() => {
     window.addEventListener('resize', handerResize);
 
 
+
 });
 
 onUnmounted(() => {
@@ -375,7 +380,19 @@ const previewAndSave = (isSave: boolean) => {
                             useModalStore().hideModal();
                         }
                         //hard reload
-                        window.location.reload();
+                        const src = `${config.public.beServerUrl}/s3/avatar/${useAuthState().userAuthState.value.userId}`;
+                        const avatar = document.getElementById('user-avatar') as HTMLImageElement;
+                        avatar.src = src + '?' + Date.now().toString()
+                        avatar.srcset = src + '?' + Date.now().toString()
+                        //set cache to new image in browser
+                        avatar.onload = () => {
+                            URL.revokeObjectURL(src);
+                            //create blob url 
+                            const blob = new Blob([src], { type: 'image/png' });
+                            URL.createObjectURL(blob);
+                        }
+
+
                     });
                 }
             }
