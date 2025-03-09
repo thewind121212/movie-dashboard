@@ -6,12 +6,14 @@ export const useAuthState = () => {
             accessToken: string;
             email: string;
             userId: string;
+            avatarUrl: string;
         }
     >('authStore', () => ({
         isAuthenticated: false,
         accessToken: '',
         email: '',
         userId: '',
+        avatarUrl: ''
     }));
 
     const setUserAuth = (isAuthenticated: boolean, accessToken: string, email: string, userId: string) => {
@@ -21,9 +23,14 @@ export const useAuthState = () => {
         userAuthState.value.userId = userId;
     };
 
+    const setAvatarUrl = (avatarUrl: string) => {
+        userAuthState.value.avatarUrl = avatarUrl;
+        
+    }
 
     return {
         userAuthState,
-        setUserAuth
+        setUserAuth,
+        setAvatarUrl
     };
 }

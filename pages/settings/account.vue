@@ -5,7 +5,6 @@ import UserSettingsLayout from '~/layouts/UserSettings.layout.vue';
 import ProfileSetting from '~/components/core/auth/ProfileSetting.vue';
 import { useAuthState } from '#imports';
 
-const nuxtApp = useNuxtApp();
 
 
 const { error, data, status, refresh } = await useAsyncData<any>('profile-settings', async () => {
@@ -44,10 +43,15 @@ const { error, data, status, refresh } = await useAsyncData<any>('profile-settin
             bio: string | null,
             gender: string | null,
             createdAt: string,
+            avatarUrl: string,
             updatedAt: string,
         }
     } = await getUserData.json()
 
+
+    
+
+    useAuthState().setAvatarUrl(userData.data.avatarUrl) 
     return {
         countries: data.countries,
         tz: data.timezones.zones,
