@@ -58,6 +58,7 @@ export default defineEventHandler(async (event) => {
                 gender: string | null,
                 createdAt: string,
                 updatedAt: string,
+                avatarUrl: string,
             }
         } = await res.json()
 

@@ -4,9 +4,15 @@ import { useRoute } from 'vue-router';
 import ImageCrop from '~/components/modals/avatarUpload/ImageCrop.vue';
 import ModalContainer from '~/components/shared/utils/ModalContainer.utils.vue';
 import { useModalStore } from '~/store/modal';
+import LoadingSpinner from '~/components/shared/ui/LoadingSpinner.vue';
+import { useAuthState } from '#imports';
 
 
 const modalStore = useModalStore();
+
+const { userAuthState } = useAuthState();
+
+const isShowAvatar = ref(true);
 
 
 const isModalShow = computed(() => modalStore.isShow);
@@ -17,6 +23,69 @@ const path = useRoute().path;
 const userCurrentPath = computed(() => {
     return path.split('/')[2];
 });
+ 
+
+const { error, data, status, refresh } = await useAsyncData<any>('user-profile', async () => {
+
+    const getUserData = await fetch('/api/user/profile', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            userId: useAuthState().userAuthState.value.userId
+        })
+    })
+
+    if (getUserData.status === 401) {
+        navigateTo('/login')
+        return
+    }
+    if (!getUserData.ok) {
+        throw new Error('Failed to fetch user data')
+    }
+    const userData: {
+        message: string,
+        data: {
+            id: string,
+            name: string,
+            email: string,
+            birthdate: string | null,
+            country: string | null,
+            timezone: string | null,
+            bio: string | null,
+            gender: string | null,
+            createdAt: string,
+            updatedAt: string,
+            avatarUrl: string | '',
+        }
+    } = await getUserData.json()
+
+    useAuthState().setUserInfo({
+        name: userData.data.name,
+        avatarUrl: userData.data.avatarUrl,
+        bio: userData.data.bio,
+        country: userData.data.country,
+        timezone: userData.data.timezone,
+        gender: userData.data.gender,
+        birthdate: userData.data.birthdate,
+        createdAt: userData.data.createdAt,
+    })
+
+    return {
+        userData: userData,
+        fetchedAt: Date.now()
+    }
+}, {
+    lazy: true,
+    server: false,
+});
+
+
+const refreshData = () => {
+    refresh()
+}
+
 
 
 
@@ -35,12 +104,15 @@ const userCurrentPath = computed(() => {
 
                 <div
                     class="rounded-full bg-white flex justify-center items-center w-20 h-20 aspect-square mx-auto mb-6 relative">
-                    <NuxtImg src="http://localhost:9000/user/cm7colnpd0004czyhh4hzz13m%2Favatar%2Favatar.png" width="200" height="200"
-                        class="w-[4.5rem] h-[4.5rem] rounded-full object-covert object-top overflow-hidden aspect-square" />
                     <div
-                        class="size-6 bg-white absolute bottom-0 right-0 rounded-md cursor-pointer flex justify-center items-center"
-                        v-on:click="modalStore.setModalType('CROP', 'Crop Image')"
-                        >
+                        class="absolute w-full h-full rounded-full z-10 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex justify-center items-center">
+                        <LoadingSpinner />
+                    </div>
+                    <NuxtImg :src="userAuthState.avatarUrl || '/images/no-avatar.png'" width="200" height="200"
+                        v-if="isShowAvatar"
+                        class="w-[4.5rem] h-[4.5rem] rounded-full object-covert object-top overflow-hidden aspect-square relative z-20" />
+                    <div class="size-6 bg-white absolute bottom-0 right-0 rounded-md cursor-pointer flex justify-center items-center z-30"
+                        v-on:click="modalStore.setModalType('CROP', 'Crop Image')">
                         <NuxtImg src="/icons/edit.svg" width="200" height="200" class="size-5 rounded-full" />
                     </div>
                 </div>

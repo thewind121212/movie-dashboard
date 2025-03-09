@@ -277,8 +277,10 @@ const previewAndSave = (isSave: boolean) => {
             let y = imgY.value;
 
             const radius = Math.min(imgW, imgH) / 2;
-            const scaleFactor = img.width / imgW > img.height / imgH ? img.width / imgW : img.height / imgH;
+            // const scaleFactor = img.width / imgW > img.height / imgH ? img.width / imgW : img.height / imgH;
+            // make sure the image cut await 512 x 512
 
+            const scaleFactor = 512 / radius;
             if (isInit) {
                 x = imgX.value = (canvas.value.width - imgW) / 2;
                 y = imgY.value = (canvas.value.height - imgH) / 2;
