@@ -16,6 +16,7 @@
     "@pinia/nuxt": "^0.10.1",
     "@vee-validate/zod": "^4.15.0",
     "axios": "^1.8.1",
+    "copy-to-clipboard": "^3.3.3",
     "nuxt": "^3.15.4",
     "pinia": "^3.0.1",
     "vanilla-calendar-pro": "^3.0.3",
