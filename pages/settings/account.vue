@@ -45,13 +45,11 @@ const { error, data, status, refresh } = await useAsyncData<any>('profile-settin
             createdAt: string,
             avatarUrl: string,
             updatedAt: string,
+            twoFaStatus: 'DISABLED' | 'ENABLED',
         }
     } = await getUserData.json()
 
 
-    
-
-    useAuthState().setAvatarUrl(userData.data.avatarUrl) 
     return {
         countries: data.countries,
         tz: data.timezones.zones,

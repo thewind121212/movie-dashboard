@@ -4,7 +4,7 @@ import { useModalStore } from '~/store/modal';
 import ModalContainer from '~/components/shared/utils/ModalContainer.utils.vue';
 import Drawer from '../shared/utils/Drawer.vue';
 import AppSetting from './Settings/AppSetting.vue';
-
+import TwoFaGetRecovery from './auth/TwoFaGetRecovery.vue';
 
 
 const modalStore = useModalStore();
@@ -55,6 +55,19 @@ onUnmounted(() => {
         <Teleport to="#modal-render-entrypoint" v-if="isShow && modalType === 'REGISTER_TOTP'">
             <ModalContainer>
                 <ModalsAuthTwoFaRequest />
+            </ModalContainer>
+        </Teleport>
+        <!--modal show recovery pass  -->
+        <Teleport to="#modal-render-entrypoint" v-if="isShow && modalType === 'RECOVERY_PASS'">
+            <ModalContainer>
+                <Suspense>
+                    <template #fallback>
+                        <LoadingTwoFaEnableTOTPLoading />
+                    </template>
+                    <template #default>
+                        <TwoFaGetRecovery />
+                    </template>
+                </Suspense>
             </ModalContainer>
         </Teleport>
         <!-- drawer setting -->

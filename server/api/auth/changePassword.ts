@@ -32,14 +32,16 @@ export default defineEventHandler(async (event) => {
 
         event.node.res.setHeader('Content-Type', 'application/json')
 
-        const { userId } = await readBody(event)
+        const { userId, currentPassword, newPassword } = await readBody(event)
 
 
 
-        const res = await fetch(`${runtimeConfig.apiUrl}/user/getUser`, {
-            method: 'POST',
+        const res = await fetch(`${runtimeConfig.apiUrl}/user/auth/changePassword`, {
+            method: 'PUT',
             body: JSON.stringify({
                 userId: userId,
+                currentPassword: currentPassword,
+                newPassword: newPassword,
             }),
             headers: {
                 'Content-Type': 'application/json',
@@ -48,25 +50,12 @@ export default defineEventHandler(async (event) => {
 
         const data: {
             message: string
-            data: {
-                id: string,
-                email: string,
-                birthdate: string | null,
-                country: string | null,
-                timezone: string | null,
-                bio: string | null,
-                gender: string | null,
-                createdAt: string,
-                updatedAt: string,
-                avatarUrl: string,
-                twoFaStatus: 'DISABLED' | 'ENABLED',
-            }
         } = await res.json()
 
         event.node.res.statusCode = res.status
         return {
             message: data.message,
-            data: data.data
+            data: null
         }
 
     } catch (error: any) {

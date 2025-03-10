@@ -7,13 +7,15 @@ export const useAuthState = () => {
             email: string;
             userId: string;
             avatarUrl: string;
+            isTwoFaEnabled: 'fetching' | 'enabled' | 'disabled';
         }
     >('authStore', () => ({
         isAuthenticated: false,
         accessToken: '',
         email: '',
         userId: '',
-        avatarUrl: ''
+        avatarUrl: '',
+        isTwoFaEnabled: 'fetching'
     }));
 
     const setUserAuth = (isAuthenticated: boolean, accessToken: string, email: string, userId: string) => {
@@ -23,14 +25,9 @@ export const useAuthState = () => {
         userAuthState.value.userId = userId;
     };
 
-    const setAvatarUrl = (avatarUrl: string) => {
-        userAuthState.value.avatarUrl = avatarUrl;
-        
-    }
 
     return {
         userAuthState,
         setUserAuth,
-        setAvatarUrl
     };
 }
