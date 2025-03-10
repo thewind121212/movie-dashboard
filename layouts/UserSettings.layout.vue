@@ -49,6 +49,7 @@ const userCurrentPath = computed(() => {
                     </div>
                     <NuxtImg :src="`${$config.public.beServerUrl}/s3/avatar/${userAuthState.userId}`" loading="lazy"
                         width="200" height="200"
+                        id="user-avatar"
                         class="w-[4.5rem] h-[4.5rem] rounded-full object-covert object-top overflow-hidden aspect-square relative z-20" />
                     <div class="size-6 bg-white absolute bottom-0 right-0 rounded-md cursor-pointer flex justify-center items-center z-30"
                         v-on:click="modalStore.setModalType('CROP', 'Crop Image')">
