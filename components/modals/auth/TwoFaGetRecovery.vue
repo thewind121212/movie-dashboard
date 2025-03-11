@@ -5,17 +5,26 @@ import { LoadingTwoFaEnableTOTPLoading } from '#components';
 import { useModalStore } from '~/store/modal';
 import RecoveryCodeItem from '~/components/shared/ui/RecoveryCodeItem.vue';
 import copy from 'copy-to-clipboard'
+import { useRequestTotpStore } from '~/store/totpRequestStore';
+import ModalContainer from '~/components/shared/utils/ModalContainer.utils.vue';
+import BinaryModal from '~/components/shared/utils/BinaryModal.vue';
 
 
 
 const { mountedRef, zoomOutRef, displayDone, animateModal } = useModalAnimation();
 const modalRef = ref<HTMLElement | null>(null);
 
+const totpRequest = useRequestTotpStore();
+const doubleCheck = ref<boolean>(false);
+
 const modalStore = useModalStore();
 const copiesAll = ref(false);
 const timerCopyRef = ref<ReturnType<typeof setTimeout> | null>(null);
 
 const isGotCodes = ref<boolean>(false);
+
+
+const recoveryCode = computed(() => totpRequest.recoveryCode);
 
 
 
@@ -38,14 +47,6 @@ const dummyCodes = [
     "XXXXXXXX"
 ]
 
-const codes = [
-    "RCPY5H5I",
-    "ADFLMLGA",
-    "WCC1M74L",
-    "0YGHJ4VM",
-    "PGAE4YIE",
-    "UNNRMLUI"
-]
 
 const handerGetCodes = (type: 'get' | 'next') => {
     if (type === 'get') {
@@ -53,7 +54,7 @@ const handerGetCodes = (type: 'get' | 'next') => {
         return;
     }
     if (type === 'next') {
-        console.log('process next');
+        doubleCheck.value = true;
     }
 }
 
@@ -66,7 +67,7 @@ const handerCopiesAll = () => {
     }
 
     copiesAll.value = true;
-    copy(codes.join('\n'));
+    copy(recoveryCode.value.join('\n'));
     timerCopyRef.value = setTimeout(() => {
         copiesAll.value = false;
     }, 210);
@@ -99,7 +100,7 @@ const handerCopiesAll = () => {
                 'You can click code to copy each code copy all' }}</p>
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap bg-gray-200 w-full p-4 rounded-lg gap-2">
-            <RecoveryCodeItem v-for="code in (isGotCodes ? codes : dummyCodes)" :key="code + 'recoveryCode'"
+            <RecoveryCodeItem v-for="code in (isGotCodes ? recoveryCode : dummyCodes)" :key="code + 'recoveryCode'"
                 :item="code" :iscopied-all="copiesAll" />
         </div>
         <div class="w-full h-auto flex justify-end items-center">
@@ -117,13 +118,24 @@ const handerCopiesAll = () => {
         <div class="submit-action w-full flex flex-col gap-[0.75rem]">
             <button
                 class="bg-[#060b26] aspect-[430/48] rounded-[0.75rem] px-[1rem] py-[0.875rem] text-[#fff] text-[0.875rem] leading-[1.25rem]"
-                @click="handerGetCodes('get')">Get
-                The Code</button>
+                @click="handerGetCodes(!isGotCodes ? 'get' : 'next')"> {{ !isGotCodes ? 'Get The Code' : 'Next' }}
+            </button>
 
             <div class="bg-[#DDDDDD] aspect-[430/48] rounded-[0.75rem] px-[1rem] py-[0.875rem] text-[#121212] text-[0.875rem] leading-[1.25rem] text-center cursor-pointer"
                 @click="modalStore.hideModal()">
                 Cancel</div>
         </div>
+
+        <!-- confirm get the code for sure-->
+        <Teleport to="#modal-render-entrypoint" v-if="doubleCheck && isGotCodes">
+            <ModalContainer>
+                <BinaryModal :cancelContent="'Wait I Need Get It'" :approveContent="'I Had Codes'"
+                    :handerFunction="() => modalStore.setModalType('ENABLE_TOTP')" class="z-[999]"
+                    header="Confrim you get all codes" :cancel-function="() => doubleCheck = false"
+                    :hide-modal-manual="true"
+                    content="Get the codes and keep it serect for future use" />
+            </ModalContainer>
+        </Teleport>
 
     </div>
 </template>
