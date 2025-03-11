@@ -17,7 +17,7 @@ const copyHander = (item: string) => {
     if (timer.value) {
         clearTimeout(timer.value)
     }
-
+    copy(item)
     copied.value = true
     timer.value = setTimeout(() => {
         copied.value = false

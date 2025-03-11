@@ -5,7 +5,7 @@ import { changePasword } from '~/actions/auth.action';
 import PasswordField from '~/components/shared/input/PasswordInput.vue';
 import { useAuthState } from '#imports';
 import * as zod from 'zod';
-import { useModalStore} from '~/store/modal';
+import { useModalStore } from '~/store/modal';
 
 
 const { setModalType } = useModalStore();
@@ -77,13 +77,12 @@ async function onSubmit(values: GenericObject) {
                             class="bg-[#0075ff] aspect-[430/48] rounded-[0.75rem] px-[1rem] py-[0.875rem] text-[#fff] text-[0.875rem] leading-[1.25rem] disabled:bg-[#d1d1d1] disabled:text-[#6B6B6B]"
                             :disabled="is2FaEnabled === 'fetching' || is2FaEnabled === 'enabled'"
                             :class="props.is2FaEnabled === 'fetching' ? 'cursor-not-allowed' : props.is2FaEnabled === 'enabled' ? 'cursor-not-allowed' : 'cursor-pointer'"
-                            @click="setModalType('REGISTER_TOTP')"
-                            >Enable
+                            @click="setModalType('REGISTER_TOTP')">Enable
                             TOTP</button>
                     </div>
                     <!--  -->
                     <div class="submit-action w-[10rem] flex flex-col gap-[0.75rem]">
-                        <button
+                        <button @click="setModalType('DISABLE_TOTP')"
                             class="bg-red-400 aspect-[430/48] rounded-[0.75rem] px-[1rem] py-[0.875rem] text-white text-[0.875rem] leading-[1.25rem] disabled:bg-[#d1d1d1] disabled:text-[#6B6B6B]"
                             :disabled="is2FaEnabled === 'fetching' || is2FaEnabled === 'disabled'"
                             :class="props.is2FaEnabled === 'fetching' ? 'cursor-not-allowed' : props.is2FaEnabled === 'disabled' ? 'cursor-not-allowed' : 'cursor-pointer'">Disable
@@ -110,5 +109,6 @@ async function onSubmit(values: GenericObject) {
                 </li>
             </ul>
         </div>
+
     </div>
 </template>

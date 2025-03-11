@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
+import { set } from 'zod';
 
 const otps = ref<string[]>(['', '', '', '', '', '']);
 const isSelectAll = ref<boolean>(false);
@@ -8,6 +9,9 @@ const previousKey = ref<string>('');
 const allowedKeyNumbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
 const validKeys = ['Backspace', 'ArrowLeft', 'ArrowRight', 'Tab', 'Delete', 'Meta'];
 
+const props = defineProps<{
+    isShowSubmit?: boolean
+}>();
 
 const emit = defineEmits(['getOTP']);
 
@@ -17,6 +21,7 @@ const focusInput = (index: number, direction: 'next' | 'prev') => {
     const target = document.getElementById(`otp${targetIndex}`) as HTMLInputElement;
     if (target) target.focus();
 };
+
 
 // Main typing handler
 const onType = (e: KeyboardEvent, index: number) => {
@@ -100,6 +105,25 @@ const onType = (e: KeyboardEvent, index: number) => {
 // handler fille and callback to parent 
 
 const handerSubmit = () => {
+    //scan otp if any dont have value add shake class
+    const remaining = otps.value.filter((otp) => otp === '');
+
+    for (let i = 0; i < remaining.length; i++) {
+        const target = document.getElementById(`otp${5 - i}`) as HTMLInputElement;
+        if (target.value === '') {
+            target.classList.add('shake');
+            target.classList.add('invalid');
+            setTimeout(() => {
+                target.classList.remove('shake');
+                target.classList.remove('invalid');
+            }, 210);
+        }
+
+
+    }
+
+
+
     const otp = otps.value.join('');
     if (otp.length !== 6) {
         return;
@@ -149,7 +173,7 @@ const preventAndKey = (e: any, index: number) => {
     <div class="w-auto h-auto flex items-center gap-2">
         <input v-for="(index) in Array.from({ length: 6 }, (_, index) => index)" :key="'otp-' + index" type="text"
             inputmode="numeric" role="textbox" aria-label="OTP Digit"
-            class="w-[50px] h-[50px] rounded-lg border-[#DDDDDD] border text-center outline-none focus:border-[#5445f4]"
+            class="w-[3.125rem] h-[3.125rem] rounded-lg border-[#DDDDDD] border text-center outline-none focus:border-[#5445f4]"
             :value="otps[index]" maxlength="1" :class="[
                 otps[index] === '' ? '' : 'border-green-400',
                 isSelectAll ? '!border-[#5445f4]' : ''
@@ -166,6 +190,10 @@ const preventAndKey = (e: any, index: number) => {
                 }
                 onType(e, index);
             }" :id="'otp' + index" />
+        <div class="size-[3.125rem] rounded-lg bg-[#0075ff] opacity-85 justify-center items-center flex cursor-pointer"
+            @click="handerSubmit">
+            <NuxtImg src="/icons/arrowNext.svg" width="200" height="200" class="size-8" />
+        </div>
     </div>
 </template>
 
@@ -173,6 +201,10 @@ const preventAndKey = (e: any, index: number) => {
 .shake {
     animation: shaking 0.2s cubic-bezier(.36, .07, .19, .97) both;
     transform-origin: center center;
+}
+
+.invalid {
+    border-color: oklch(0.704 0.191 22.216);
 }
 
 @keyframes shaking {

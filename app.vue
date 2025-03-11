@@ -6,7 +6,7 @@ import { Modals } from '#components';
 
 
 <template>
-  <div class="" id="modal-render-entrypoint"></div>
+  <div class="font-shatoshi" id="modal-render-entrypoint"></div>
   <Modals />
   <NuxtPage />
 </template>

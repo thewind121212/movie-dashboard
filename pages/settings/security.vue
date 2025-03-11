@@ -44,8 +44,6 @@ const { error, data, status, refresh } = await useAsyncData<any>('security-setti
     } = await getUserData.json()
 
 
-    const isHave2Fa = userData.data.twoFaStatus === 'ENABLED' ? 'enabled' : 'disabled'
-
     return {
         userData: userData,
         fetchedAt: Date.now()
@@ -56,6 +54,12 @@ const { error, data, status, refresh } = await useAsyncData<any>('security-setti
 });
 
 
+watch(() => useAuthState().userAuthState.value.refeshTrigger, (val) => {
+    if (!val) return 
+    refresh()
+})
+
+
 
 </script>
 
@@ -64,9 +68,9 @@ const { error, data, status, refresh } = await useAsyncData<any>('security-setti
     <AppLayout>
         <UserSettingsLayout>
 
-            <SecuritySetting :is2FaEnabled="data.userData !== undefined ? data.userData.data.twoFaStatus.toLowerCase() : 'fetching' " 
-            v-if="status === 'success' && data.userData !== undefined" 
-            />
+            <SecuritySetting
+                :is2FaEnabled="data.userData !== undefined ? data.userData.data.twoFaStatus.toLowerCase() : 'fetching'"
+                v-if="status === 'success' && data.userData !== undefined" />
         </UserSettingsLayout>
     </AppLayout>
 </template>

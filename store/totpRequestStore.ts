@@ -7,6 +7,7 @@ interface State {
     step: requestTOTPStep
     recoveryCode: string[]
     serect: string
+    qrImagebase64: string
 }
 
 export const useRequestTotpStore = defineStore('totpRequest', {
@@ -15,6 +16,7 @@ export const useRequestTotpStore = defineStore('totpRequest', {
             step: "INIT",
             recoveryCode: [],
             serect: '',
+        qrImagebase64: ''
         }
     },
     actions: {
@@ -26,6 +28,15 @@ export const useRequestTotpStore = defineStore('totpRequest', {
         },
         setSerect(serect: string) {
             this.serect = serect
+        },
+        setQrImagebase64(qrImagebase64: string) {
+            this.qrImagebase64 = qrImagebase64
+        },
+        clearAllInfo() {
+            this.step = 'INIT'
+            this.recoveryCode = []
+            this.serect = ''
+            this.qrImagebase64 = ''
         }
     }
 })

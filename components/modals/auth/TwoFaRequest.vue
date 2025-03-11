@@ -5,8 +5,11 @@ import { LoadingTwoFaEnableTOTPLoading } from '#components';
 import { useModalStore } from '~/store/modal';
 import PasswordInput from '~/components/shared/input/PasswordInput.vue';
 import zod from 'zod';
+import { requestEnableTOTP } from '~/actions/auth.action';
+import { pushSuccessToast } from '#imports';
 import { toTypedSchema } from '@vee-validate/zod';
 import { Form } from 'vee-validate';
+import { useRequestTotpStore } from '~/store/totpRequestStore';
 
 
 
@@ -14,7 +17,7 @@ const { mountedRef, zoomOutRef, displayDone, animateModal } = useModalAnimation(
 const modalRef = ref<HTMLElement | null>(null);
 
 const modalStore = useModalStore();
-
+const requestTOTPStore = useRequestTotpStore();
 
 
 onMounted(() => {
@@ -28,7 +31,18 @@ const validationSchema = toTypedSchema(
 );
 
 async function onSubmit(values: any) {
-    modalStore.setModalType('RECOVERY_PASS');
+    const result = await requestEnableTOTP(useAuthState().userAuthState.value.email, values.password);
+    console.log(result.serect)
+    if (result.isSuccess && result.recoveryCodes && result.qrCodeImageURL && result.serect) {
+        requestTOTPStore.setRecoveryCode(result.recoveryCodes);
+        requestTOTPStore.setSerect(result.serect);
+        requestTOTPStore.setQrImagebase64(result.qrCodeImageURL);
+        modalStore.setModalType('RECOVERY_PASS');
+        setTimeout(() => {
+            pushSuccessToast('Get Your Recovery Codes');
+        }, 300)
+    }
+
 }
 
 
@@ -58,8 +72,7 @@ async function onSubmit(values: any) {
             <div class="submit-action w-full flex flex-col gap-[0.75rem]">
                 <button
                     class="bg-[#060b26] aspect-[430/48] rounded-[0.75rem] px-[1rem] py-[0.875rem] text-[#fff] text-[0.875rem] leading-[1.25rem]">Next</button>
-                <div
-                    class="bg-[#DDDDDD] aspect-[430/48] rounded-[0.75rem] px-[1rem] py-[0.875rem] text-[#121212] text-[0.875rem] leading-[1.25rem] text-center cursor-pointer"
+                <div class="bg-[#DDDDDD] aspect-[430/48] rounded-[0.75rem] px-[1rem] py-[0.875rem] text-[#121212] text-[0.875rem] leading-[1.25rem] text-center cursor-pointer"
                     @click="modalStore.hideModal()">
                     Cancel</div>
             </div>

@@ -5,6 +5,7 @@ import ModalContainer from '~/components/shared/utils/ModalContainer.utils.vue';
 import Drawer from '../shared/utils/Drawer.vue';
 import AppSetting from './Settings/AppSetting.vue';
 import TwoFaGetRecovery from './auth/TwoFaGetRecovery.vue';
+import DisableTOTP from '~/components/modals/auth/DisableTOTP.vue';
 
 
 const modalStore = useModalStore();
@@ -13,11 +14,13 @@ const isShow = computed(() => modalStore.isShow);
 const modalType = computed(() => modalStore.type);
 const eventESCref = ref<null | ((e: KeyboardEvent) => void)>(null);
 
+const modalWontAffectedByESC = ['SETTINGS', 'ENABLE_TOTP', 'RECOVERY_PASS', 'DISABLE_TOTP', 'REGISTER_TOTP'];
+
 
 onMounted(() => {
     eventESCref.value = (e: KeyboardEvent) => {
         if (e.key === 'Escape') {
-            if (modalType.value === 'SETTINGS') {
+            if (modalWontAffectedByESC.includes(modalType.value)) {
                 return
             }
             modalStore.hideModal();
@@ -68,6 +71,12 @@ onUnmounted(() => {
                         <TwoFaGetRecovery />
                     </template>
                 </Suspense>
+            </ModalContainer>
+        </Teleport>
+        <!-- disable TOTP -->
+        <Teleport to="#modal-render-entrypoint" v-if="isShow && modalType === 'DISABLE_TOTP'">
+            <ModalContainer>
+                <DisableTOTP />
             </ModalContainer>
         </Teleport>
         <!-- drawer setting -->

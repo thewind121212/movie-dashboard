@@ -7,6 +7,7 @@ export const useAuthState = () => {
             email: string;
             userId: string;
             avatarUrl: string;
+            refeshTrigger: boolean;
             isTwoFaEnabled: 'fetching' | 'enabled' | 'disabled';
         }
     >('authStore', () => ({
@@ -15,7 +16,8 @@ export const useAuthState = () => {
         email: '',
         userId: '',
         avatarUrl: '',
-        isTwoFaEnabled: 'fetching'
+        isTwoFaEnabled: 'fetching',
+        refeshTrigger: false,
     }));
 
     const setUserAuth = (isAuthenticated: boolean, accessToken: string, email: string, userId: string) => {
@@ -25,9 +27,18 @@ export const useAuthState = () => {
         userAuthState.value.userId = userId;
     };
 
+    const sendRefeshTrigger = () => {
+        if (userAuthState.value.refeshTrigger) return
+        userAuthState.value.refeshTrigger = true
+        setTimeout(() => {
+            userAuthState.value.refeshTrigger = false
+        },2000)
+    }
+
 
     return {
         userAuthState,
         setUserAuth,
+        sendRefeshTrigger,
     };
 }

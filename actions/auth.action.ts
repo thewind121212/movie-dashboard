@@ -2,7 +2,7 @@
 
 import { HttpStatusCode } from "axios"
 import { pushSuccessToast } from "../utils/toastNotification"
-import { type EventHandlerRequest, H3Event, use } from 'h3'
+import { type EventHandlerRequest, H3Event } from 'h3'
 
 
 
@@ -141,6 +141,140 @@ export const forgotPassword = async (email: string): Promise<boolean> => {
     }
 
 }
+
+
+export const requestEnableTOTP = async (email: string, password: string): Promise<{
+    isSuccess: boolean,
+    serect?: string,
+    recoveryCodes?: string[],
+    qrCodeImageURL?: string
+}> => {
+    try {
+        const res: {
+            message: string, data: {
+                recoveryCodes: string[],
+                serect: string,
+                qrCodeImageURL: string
+            }
+        } = await $fetch('/api/auth/requestEnableTOTP',
+            {
+                method: 'POST',
+                body: {
+                    email,
+                    password,
+                }
+            }
+        )
+
+
+        return {
+            isSuccess: true, //success,
+            recoveryCodes: res.data.recoveryCodes,
+            serect: res.data.serect,
+            qrCodeImageURL: res.data.qrCodeImageURL
+
+        }
+    } catch (error: any) {
+        if (error.statusCode === HttpStatusCode.Unauthorized) {
+            navigateTo('/login')
+            setTimeout(() => {
+                pushErrorToast('Unauthorized Access')
+            }
+                , 300)
+            return {
+                isSuccess: false
+            }
+        } else if (error.statusCode === HttpStatusCode.InternalServerError) {
+            pushErrorToast('Internal Server Error')
+            return {
+                isSuccess: false
+            }
+        } else {
+            pushErrorToast('Email or password is incorrect or TOTP is already enabled')
+            return {
+                isSuccess: false
+            }
+        }
+    }
+
+}
+
+export const enableTOTP = async (userId: string, token: string): Promise<boolean> => {
+    try {
+        const res: {
+            message: string
+        } = await $fetch('/api/auth/enableTOTP',
+            {
+                method: 'POST',
+                body: {
+                    userId,
+                    token,
+                }
+            }
+        )
+
+
+        return true
+    } catch (error: any) {
+        if (error.statusCode === HttpStatusCode.Unauthorized) {
+            navigateTo('/login')
+            setTimeout(() => {
+                pushErrorToast('Unauthorized Access')
+            }
+                , 300)
+            return false
+        } else if (error.statusCode === HttpStatusCode.InternalServerError) {
+            pushErrorToast('Internal Server Error')
+            return false
+        } else {
+            pushErrorToast('TOTP code is incorrect or expired')
+            return false
+        }
+    }
+
+
+}
+
+
+export const disableTOTP = async (userId: string, token: string, removeMethod: 'token' | 'recoveryPass'): Promise<boolean> => {
+    try {
+        const res: {
+            message: string
+        } = await $fetch('/api/auth/disableTOTP',
+            {
+                method: 'POST',
+                body: {
+                    userId,
+                    token,
+                    removeMethod,
+                }
+            }
+        )
+
+
+        return true
+    } catch (error: any) {
+        if (error.statusCode === HttpStatusCode.Unauthorized) {
+            navigateTo('/login')
+            setTimeout(() => {
+                pushErrorToast('Unauthorized Access')
+            }
+                , 300)
+            return false
+        } else if (error.statusCode === HttpStatusCode.InternalServerError) {
+            pushErrorToast('Internal Server Error')
+            return false
+        } else {
+            const content  = removeMethod === 'token' ? 'TOTP code is incorrect or expired' : 'Recovery password is incorrect'
+            pushErrorToast(content)
+            return false
+        }
+    }
+
+}
+
+
+
 
 export const forgotSubmit = async (token: string, password: string): Promise<boolean> => {
     try {
