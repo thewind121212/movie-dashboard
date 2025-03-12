@@ -14,14 +14,14 @@ onUnmounted(() => {
 
 
 <template>
-    <div class="w-full h-full flex flex-col justify-between items-center py-6">
+    <div class="w-full  min-h-[42.5rem] lg:min-h-auto lg:h-full flex flex-col justify-between items-center py-6">
         <div class="w-full h-auto flex justify-center items-center">
             <NuxtLink to="/">
                 <NuxtImg src="/icons/logo-dark.webp" width="48" height="48" alt="logo" class="w-[3rem] h-auto" />
             </NuxtLink>
             <h2 class="font-[400] font-shatoshi text-[1.375rem] leading-[1.5rem] text-[#121212]">Wliafdew</h2>
         </div>
-        <div class="w-full h-auto flex flex-col gap-[2.5rem] items-center">
+        <div class="w-full max-w-[48rem] lg:max-w-auto h-auto flex flex-col gap-[2.5rem] items-center">
             <div class="relative w-full h-auto overflow-hidden">
                 <div class="w-[200%] flex justify-center items-center duration-300 relative" :class="{
                     'translate-x-0': forgotPasswordPhase === 'FORGOT_FORM',

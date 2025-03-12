@@ -67,7 +67,7 @@ onBeforeUnmount(() => {
 
 <template>
     <LoadingTwoFaEnableTOTPLoading
-        v-bind:class="[{ '!opacity-100': mountedRef }, { 'w-[40%] rounded-xl': zoomOutRef }, { 'opacity-0': displayDone }, 'z-20 duration-300 max-w-[38.75rem] min-w-[28.125rem]']"
+        v-bind:class="[{ '!opacity-100': mountedRef }, { 'w-[40%] rounded-xl': zoomOutRef }, { 'opacity-0': displayDone }, 'z-20 duration-300 max-w-[38.75rem] min-w-[21.875rem]']"
         v-bind:style="{ aspectRatio: zoomOutRef ? modalRef?.getBoundingClientRect().width! / modalRef?.getBoundingClientRect().height! : '1/1' }" />
     <div class="w-[40%] h-auto bg-white border shadow-md rounded-xl p-6 flex flex-col gap-6 pb-4 absolute opacity-0 duration-500 max-w-[38.75rem] min-w-[28.125rem]"
         ref="modalRef" :class="[{ 'opacity-100 z-30': displayDone }]">

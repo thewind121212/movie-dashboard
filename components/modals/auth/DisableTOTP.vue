@@ -77,12 +77,12 @@ async function handerDisableOnOTP(otp: string) {
 
 <template>
     <LoadingTwoFaEnableTOTPLoading
-        v-bind:class="[{ '!opacity-100': mountedRef }, { 'w-[20%] rounded-xl': zoomOutRef }, { 'opacity-0': displayDone }, 'z-20 duration-300 min-w-[21.875rem]']"
+        v-bind:class="[{ '!opacity-100': mountedRef }, { ' w-full lg:w-[20%] rounded-xl': zoomOutRef }, { 'opacity-0': displayDone }, 'z-20 duration-300 !min-w-[21.875rem]']"
         v-bind:style="{ aspectRatio: zoomOutRef ? modalRef?.getBoundingClientRect().width! / modalRef?.getBoundingClientRect().height! : '1/1' }" />
 
-    <div class="w-[20%] h-auto bg-white border shadow-md rounded-xl p-6 flex flex-col justify-start items-center gap-4 pb-4 absolute opacity-0 duration-500 min-w-[21.875rem] font-shatoshi"
+    <div class="w-full lg:w-[20%] h-auto bg-white border shadow-md rounded-xl p-6 flex flex-col justify-start items-center gap-4 pb-4 absolute opacity-0 duration-500 max-w-[28.375rem] font-shatoshi"
         ref="modalRef"
-        :class="[{ 'opacity-100 z-30 !duration-0': displayDone }, { 'w-[40%] !duration-0': method !== 'init' }]">
+        :class="[{ 'opacity-100 z-30 !duration-0': displayDone }, { 'w-[40%] !duration-0 lg:!min-w-[28.365rem]': method !== 'init' }]">
         <h1 class="font-shatoshi text-center text-[1.5rem]">
             Disable Two-Factor TOTP
         </h1>
@@ -126,11 +126,11 @@ async function handerDisableOnOTP(otp: string) {
         </div>
 
         <button
-            class="bg-[#060b26] w-full aspect-[430/48] rounded-[0.75rem] px-[1rem] py-[0.875rem] text-[#fff] text-[0.875rem] leading-[1.25rem]"
+            class="bg-[#060b26] w-full rounded-[0.75rem] px-[1rem] py-[0.875rem] text-[#fff] text-[0.875rem] leading-[1.25rem]"
             @click="onSubmit()" v-if="method === 'recoveryPass'" :disabled="method !== 'recoveryPass'">Disable
             TOTP</button>
         <div class="submit-action w-full flex flex-col gap-[0.75rem]">
-            <div class="bg-[#DDDDDD] aspect-[430/48] rounded-[0.75rem] px-[1rem] py-[0.875rem] text-[#121212] text-[0.875rem] leading-[1.25rem] text-center cursor-pointer"
+            <div class="bg-[#DDDDDD] rounded-[0.75rem] px-[1rem] py-[0.875rem] text-[#121212] text-[0.875rem] leading-[1.25rem] text-center cursor-pointer"
                 @click="modalStore.hideModal()">
                 Cancel</div>
         </div>

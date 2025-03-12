@@ -41,7 +41,7 @@ async function onSubmit(values) {
         </div>
 
         <Form :validation-schema="validationSchema" @submit="onSubmit"
-            class="w-[60%] h-auto flex flex-col gap-[2rem] font-shatoshi">
+            class="max-[450px]:w-[90%] w-[80%] min-[1379px]:w-[60%]  h-auto flex flex-col gap-[2rem] font-shatoshi">
             <div class="w-full h-auto flex flex-col gap-[1rem]">
                 <!-- email field -->
                 <CommonField htmlFor="email" fieldName="email" type="email" label="Email" placeholder="Enter Your Email"
@@ -49,7 +49,7 @@ async function onSubmit(values) {
             </div>
             <div class="submit-action w-full flex flex-col gap-[0.75rem]">
                 <button
-                    class="bg-[#121212] aspect-[430/48] rounded-[0.75rem] px-[1rem] py-[0.875rem] text-[#fff] text-[0.875rem] leading-[1.25rem]">Send
+                    class="bg-[#121212] rounded-[0.75rem] px-[1rem] py-[0.875rem] text-[#fff] text-[0.875rem] leading-[1.25rem]">Send
                     Email</button>
             </div>
         </Form>

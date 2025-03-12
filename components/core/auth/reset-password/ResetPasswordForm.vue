@@ -55,7 +55,7 @@ async function onSubmit(values) {
                 placeholder="Confirm Password" fieldType="repeatPassword" />
             <div class="submit-action w-full flex flex-col gap-[0.75rem]">
                 <button
-                    class="bg-[#121212] aspect-[430/48] rounded-[0.75rem] px-[1rem] py-[0.875rem] text-[#fff] text-[0.875rem] leading-[1.25rem]">Reset
+                    class="bg-[#121212] rounded-[0.75rem] px-[1rem] py-[0.875rem] text-[#fff] text-[0.875rem] leading-[1.25rem]">Reset
                     Now</button>
             </div>
         </Form>

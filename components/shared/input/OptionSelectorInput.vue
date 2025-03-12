@@ -91,13 +91,13 @@ onUnmounted(() => {
 <template>
 
     <!-- countries  filed -->
-    <div class="w-full h-auto flex flex-col gap-2 flex-1" :id="`${fieldName}-options-selector`">
+    <div class="min-w-[17rem] h-auto flex flex-col gap-2 flex-1" :id="`${fieldName}-options-selector`">
         <label :for="htmlFor" class="text-white text-[1rem] leading-[1.5rem]">{{ label }}</label>
         <Field :name="fieldName!" :type="fieldType" v-slot="{ field }">
-            <div class="w-full h-auto relative flex justify-end items-center min-w-[17rem]">
+            <div class="w-full h-auto relative flex justify-end items-center min-w-auto">
                 <input :placeholder="placeholder" readonly v-on:click="dropDown = !dropDown" :type="fieldType"
                     v-bind="field"
-                    class=" w-full bg-white aspect-[430/48] rounded-[0.75rem] px-[1rem] py-[0.875rem] text-[#6B6B6B] text-[0.875rem] leading-[1.25rem] min-w-[17rem] dark:text-white dark:bg-[#2f2f2f] cursor-default relative z-20" />
+                    class=" w-full bg-white rounded-[0.75rem] px-[1rem] py-[0.875rem] text-[#6B6B6B] text-[0.875rem] leading-[1.25rem] md:min-w-[17rem] dark:text-white dark:bg-[#2f2f2f] cursor-default relative z-20" />
                 <NuxtImg :src="dropDownIcon ? dropDownIcon : '/icons/arrowDown.svg'" width="24" height="24"
                     class="absolute mr-4 z-30 duration-200" :class="[!dropDown ? 'transform rotate-180' : '']"
                     @click="dropDown = !dropDown" />

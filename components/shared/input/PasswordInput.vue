@@ -28,7 +28,7 @@ const showPassword = ref(false);
         <Field :name="fieldName!" v-slot="{ field }">
             <div class="w-full h-auto relative">
                 <input :type="showPassword ? 'text' : 'password'" v-bind="field" autocomplete="on"
-                    class="bg-[#F5F7FA] w-full aspect-[430/48] rounded-[0.75rem] px-[1rem] py-[0.875rem] text-[#6B6B6B] text-[0.875rem] leading-[1.25rem]"
+                    class="bg-[#F5F7FA] w-full rounded-[0.75rem] px-[1rem] py-[0.875rem] text-[#6B6B6B] text-[0.875rem] leading-[1.25rem]"
                     :class="isDark ? 'dark:bg-[#2f2f2f]' : 'bg-[#F5F7FA]'" placeholder="Enter Your Password" />
                 <div @click="showPassword = !showPassword" type="button"
                     class="absolute right-4 top-1/2 -translate-y-1/2">
