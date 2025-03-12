@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { set } from 'zod';
 
 const otps = ref<string[]>(['', '', '', '', '', '']);
 const isSelectAll = ref<boolean>(false);
@@ -173,7 +172,7 @@ const preventAndKey = (e: any, index: number) => {
     <div class="w-auto h-auto flex items-center gap-2">
         <input v-for="(index) in Array.from({ length: 6 }, (_, index) => index)" :key="'otp-' + index" type="text"
             inputmode="numeric" role="textbox" aria-label="OTP Digit"
-            class="w-[3.125rem] h-[3.125rem] rounded-lg border-[#DDDDDD] border text-center outline-none focus:border-[#5445f4]"
+            class="max-[385px]:size-[2rem] size-[2.5rem] sm:w-[3.125rem] sm:h-[3.125rem] rounded-lg border-[#DDDDDD] border text-center outline-none focus:border-[#5445f4]"
             :value="otps[index]" maxlength="1" :class="[
                 otps[index] === '' ? '' : 'border-green-400',
                 isSelectAll ? '!border-[#5445f4]' : ''
@@ -190,9 +189,9 @@ const preventAndKey = (e: any, index: number) => {
                 }
                 onType(e, index);
             }" :id="'otp' + index" />
-        <div class="size-[3.125rem] rounded-lg bg-[#0075ff] opacity-85 justify-center items-center flex cursor-pointer"
+        <div class="max-[385px]:size-[2rem] size-[2.5rem] sm:size-[3.125rem] rounded-lg bg-[#0075ff] opacity-85 justify-center items-center flex cursor-pointer"
             @click="handerSubmit">
-            <NuxtImg src="/icons/arrowNext.svg" width="200" height="200" class="size-8" />
+            <NuxtImg src="/icons/arrowNext.svg" width="200" height="200" class="size-6 sm:size-8" />
         </div>
     </div>
 </template>

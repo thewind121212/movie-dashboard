@@ -26,14 +26,14 @@ const setPayLoad2FATOTP = (data: { email: string, nonce: string, remember: boole
 
 
 <template>
-    <div class="w-full h-full flex flex-col justify-between items-center py-6 relative overflow-hidden">
+    <div class="w-full h-full min-h-[52.5rem] lg:min-h-auto flex flex-col justify-between items-center py-6 relative overflow-hidden">
         <div class="w-full h-auto flex justify-center items-center">
             <NuxtLink to="/">
                 <NuxtImg src="/icons/logo-dark.webp" width="48" height="48" alt="logo" class="w-[3rem] h-auto" />
             </NuxtLink>
             <h2 class="font-[400] font-shatoshi text-[1.375rem] leading-[1.5rem] text-[#121212]">Wliafdew</h2>
         </div>
-        <div class="w-full h-auto relative flex justify-center items-center">
+        <div class="w-full max-w-[48rem] lg:max-w-auto  h-auto relative flex justify-center items-center">
             <div class="w-[200%] flex justify-center items-center absolute left-0 duration-300"
                 :class="loginPhase === 'LOGIN' ? 'translate-x-0' : '-translate-x-1/2'">
                 <div class="w-1/2 h-auto">

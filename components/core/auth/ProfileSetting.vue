@@ -138,15 +138,16 @@ onMounted(() => {
 
 
 <template>
-    <form @submit.prevent="showModalChange" class="w-[70%] h-full flex flex-col gap-[2.5rem] font-shatoshi p-6 dark">
+    <form @submit.prevent="showModalChange"
+        class="w-[70%] h-full flex flex-col gap-[2.5rem] font-shatoshi p-6 dark max-w-[64rem]">
         <div class="w-full h-full flex flex-col gap-[1rem] flex-wrap">
-            <div class="w-full h-auto flex gap-[2rem]">
+            <div class="w-full h-auto flex gap-2 md:gap-[2rem] flex-wrap md:flex-nowrap">
                 <!-- email field -->
                 <div class="h-auto flex flex-col gap-2 flex-1">
                     <label for="email" class="text-white text-[1rem] leading-[1.5rem]">Email</label>
                     <Field name="email" type="email" v-slot="{ field }">
                         <input type="email" v-bind="field" readonly disabled
-                            class="bg-[#d1d1d1] dark:bg-[#2f2f2f] aspect-[430/48] rounded-[0.75rem] px-[1rem] py-[0.875rem] text-[#6B6B6B] min-w-[17rem] text-[0.875rem] leading-[1.25rem] select-none" />
+                            class="bg-[#d1d1d1] dark:bg-[#2f2f2f] aspect-[430/48] rounded-[0.75rem] px-[1rem] py-[0.875rem] text-[#6B6B6B] md:min-w-[17rem] text-[0.875rem] leading-[1.25rem] select-none" />
                     </Field>
                     <div class="w-full h-2 relative flex justify-start items-center">
                         <ErrorMessage name="email"
@@ -158,7 +159,7 @@ onMounted(() => {
                     <label for="fullname" class="text-white text-[1rem] leading-[1.5rem]">Full Name</label>
                     <Field name="fullname" type="string" v-slot="{ field }">
                         <input type="text" v-bind="field"
-                            class="bg-white aspect-[430/48] rounded-[0.75rem] px-[1rem] py-[0.875rem] text-[#6B6B6B] text-[0.875rem] leading-[1.25rem] min-w-[17rem] dark:text-white dark:bg-[#2f2f2f]" />
+                            class="bg-white aspect-[430/48] rounded-[0.75rem] px-[1rem] py-[0.875rem] text-[#6B6B6B] text-[0.875rem] leading-[1.25rem] md:min-w-[17rem] dark:text-white dark:bg-[#2f2f2f]" />
                     </Field>
                     <div class="w-full h-2 relative flex justify-start items-center">
                         <ErrorMessage name="fullname"
@@ -168,23 +169,23 @@ onMounted(() => {
             </div>
 
             <!-- row 2 -->
-            <div class="w-full h-auto flex gap-[2rem] z-30">
+            <div class="w-full h-auto flex  gap-2 md:gap-[2rem] z-30 flex-wrap md:flex-nowrap">
                 <!-- birdate  filed -->
-                <DateInput htmlFor="birthdate" fieldName="birthdate" type="date" label="Birth Date"
+                <DateInput htmlFor="birthdate" fieldName="birthdate" type="date" label="Birth Date"  class="z-20"
                     placeholder="Select Your Birthdate" fieldType="date" :setFieldValue="setFieldValue"
                     :value="values.birthdate" />
                 <!-- gender field -->
-                <OptionSelectorInput htmlFor="gender" fieldName="gender" type="text" label="Gender"
+                <OptionSelectorInput htmlFor="gender" fieldName="gender" type="text" label="Gender"  class="z-10"
                     placeholder="Select Your Gender" fieldType="text" :optionsData="allowGender"
                     :setFieldValue="setFieldValue" :value="values.gender" :retrive-path="[]" />
             </div>
 
 
             <!-- row 3 -->
-            <div class="w-full h-auto flex gap-[2rem] z-20" id="country-timezone">
+            <div class="w-full h-auto relative flex gap-2 md:gap-[2rem] z-20 flex-wrap md:flex-nowrap" id="country-timezone">
                 <!-- countries  filed -->
-                <div class="w-auto h-auto flex flex-col gap-2 flex-1">
-                    <OptionSelectorInput htmlFor="country" fieldName="country" type="text" label="Country"
+                <div class="w-auto h-auto flex flex-col gap-2 flex-1 relative z-10">
+                    <OptionSelectorInput htmlFor="country" fieldName="country" type="text" label="Country" 
                         placeholder="Select Country" fieldType="text" :optionsData="countries"
                         :setFieldValue="setFieldValue" :value="values.country" :retrive-path="['name', 'common']"
                         drop-down-icon="/icons/language.svg" :is-search-enabled="true" :is-image-enabled="true"
@@ -192,7 +193,7 @@ onMounted(() => {
                 </div>
                 <!-- timezone field -->
 
-                <div class="w-auto h-auto flex flex-col gap-2 flex-1">
+                <div class="w-auto h-auto flex flex-col gap-2 md:gap-[2rem] flex-1 z-[5]">
                     <OptionSelectorInput htmlFor="timezone" fieldName="timezone" type="text" label="Timezone"
                         placeholder="Select Timezone" fieldType="text" :optionsData="timezones"
                         :is-search-enabled="true" :setFieldValue="setFieldValue" :value="values.timezone"
@@ -200,12 +201,12 @@ onMounted(() => {
                 </div>
             </div>
             <!-- row 4 -->
-            <div class="w-3/4 h-auto flex gap-[2rem] z-5">
+            <div class="w-3/4 h-auto flex gap-[2rem] z-5 md:flex-nowrap">
                 <div class="h-auto flex flex-col gap-2 flex-1">
                     <label for="bio" class="text-white text-[1rem] leading-[1.5rem]">Your Bio</label>
                     <Field name="bio" type="text" v-slot="{ field }">
                         <textarea v-bind="field" rows="4"
-                            class="bg-[#d1d1d1] dark:bg-[#2f2f2f] rounded-[0.75rem] px-[1rem] py-[0.875rem] text-white min-w-[17rem] text-[0.875rem] leading-[1.25rem] resize-none"
+                            class="bg-[#d1d1d1] dark:bg-[#2f2f2f] rounded-[0.75rem] px-[1rem] py-[0.875rem] text-white min-w-[15rem] md:min-w-[17rem] text-[0.875rem] leading-[1.25rem] resize-none"
                             placeholder="Write something about yourself" />
                     </Field>
                     <div class="w-full h-2 relative flex justify-start items-center">
@@ -216,9 +217,7 @@ onMounted(() => {
             </div>
         </div>
         <div class="submit-action w-[10rem] flex flex-col gap-[0.75rem]">
-            <button
-                :disabled="!isDataDirty"
-                class="bg-[#0075ff] aspect-[430/48] rounded-[0.75rem] px-[1rem] py-[0.875rem] text-[#fff] text-[0.875rem] leading-[1.25rem] disabled:bg-[#d1d1d1] disabled:text-[#6B6B6B] 
+            <button :disabled="!isDataDirty" class="bg-[#0075ff] aspect-[430/48] rounded-[0.75rem] px-[1rem] py-[0.875rem] text-[#fff] text-[0.875rem] leading-[1.25rem] disabled:bg-[#d1d1d1] disabled:text-[#6B6B6B] 
                 ">Change
                 Profile Info</button>
         </div>

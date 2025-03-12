@@ -77,12 +77,12 @@ async function handerDisableOnOTP(otp: string) {
 
 <template>
     <LoadingTwoFaEnableTOTPLoading
-        v-bind:class="[{ '!opacity-100': mountedRef }, { 'w-[20%] rounded-xl': zoomOutRef }, { 'opacity-0': displayDone }, 'z-20 duration-300 min-w-[21.875rem]']"
+        v-bind:class="[{ '!opacity-100': mountedRef }, { ' w-full lg:w-[20%] rounded-xl': zoomOutRef }, { 'opacity-0': displayDone }, 'z-20 duration-300 !min-w-[21.875rem]']"
         v-bind:style="{ aspectRatio: zoomOutRef ? modalRef?.getBoundingClientRect().width! / modalRef?.getBoundingClientRect().height! : '1/1' }" />
 
-    <div class="w-[20%] h-auto bg-white border shadow-md rounded-xl p-6 flex flex-col justify-start items-center gap-4 pb-4 absolute opacity-0 duration-500 min-w-[21.875rem] font-shatoshi"
+    <div class="w-full lg:w-[20%] h-auto bg-white border shadow-md rounded-xl p-6 flex flex-col justify-start items-center gap-4 pb-4 absolute opacity-0 duration-500 max-w-[28.375rem] font-shatoshi"
         ref="modalRef"
-        :class="[{ 'opacity-100 z-30 !duration-0': displayDone }, { 'w-[40%] !duration-0': method !== 'init' }]">
+        :class="[{ 'opacity-100 z-30 !duration-0': displayDone }, { 'w-[40%] !duration-0 lg:!min-w-[28.365rem]': method !== 'init' }]">
         <h1 class="font-shatoshi text-center text-[1.5rem]">
             Disable Two-Factor TOTP
         </h1>

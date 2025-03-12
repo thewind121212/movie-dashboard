@@ -75,7 +75,7 @@ onUnmounted(() => {
         <label :for="htmlFor" class="text-white text-[1rem] leading-[1.5rem]">{{ label }}</label>
         <Field :name="fieldName!" :type="fieldType" v-slot="{ field }">
 
-            <div class="w-full h-auto relative flex justify-end items-center min-w-[17rem]">
+            <div class="w-full h-auto relative flex justify-end items-center md:min-w-[17rem]">
                 <input type="date" v-bind="field" ref="birthDateField"
                     class="w-full bg-white aspect-[430/48] rounded-[0.75rem] px-[1rem] py-[0.875rem] text-[#6B6B6B] text-[0.875rem] leading-[1.25rem] dark:text-white dark:bg-[#2f2f2f] relative z-20" />
 

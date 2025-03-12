@@ -82,7 +82,7 @@ const refreshData = () => {
 
             </div>
             <ClientOnly>
-                <div class="w-full h-full flex justify-center items-center relative" v-if="status === 'pending'">
+                <div class="w-full h-[39.625rem] flex justify-center items-center relative" v-if="status === 'pending'">
                     <div
                         class="w-full h-full bg-[#121212] opacity-60 rounded-[1.25rem] absolute top-0 left-0 z-20 flex justify-center items-center">
                         <NuxtImg src="/icons/loading.svg" alt="logo" class="w-[3rem] h-auto" />

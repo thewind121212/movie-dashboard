@@ -47,8 +47,8 @@ const header: Record<'login' | 'register' | 'forgotPassword' | 'resetPassword', 
 
 
 <template>
-    <section class="w-screen h-screen flex justify-start items-start p-[0.75rem] select-none gap-[0.75rem] light">
-        <div class="rounded-[1.25rem] overflow-hidden h-full min-w-[550px] w-1/2 relative">
+    <section class="w-screen h-screen flex justify-center lg:justify-start items-start p-[0.75rem] select-none gap-[0.75rem] light">
+        <div class="rounded-[1.25rem] overflow-hidden h-full min-w-[34.375rem] w-1/2 relative hidden lg:block">
             <NuxtImg :src="images[currentAuthPath!]"
                 alt="login" class="w-full h-full object-cover" />
             <div class="absolute w-full h-full bg-[#000] left-0 top-0 opacity-[0.35] z-10"></div>
@@ -71,7 +71,7 @@ const header: Record<'login' | 'register' | 'forgotPassword' | 'resetPassword', 
                 </div>
             </div>
         </div>
-        <div class="h-full w-1/2 relative">
+        <div class="h-auto lg:h-full lg:min-h-auto w-full lg:w-1/2 relative">
             <client-only>
                 <div v-if="isLoading"
                     class="w-full h-full bg-[#121212] opacity-60 rounded-[1.25rem] absolute top-0 left-0 z-20 flex justify-center items-center">

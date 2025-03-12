@@ -59,7 +59,7 @@ async function onSubmit(values) {
                 access your account</p>
         </div>
         <Form :validation-schema="validationSchema" @submit="onSubmit"
-            class="w-[60%] h-auto flex flex-col gap-[2rem] font-shatoshi">
+            class="w-[80%] min-[1379px]:w-[60%] h-auto flex flex-col gap-[2rem] font-shatoshi">
             <div class="w-full h-auto flex flex-col gap-[1rem]">
                 <CommonInput htmlFor="email" fieldName="email" type="email" label="Email" placeholder="Enter Your Email"
                     fieldType="email" />

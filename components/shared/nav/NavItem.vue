@@ -26,13 +26,13 @@ const classToogle = !homeDashboard.caution ? ([homeDashboard.isExpanded ? 'group
 
 <template>
 
-    <NuxtLink :to="isExpanded ? url : url"  
-        class="shadow-[0px_4px_6px_0px_rgba(0,0,0,0.02)] rounded-[15px] w-[14.5rem] h-[3.375rem] duration-200"
-        :class="[isExpanded ? 'hover:bg-[#1a1f37] group cursor-pointer' : 'cursor-default', active ? 'bg-[#1a1f37]' : '']">
-        <div class="w-full h-full flex justify-start items-center gap-3"
-            :class="isExpanded ? 'px-3 cursor-pointer' : '!px-1 cursor-default'">
+    <NuxtLink :to="isExpanded ? url : url"
+        class="shadow-[0px_4px_6px_0px_rgba(0,0,0,0.02)] rounded-[15px] w-[14.5rem] h-[3.375rem] duration-200 flex justify-start items-center max-[443px]:!w-auto"
+        :class="[isExpanded ? 'hover:bg-[#1a1f37] group cursor-pointer pl-2' : 'cursor-default', active ? 'bg-[#1a1f37]' : '']">
+        <div class="w-full h-auto flex justify-start items-center gap-3"
+            :class="isExpanded ? 'px-1 cursor-pointer' : '!px-1 cursor-default'">
             <div @click="navigateLink"
-                class="h-9 w-9 flex justify-center items-center bg-[#1A1F37] rounded-[10px] duration-200"
+                class="h-9 w-9 flex justify-center items-center bg-[#1A1F37] rounded-[10px] duration-200 min-w-9"
                 :class="classToogle">
                 <NuxtImg :src="iconPath" class="w-5 h-5" />
             </div>

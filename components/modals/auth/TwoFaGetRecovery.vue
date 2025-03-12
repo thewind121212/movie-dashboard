@@ -81,7 +81,9 @@ const handerCopiesAll = () => {
         v-bind:class="[{ '!opacity-100': mountedRef }, { 'w-[20%] rounded-xl': zoomOutRef }, { 'opacity-0': displayDone }, 'z-20 duration-300 min-w-[21.875rem]']"
         v-bind:style="{ aspectRatio: zoomOutRef ? modalRef?.getBoundingClientRect().width! / modalRef?.getBoundingClientRect().height! : '1/1' }" />
 
-    <div class="w-[20%] h-auto bg-white border shadow-lg rounded-xl p-6 flex flex-col justify-start items-center gap-4 pb-4 absolute opacity-0 duration-500 min-w-[21.875rem]"
+    <div class="w-[20%] h-auto bg-white border shadow-lg rounded-xl p-6 flex flex-col justify-start items-center gap-4 pb-4 absolute opacity-0 duration-500 min-w-[21.875rem] max-h-screen
+   overflow-y-scroll 
+    "
         ref="modalRef" :class="[{ 'opacity-100 z-30': displayDone }]">
         <h1 class="font-shatoshi text-center text-[1.5rem]">
             Recovery Codes

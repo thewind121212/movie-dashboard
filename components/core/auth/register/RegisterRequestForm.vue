@@ -40,7 +40,7 @@ async function onSubmit(values) {
                 address. We will then send a verification email to ensure its accuracy.</p>
         </div>
         <VeeForm :validation-schema="validationSchema" @submit="onSubmit"
-            class="w-[60%] h-auto flex flex-col gap-[2.5rem] font-shatoshi">
+            class="w-[80%] min-[1379px]:w-[60%] h-auto flex flex-col gap-[2.5rem] font-shatoshi">
             <CommonField htmlFor="email" fieldName="email" type="email" label="Email" placeholder="Enter Your Email"
                 fieldType="email" />
             <div class="submit-action w-full flex flex-col gap-[0.75rem]">
