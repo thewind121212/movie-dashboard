@@ -10,6 +10,7 @@ const homeDashboard = defineProps<{
     url: string
     active?: boolean
     caution?: boolean
+    mobileWidthManual?: boolean
 }>()
 
 const navigateLink = () => {
@@ -27,8 +28,8 @@ const classToogle = !homeDashboard.caution ? ([homeDashboard.isExpanded ? 'group
 <template>
 
     <NuxtLink :to="isExpanded ? url : url"
-        class="shadow-[0px_4px_6px_0px_rgba(0,0,0,0.02)] rounded-[15px] w-[14.5rem] h-[3.375rem] duration-200 flex justify-start items-center max-[443px]:!w-auto"
-        :class="[isExpanded ? 'hover:bg-[#1a1f37] group cursor-pointer pl-2' : 'cursor-default', active ? 'bg-[#1a1f37]' : '']">
+        class="shadow-[0px_4px_6px_0px_rgba(0,0,0,0.02)] rounded-[15px] w-[14.5rem] h-[3.375rem] duration-200 flex justify-start items-center"
+        :class="[isExpanded ? 'hover:bg-[#1a1f37] group cursor-pointer pl-2' : 'cursor-default', active ? 'bg-[#1a1f37]' : '', mobileWidthManual ? '' : 'max-[443px]:!w-auto']">
         <div class="w-full h-auto flex justify-start items-center gap-3"
             :class="isExpanded ? 'px-1 cursor-pointer' : '!px-1 cursor-default'">
             <div @click="navigateLink"

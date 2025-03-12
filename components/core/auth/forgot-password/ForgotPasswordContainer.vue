@@ -14,7 +14,7 @@ onUnmounted(() => {
 
 
 <template>
-    <div class="w-full  min-h-[840px] h-screen lg:min-h-auto lg:h-full flex flex-col justify-between items-center py-6">
+    <div class="w-full  min-h-[42.5rem] lg:min-h-auto lg:h-full flex flex-col justify-between items-center py-6">
         <div class="w-full h-auto flex justify-center items-center">
             <NuxtLink to="/">
                 <NuxtImg src="/icons/logo-dark.webp" width="48" height="48" alt="logo" class="w-[3rem] h-auto" />

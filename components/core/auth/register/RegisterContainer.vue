@@ -42,7 +42,7 @@ onBeforeUnmount(() => {
 
 <template>
     <div
-        class="w-full lg:min-h- h-full flex flex-col justify-between items-center py-6 relative overflow-hidden rounded-[1.25rem]"
+        class="w-full lg:min-h-auto h-full flex flex-col justify-between items-center py-6 relative overflow-hidden rounded-[1.25rem]"
         :class="registerPhase === 'SIGN_UP_PROCESSING' ? 'min-h-[56.25rem]' : 'min-h-[28.125rem]'"
         >
         <div class=" w-full h-auto flex justify-center items-center">

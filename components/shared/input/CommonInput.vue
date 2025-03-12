@@ -16,11 +16,11 @@ defineProps({
 
 
 <template>
-    <div class="w-full h-auto flex flex-col gap-2">
+    <div class="w-auto h-auto flex flex-col gap-2">
         <label :for="htmlFor" class="text-[#121212] text-[1rem] leading-[1.5rem]">{{ label }}</label>
         <Field :name="fieldName!" :type="fieldType" v-slot="{ field }">
             <input :type="fieldType" v-bind="field"
-                class="bg-[#F5F7FA] aspect-[430/48] rounded-[0.75rem] px-[1rem] py-[0.875rem] text-[#6B6B6B] text-[0.875rem] leading-[1.25rem]"
+                class="bg-[#F5F7FA] rounded-[0.75rem] px-[1rem] py-[0.875rem] text-[#6B6B6B] text-[0.875rem] leading-[1.25rem]"
                 :placeholder="placeholder" />
         </Field>
         <ErrorMessage :name="fieldName!" class="text-red-400 text-[0.75rem] leading-[0.75rem]" />

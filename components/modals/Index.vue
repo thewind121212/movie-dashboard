@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { LoadingTwoFaEnableTOTPLoading } from '#components';
+import { Html, LoadingTwoFaEnableTOTPLoading } from '#components';
 import { useModalStore } from '~/store/modal';
 import ModalContainer from '~/components/shared/utils/ModalContainer.utils.vue';
 import Drawer from '../shared/utils/Drawer.vue';
@@ -35,6 +35,15 @@ onUnmounted(() => {
         window.removeEventListener('keydown', eventESCref.value);
     }
 });
+
+watch(isShow, (value) => {
+    if (value) {
+        //html overflow hidden
+        document.body.style.overflow = 'hidden';
+    } else {
+        document.body.style.overflow = 'auto';
+    }
+})
 
 </script>
 

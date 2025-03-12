@@ -26,8 +26,9 @@ const setPayLoad2FATOTP = (data: { email: string, nonce: string, remember: boole
 
 
 <template>
-    <div class="w-full h-full min-h-[52.5rem] lg:min-h-auto flex flex-col justify-between items-center py-6 relative overflow-hidden">
-        <div class="w-full h-auto flex justify-center items-center">
+    <div class="w-full h-full min-h-[48.5rem] lg:min-h-auto flex flex-col justify-between items-center py-6 relative overflow-hidden">
+        <div class="w-full h-auto flex justify-center items-center"
+        >
             <NuxtLink to="/">
                 <NuxtImg src="/icons/logo-dark.webp" width="48" height="48" alt="logo" class="w-[3rem] h-auto" />
             </NuxtLink>
@@ -45,7 +46,7 @@ const setPayLoad2FATOTP = (data: { email: string, nonce: string, remember: boole
             </div>
 
         </div>
-        <div class="footer-auth">
+        <div class="footer-auth mt-6">
             <p class="text-[#3D3D3D] text-[1rem] leading-[1.5rem] font-shatoshi cursor-default">Don’t have an account?
                 <span class="font-medium cursor-pointer" v-on:click="() => router.push('/register')">Sign Up</span>
             </p>

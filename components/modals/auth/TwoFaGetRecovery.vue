@@ -119,11 +119,11 @@ const handerCopiesAll = () => {
 
         <div class="submit-action w-full flex flex-col gap-[0.75rem]">
             <button
-                class="bg-[#060b26] aspect-[430/48] rounded-[0.75rem] px-[1rem] py-[0.875rem] text-[#fff] text-[0.875rem] leading-[1.25rem]"
+                class="bg-[#060b26] rounded-[0.75rem] px-[1rem] py-[0.875rem] text-[#fff] text-[0.875rem] leading-[1.25rem]"
                 @click="handerGetCodes(!isGotCodes ? 'get' : 'next')"> {{ !isGotCodes ? 'Get The Code' : 'Next' }}
             </button>
 
-            <div class="bg-[#DDDDDD] aspect-[430/48] rounded-[0.75rem] px-[1rem] py-[0.875rem] text-[#121212] text-[0.875rem] leading-[1.25rem] text-center cursor-pointer"
+            <div class="bg-[#DDDDDD] rounded-[0.75rem] px-[1rem] py-[0.875rem] text-[#121212] text-[0.875rem] leading-[1.25rem] text-center cursor-pointer"
                 @click="modalStore.hideModal()">
                 Cancel</div>
         </div>

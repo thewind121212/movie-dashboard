@@ -74,7 +74,7 @@ const header: Record<'login' | 'register' | 'forgotPassword' | 'resetPassword', 
         <div class="h-auto lg:h-full lg:min-h-auto w-full lg:w-1/2 relative">
             <client-only>
                 <div v-if="isLoading"
-                    class="w-full h-full bg-[#121212] opacity-60 rounded-[1.25rem] absolute top-0 left-0 z-20 flex justify-center items-center">
+                    class="w-full h-full opacity-60 rounded-[1.25rem] absolute top-0 left-0 z-20 flex justify-center items-center">
                     <NuxtImg src="/icons/loading.svg" alt="logo" class="w-[3rem] h-auto" />
                 </div>
             </client-only>

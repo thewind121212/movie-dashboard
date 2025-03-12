@@ -26,7 +26,7 @@ const dropDown = ref<boolean>(false);
 
 
 const handerClickOutside = (e: MouseEvent) => {
-    const allowClasses = ['vc-year', 'vc-month','vc-months__month', 'vc-years__year', 'vc-arrow vc-arrow_next', 'vc-arrow vc-arrow_prev']
+    const allowClasses = ['vc-year', 'vc-month', 'vc-months__month', 'vc-years__year', 'vc-arrow vc-arrow_next', 'vc-arrow vc-arrow_prev']
     const container = document.getElementById('date-input-user');
     if (dropDown.value) {
         const target = e.target as HTMLElement;
@@ -71,15 +71,15 @@ onUnmounted(() => {
 
 
 <template>
-    <div class="h-auto flex flex-col gap-2 flex-1" id="date-input-user">
+    <div class="w-full h-auto flex flex-col gap-2" id="date-input-user">
         <label :for="htmlFor" class="text-white text-[1rem] leading-[1.5rem]">{{ label }}</label>
         <Field :name="fieldName!" :type="fieldType" v-slot="{ field }">
 
-            <div class="w-full h-auto relative flex justify-end items-center md:min-w-[17rem]">
+            <div class="w-full h-auto relative flex justify-start items-center">
                 <input type="date" v-bind="field" ref="birthDateField"
-                    class="w-full bg-white aspect-[430/48] rounded-[0.75rem] px-[1rem] py-[0.875rem] text-[#6B6B6B] text-[0.875rem] leading-[1.25rem] dark:text-white dark:bg-[#2f2f2f] relative z-20" />
-
-                <NuxtImg src="/icons/calendar.svg" width="24" height="24" class="absolute mr-4 z-30"
+                    class="w-full h-[3rem] bg-white rounded-[0.75rem] px-[1rem] py-[0.875rem] text-[#6B6B6B] text-[0.875rem] leading-[1.25rem] dark:text-white dark:bg-[#2f2f2f] z-20"
+                    />
+                <NuxtImg src="/icons/calendar.svg" width="24" height="24" class="absolute mr-4 z-30 right-1"
                     @click="dropDown = !dropDown" />
 
                 <div class="absolute w-full h-auto top-0 left-0 z-10 opacity-0 duration-200"
