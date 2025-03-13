@@ -6,18 +6,6 @@ html {
   font-size: 0.8333333333333333vw;
 }
 
-input[type="date"] {
-  display: block;
-  width: 100%;
-  -webkit-appearance: textfield;
-  -moz-appearance: textfield;
-}
-
-
-.linh {
-  display: block;
-  width: 100%;
-  -webkit-appearance: textfield;
-  -moz-appearance: textfield;
-
+.bg-gradient-to-r {
+  background: linear-gradient(to right, #060b28f1, #0a0e2393);
 }

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useModalStore } from '~/store/modal';
-import { uploadAvatar } from '~/actions/auth.action';
+import { uploadAvatar } from '~/actions/user.action';
 import { useAuthState } from '#imports';
 
 

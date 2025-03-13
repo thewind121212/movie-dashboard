@@ -17,6 +17,9 @@ const expanedSidebar = ref(false)
 
 
 
+
+
+
 const handerToogleExpanedSidebar = () => {
     expanedSidebar.value = !expanedSidebar.value
     //save to local storage
@@ -67,7 +70,7 @@ const userDashboard: {
             id: 1,
             name: 'Admin User',
             iconPath: '/icons/adminUser.svg',
-            url: '/',
+            url: '/user/admin',
             group: 'USER'
         },
         {
@@ -106,21 +109,20 @@ const movieDashboard: {
             name: 'Movie Genere',
             iconPath: '/icons/movieGenere.svg',
             url: '/',
-            group: 'USER'
-        },
-        {
+            group: 'MOVIE'
+        }, {
             id: 1,
             name: 'Movie',
             iconPath: '/icons/movieSingle.svg',
             url: '/',
-            group: 'USER'
+            group: 'MOVIE'
         },
         {
             id: 1,
             name: 'TV Show',
             iconPath: '/icons/tvShow.svg',
             url: '/',
-            group: 'USER'
+            group: 'MOVIE'
         },
     ]
 
@@ -132,7 +134,7 @@ const movieDashboard: {
     <div
         class="w-screen min-h-screen h-auto flex justify-start items-start bg-[url('/images/background.png')] bg-cover bg-center relative pl-4 py-4 pr-4">
         <div class="w-full h-full absolute backdrop-blur-md top-0 left-0 z-10"></div>
-        <div class="backdrop-blur-[120px] rounded-[20px] w-[16.5rem] overflow-hidden  md:h-[calc(100vh-3rem)] bg-gradient-to-br from-[#060b26] to-[#1a1f37] bg-[linear-gradient(21.837897884493334deg, #060b26 0.00%, #1a1f37 100.00%)] px-1 py-4 md:p-4
+        <div class="backdrop-blur-[120px] rounded-[20px] w-[16.5rem] overflow-hidden  md:h-[calc(100vh-2rem)] bg-gradient-to-br from-[#060b26] to-[#1a1f37] bg-[linear-gradient(21.837897884493334deg, #060b26 0.00%, #1a1f37 100.00%)] px-1 py-4 md:p-4
           flex flex-col justify-start items-start gap-1 shadow-[0px_4px_6px_0px_rgba(0,0,0,0.02)] z-50 md:z-20  duration-300 min-w-[3.2rem] md:min-w-[4.5rem] fixed left-0 top-20 md:static"
             :class="expanedSidebar ? 'w-[16.5rem]' : 'w-[3.2rem] md:w-[4.5rem]'">
             <!-- logo  -->

@@ -40,7 +40,7 @@ const submitTOTP = async (otp: string) => {
     <div class="login-header text-center flex flex-col justify-center items-center gap-[0.75rem]">
         <h1 class="text-[#121212] text-[3rem] leading-[3rem] font-noto">Verify Your Identity</h1>
         <div
-            class="w-[70%] aspect-[659/420] flex justify-center items-center gap-4 relative min-w-[27.5rem] ml-[3%]  sm:!min-w-[37.5rem] sm:ml-[5%] z-10">
+            class="w-[70%] aspect-[659/420] flex justify-center items-center gap-4 relative min-w-[27.5rem] ml-[3%] sm:!min-w-[37.5rem] sm:ml-[5%] z-10">
             <client-only>
                 <Vue3Lottie animationLink="/animations/otp-2fa.json" :loop="false" class="!w-full !h-auto absolute" />
             </client-only>
