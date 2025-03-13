@@ -32,5 +32,8 @@
   },
   "devDependencies": {
     "@primevue/nuxt-module": "^4.3.2"
+  },
+  "optionalDependencies": {
+    "@rollup/rollup-linux-x64-gnu": "4.9.5"
   }
 }
