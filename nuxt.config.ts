@@ -8,7 +8,7 @@ export default defineNuxtConfig({
     components: {
       prefix: 'Prime',
       include: '*',
-      exclude: ['Form', 'FormField']
+      exclude: ['Form', 'FormField', 'Editor', 'Chart']
     },
   },
   googleFonts: {
