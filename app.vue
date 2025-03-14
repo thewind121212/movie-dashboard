@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import { NuxtPage } from '#components';
 import { Modals } from '#components';
+import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community'; 
+
+ModuleRegistry.registerModules([AllCommunityModule]);
+
 
 </script>
 

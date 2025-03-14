@@ -5,7 +5,7 @@ import * as zod from 'zod';
 import { useAuthState } from "~/composables/useAuthStore"
 import OptionSelectorInput from '~/components/shared/input/OptionSelectorInput.vue';
 import DateInput from '~/components/shared/input/DateInput.client.vue';
-import { editUser } from '~/actions/auth.action';
+import { editUser } from '~/actions/user.action';
 import 'vanilla-calendar-pro/styles/index.css';
 import ModalContainer from '~/components/shared/utils/ModalContainer.utils.vue';
 import BinaryModal from '~/components/shared/utils/BinaryModal.vue';
