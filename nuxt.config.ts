@@ -2,15 +2,7 @@
 export default defineNuxtConfig({
   css: ['@/assets/css/fonts.css', '@/assets/css/fonts.css'],
   compatibilityDate: '2024-11-01',
-  modules: ['@nuxtjs/tailwindcss', '@nuxtjs/google-fonts', '@nuxt/image', '@pinia/nuxt', '@primevue/nuxt-module'],
-  primevue: {
-    autoImport: false,
-    components: {
-      prefix: 'Prime',
-      include: '*',
-      exclude: ['Form', 'FormField', 'Editor', 'Chart']
-    },
-  },
+  modules: ['@nuxtjs/tailwindcss', '@nuxtjs/google-fonts', '@nuxt/image', '@pinia/nuxt'],
   googleFonts: {
     families: {
       "Noto Serif": [400, 500, 600, 700],

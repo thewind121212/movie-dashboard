@@ -4,20 +4,27 @@ import UserMobileRow from '~/components/shared/ui/UserMobileRow.vue';
 import { useSearch } from '#imports';
 import UserCol from '~/components/shared/ui/UserCol.vue';
 import ModalContainer from '~/components/shared/utils/ModalContainer.utils.vue';
+import { type Theme } from 'ag-grid-community';
+import AvatarRowAgrid from '~/components/shared/ui/argird/AvatarRowAgrid.vue';
+import { myTheme } from '~/components/shared/ui/argird/config';
+import { AgGridVue } from "ag-grid-vue3";
 
 
 const props = defineProps<{
     usersRes: GetAllUserResponse
 }>()
 
+const theme = ref<Theme | "legacy">(myTheme);
+
 
 
 const users = computed(() => {
-    return [...props.usersRes.data.users, ...props.usersRes.data.users]
+    return props.usersRes.data.users
 })
 
 
 const { searchValue, toggleSearch, isSearchVisible, closeSearch } = useSearch()
+
 
 
 
@@ -83,34 +90,65 @@ const { searchValue, toggleSearch, isSearchVisible, closeSearch } = useSearch()
                 <NuxtImg src="/icons/add.svg" width="24" height="24" />
             </div>
         </div>
-        <div class="w-full text-white bg-gradient-to-r from-[#060b28f1] to-[#0a0e2393] rounded-lg p-6 lg:py-4">
-            <table class="w-full table-auto lg:border-separate lg:border-spacing-2 relative">
+
+
+
+        <div class="w-full text-white bg-gradient-to-r from-[#060b28f1] to-[#0a0e2393] rounded-lg p-6 lg:p-0">
+
+            <table class="w-full table-auto lg:border-separate lg:border-spacing-2 relative lg:hidden">
                 <thead>
-                    <UserCol :cols="['Avatar', 'Email', 'Name', 'Created At', 'Updated At', 'Time Zone', 'Country']"
-                        class="hidden lg:table-row" />
+                    <UserCol :cols="['Admin User']" class="lg:hidden" />
                 </thead>
                 <tbody class="mt-4">
-                    <!-- this is content -->
-                    <!-- <UserMobileRow v-for="user in users" :key="user.id" :user="user" class="lg:hidden"/> -->
-                    <tr v-for="user in users" :key="user.id" class="hidden lg:table-row py-4">
-                        <td>
-                            <NuxtImg
-                                :src="user.avatarUrl ? `${$config.public.beServerUrl}/s3/avatar/${user.id}` : '/images/no-avatar.png'"
-                                loading="lazy" width="200" height="200" id="user-avatar"
-                                class="size-8 rounded-full object-covert object-top overflow-hidden aspect-square relative z-20" />
-                        </td>
-                        <td>{{ user.email }}</td>
-                        <td>{{ user.name }}</td>
-                        <td>{{ user.createdAt.split('T')[0] }}</td>
-                        <td>{{ user.updatedAt.split('T')[0] }}</td>
-                        <td>{{ user.timeZone || 'Not Fill' }}</td>
-                        <td>{{ user.country || 'Not Fill' }}</td>
-                    </tr>
-                    <!-- this end of block item -->
+                    <tr class="block mt-4"></tr>
+                    <UserMobileRow v-for="user in users" :key="user.id" :user="user" class="lg:hidden" />
                 </tbody>
-            </table> 
+            </table>
 
 
+            <ag-grid-vue :rowData="users" :columnDefs="[
+                {
+                    headerName: 'Avatar',
+                    field: 'id',
+                    cellRenderer: AvatarRowAgrid,
+                    minWidth: 50,
+                    width: 100,
+                },
+                {
+                    field: 'email',
+                    cellStyle: { display: 'flex', justifyContent: 'start', alignItems: 'center' },
+                },
+                {
+                    field: 'name',
+                    cellStyle: { display: 'flex', justifyContent: 'start', alignItems: 'center' },
+                },
+                {
+                    field: 'timeZone',
+                    cellStyle: { display: 'flex', justifyContent: 'start', alignItems: 'center' },
+                },
+                {
+                    field: 'country',
+                    cellStyle: { display: 'flex', justifyContent: 'start', alignItems: 'center' },
+                },
+                {
+                    field: 'createdAt',
+                    cellStyle: { display: 'flex', justifyContent: 'start', alignItems: 'center' },
+                },
+                {
+                    field: 'updatedAt',
+                    cellStyle: { display: 'flex', justifyContent: 'start', alignItems: 'center' },
+                },
+            ]" style="height: calc(100vh - 15.75rem)" :row-height="54" class="hidden lg:block"
+                :row-style="{ 'color': 'white' }" :theme="theme">
+            </ag-grid-vue>
         </div>
     </div>
 </template>
+
+<style lang="css" scoped>
+.ag-cell {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+}
+</style>

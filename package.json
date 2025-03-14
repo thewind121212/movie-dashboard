@@ -14,8 +14,9 @@
     "@nuxtjs/google-fonts": "^3.2.0",
     "@nuxtjs/tailwindcss": "^6.13.1",
     "@pinia/nuxt": "^0.10.1",
-    "@primeuix/themes": "^1.0.0",
     "@vee-validate/zod": "^4.15.0",
+    "ag-grid-community": "^33.1.1",
+    "ag-grid-vue3": "^33.1.1",
     "axios": "^1.8.1",
     "copy-to-clipboard": "^3.3.3",
     "nuxt": "^3.15.4",
@@ -28,8 +29,5 @@
     "vue3-lottie": "^3.3.1",
     "vue3-toastify": "^0.2.8",
     "zod": "^3.24.2"
-  },
-  "devDependencies": {
-    "@primevue/nuxt-module": "^4.3.2"
   }
 }
